@@ -1,0 +1,241 @@
+Mostly uses TypeScript interface syntax:
+
+interface Thing {
+  fieldName: type;
+  field2: type2;
+  field3: type | unionWithAnotherType;
+  optionalField?: anotherType;
+};
+
+Two sockets are used, a conversation socket for server-client
+conversations, and a pubsub socket for the server only to send
+messages the client is subscribed to.
+
+"conversation" and "setup" messages are sent on the
+conversation socket. Both sides send the "action" field, and
+the client sends the fields listed in client, the server
+replies with the fields in server.
+
+"conversation" only involves server replies of "status", and is
+like an HTTP POST. All messages start with DO or CREATE.
+
+"setup" involves more complicated server replies, since data is
+being fetched, like an HTTP GET. All messages start with GET.
+
+"serverOnly" messages are sent on the pubsub socket. The client
+does not send anything on this socket.
+
+conversation: [
+  {
+    action: "CREATE_ACCOUNT";
+    client: {
+      username: string;
+      password: string;
+    };
+    server: {
+      status: "OK" | "EEXISTS";
+    };
+  },
+  {
+    action: "DO_LOGIN";
+    client: {
+      username: string;
+      password: string;
+    };
+    server: {
+      status: "OK" | "ENOTEXISTS" | "EBADARGS";
+    };
+  },
+  {
+    action: "CREATE_FRIEND_REQUEST";
+    client: {
+      targetUsername: string;
+    };
+    server: {
+      status: "OK" | "ENOTEXISTS" | "EEXISTS";
+    };
+  },
+  {
+    action: "DO_FRIEND_ACCEPT";
+    client: {
+      friendRequestId: long;
+    };
+    server: {
+      status: "OK" | "ENOTEXISTS" | "EBADOPERATION";
+    };
+  },
+  {
+    action: "DO_FRIEND_REJECT";
+    client: {
+      friendRequestId: long;
+    };
+    server: {
+      status: "OK" | "ENOTEXISTS" | "EBADOPERATION";
+    };
+  },
+  {
+    action: "DO_FRIEND_CANCEL";
+    client: {
+      friendRequestId: long;
+    };
+    server: {
+      status: "OK" | "ENOTEXISTS" | "EBADOPERATION";
+    };
+  },
+  {
+    action: "DO_FRIEND_REMOVE";
+    client: {
+      userId: long;
+    };
+    server: {
+      status: "OK" | "ENOTEXISTS";
+    };
+  },
+  {
+    action: "CREATE_DM";
+    client: {
+      userId: long;
+    };
+    server: {
+      status: "OK" | "ENOTEXISTS" | "ENOPERMISSION" | "EEXISTS";
+    };
+  },
+  {
+    action: "CREATE_GROUP_CHAT";
+    client: {
+      userIds: long[];
+      private: boolean;
+      name: string;
+    };
+    server: {
+      status: "OK" | "ENOTEXISTS" | "ENOPERMISSION";
+    };
+  },
+  {
+    action: "CREATE_MESSAGE";
+    client: {
+      chatId: long;
+      message: string;
+    };
+    server: {
+      status: "OK" | "ENOTEXISTS" | "ENOPERMISSION";
+    };
+  },
+  {
+    action: "DO_STATUS_CHANGE";
+    client: {
+      userStatus: "ONLINE" | "AWAY" | "DONOTDISTURB" | "OFFLINE";
+      userMessage: string;
+    };
+    server: {
+      status: "OK" | "EBADARGS";
+    };
+  }
+],
+setup: [
+  {
+    action: "GET_FRIENDS";
+    client: {};
+    server: {
+      status: "OK" | "ENOPERMISSION";
+      userIds?: long[];
+    };
+  },
+  {
+    action: "GET_USER";
+    client: {
+      userId: long;
+    };
+    server: {
+      status: "OK" | "ENOTEXISTS" | "ENOPERMISSION";
+      username?: string;
+      userStatus?: "ONLINE" | "AWAY" | "DONOTDISTURB" | "OFFLINE";
+      userMessage?: string;
+    };
+  },
+  {
+    action: "GET_FRIEND_REQUESTS";
+    client: {};
+    server: {
+      status: "OK" | "ENOPERMISSION";
+      friendRequestIds?: long[];
+      sourceUsernames?: string[];
+      targetUsernames?: string[];
+    };
+  },
+  {
+    action: "GET_CHATS";
+    client: {};
+    server: {
+      status: "OK" | "ENOPERMISSION";
+      chatIds?: long[];
+    };
+  },
+  {
+    action: "GET_CHAT";
+    client: {
+      chatId: long;
+    };
+    server: {
+      status: "OK" | "ENOTEXISTS" | "ENOPERMISSION";
+      type?: "DM" | "GROUP";
+      userIds?: long[];
+      name?: string;
+      lastMessageTime?: long;
+    };
+  },
+  {
+    action: "GET_MESSAGES";
+    client: {
+      chatId: long;
+      beforeTime: long;
+      amount: long;
+    };
+    server: {
+      status: "OK" | "ENOTEXISTS" | "ENOPERMISSION" | "EBADARGS";
+      messageIds?: long[];
+      authorIds?: long[];
+      times?: long[];
+      messages?: string[];
+    }
+  }
+],
+serverOnly: [
+  {
+    action: "FRIEND_REQUEST_RECEIVED";
+    sourceUsername: string;
+    friendRequestId: long;
+  },
+  {
+    action: "FRIEND_REQUEST_FAILED";
+    friendRequestId: long;
+  },
+  {
+    action: "FRIEND_UPDATE";
+    type: "ADD" | "REMOVE";
+    userId: long;
+  },
+  {
+    action: "DM_JOINED";
+    chatId: long;
+    userId: long;
+  },
+  {
+    action: "GROUP_CHAT_JOINED";
+    chatId: long;
+  },
+  {
+    action: "MESSAGE_RECEIVED";
+    messageId: long;
+    chatId: long;
+    userId: long;
+    time: long;
+    message: string;
+  },
+  {
+    action: "STATUS_CHANGE";
+    userId: long;
+    userStatus: "ONLINE" | "AWAY" | "DONOTDISTURB" | "OFFLINE";
+    userMessage: string;
+  }
+]
