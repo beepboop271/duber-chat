@@ -104,7 +104,6 @@ conversation: [
     action: "CREATE_GROUP_CHAT";
     client: {
       userIds: long[];
-      private: boolean;
       name: string;
     };
     server: {

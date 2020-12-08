@@ -1,10 +1,13 @@
 package messages;
-public class CreateGroupChat {
-    long[] userIds;
-    //boolean private;
-    String name;
-    CreateGroupChat(long[] users, String groupname){
-        this.userIds = users;
-        this.name = groupname;
-    }
+
+public class CreateGroupChat extends CommandMessage {
+  private static final long serialVersionUID = 0L;
+
+  private long[] userIds;
+  private String name;
+
+  public CreateGroupChat(long[] userIds, String name) {
+    this.userIds = userIds;
+    this.name = name;
+  }
 }

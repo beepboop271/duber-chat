@@ -1,7 +1,11 @@
 package messages;
-public class DoFriendReject {
-    long friendRequestID;
-    DoFriendReject(long requestID) {
-        this.friendRequestID = requestID;
-    }
+
+public class DoFriendReject extends CommandMessage {
+  private static final long serialVersionUID = 0L;
+
+  private long friendRequestId;
+
+  public DoFriendReject(long friendRequestId) {
+    this.friendRequestId = friendRequestId;
+  }
 }

@@ -1,9 +1,13 @@
 package messages;
-public class CreateMessage {
-    long chatID;
-    String message;
-    CreateMessage(long ID, String msg){
-        this.chatID = ID;
-        this.message = msg;
-    }
+
+public class CreateMessage extends CommandMessage {
+  private static final long serialVersionUID = 0L;
+
+  private long chatId;
+  private String message;
+
+  public CreateMessage(long chatId, String message) {
+    this.chatId = chatId;
+    this.message = message;
+  }
 }

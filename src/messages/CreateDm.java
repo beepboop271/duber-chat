@@ -1,11 +1,11 @@
 package messages;
 
-public class DoFriendRemove extends CommandMessage {
+public class CreateDm extends CommandMessage {
   private static final long serialVersionUID = 0L;
 
   private long userId;
 
-  public DoFriendRemove(long userId) {
+  public CreateDm(long userId) {
     this.userId = userId;
   }
 }
