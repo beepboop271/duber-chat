@@ -1,31 +1,23 @@
 package reduber;
 
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-class ReDuberRequest<I, O> {
+abstract class Operation<T, I, O> {
   private final CompletableFuture<O> result;
-  private final ReDuberStore.Operation operation;
   private final String key;
   private final I args;
 
-  ReDuberRequest(
-    CompletableFuture<O> result,
-    ReDuberStore.Operation operation,
-    String key,
-    I args
-  ) {
+  Operation(CompletableFuture<O> result, String key, I args) {
     this.result = result;
-    this.operation = operation;
     this.key = key;
     this.args = args;
   }
 
+  abstract void execute(Map<String, T> db);
+
   CompletableFuture<O> getResult() {
     return this.result;
-  }
-
-  ReDuberStore.Operation getOperation() {
-    return this.operation;
   }
 
   String getKey() {

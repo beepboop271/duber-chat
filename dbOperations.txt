@@ -1,0 +1,17 @@
+GET_LONG                void -> long
+SET_LONG                long -> Status
+SET_LONG_NOT_EXISTS     long -> Status
+
+GET_STRING              void -> string
+SET_STRING              string -> Status
+SET_STRING_NOT_EXISTS   string -> Status
+
+LIST_APPEND             long -> Status
+LIST_REMOVE             long -> Status
+LIST_GET                void -> long[]
+LIST_GET_PARTIAL        int[] -> long[]
+
+SET_ADD                 long -> Status
+SET_REMOVE              long -> Status
+SET_CONTAINS            long -> Status
+SET_GET                 void -> long[]

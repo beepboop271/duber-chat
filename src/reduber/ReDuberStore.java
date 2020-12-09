@@ -10,29 +10,12 @@ import java.util.concurrent.BlockingQueue;
 class ReDuberStore implements Runnable, Serializable {
   private static final long serialVersionUID = 0L;
 
-  private transient BlockingQueue<ReDuberRequest<?, ?>> opQueue;
+  private transient BlockingQueue<Operation<?, ?, ?>> opQueue;
 
   private final HashMap<String, Long> longMap;
   private final HashMap<String, String> stringMap;
   private final HashMap<String, ArrayDeque<Long>> listMap;
   private final HashMap<String, HashSet<Long>> setMap;
-
-  enum Operation {
-    GET_LONG,
-    SET_LONG,
-    SET_LONG_NOT_EXISTS,
-    GET_STRING,
-    SET_STRING,
-    SET_STRING_NOT_EXISTS,
-    LIST_APPEND,
-    LIST_REMOVE,
-    LIST_GET,
-    LIST_GET_PARTIAL,
-    SET_ADD,
-    SET_REMOVE,
-    SET_CONTAINS,
-    SET_GET,
-  }
 
   ReDuberStore(int queueSize, int initialCapacities) {
     this.opQueue = new ArrayBlockingQueue<>(queueSize);
@@ -46,7 +29,7 @@ class ReDuberStore implements Runnable, Serializable {
   @Override
   public void run() {
     while (true) {
-      ReDuberRequest<?, ?> op;
+      Operation<?, ?, ?> op;
       try {
         op = this.opQueue.take();
       } catch (InterruptedException e) {
@@ -54,13 +37,15 @@ class ReDuberStore implements Runnable, Serializable {
         return;
       }
 
-      switch (op.getOperation()) {
-
+      if (op instanceof LongOperation) {
+        ((LongOperation<?, ?>)op).execute(this.longMap);
+      } else if (op instanceof StringOperation) {
+        ((StringOperation<?, ?>)op).execute(this.stringMap);
       }
     }
   }
 
-  public void put(ReDuberRequest<?, ?> op) throws InterruptedException {
+  public void put(Operation<?, ?, ?> op) throws InterruptedException {
     this.opQueue.put(op);
   }
 }
