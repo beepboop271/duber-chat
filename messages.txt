@@ -180,20 +180,20 @@ setup: [
       type?: "DM" | "GROUP";
       userIds?: long[];
       name?: string;
-      lastMessageTime?: long;
+      lastMessageId?: long;
     };
   },
   {
     action: "GET_MESSAGES";
     client: {
       chatId: long;
-      beforeTime: long;
+      beforeMessageId: long;
       amount: long;
     };
     server: {
       status: "OK" | "ENOTEXISTS" | "ENOPERMISSION" | "EBADARGS";
       messageIds?: long[];
-      authorIds?: long[];
+      userIds?: long[];
       times?: long[];
       messages?: string[];
     }
@@ -202,12 +202,13 @@ setup: [
 serverOnly: [
   {
     action: "FRIEND_REQUEST_RECEIVED";
-    sourceUsername: string;
     friendRequestId: long;
+    sourceUsername: string;
   },
   {
     action: "FRIEND_REQUEST_FAILED";
     friendRequestId: long;
+    targetUsername: string;
   },
   {
     action: "FRIEND_UPDATE";
@@ -218,10 +219,14 @@ serverOnly: [
     action: "DM_JOINED";
     chatId: long;
     userId: long;
+    lastMessageTime: long;
   },
   {
     action: "GROUP_CHAT_JOINED";
     chatId: long;
+    userIds: long[];
+    name: string;
+    lastMessageTime: long;
   },
   {
     action: "MESSAGE_RECEIVED";
