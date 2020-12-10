@@ -6,10 +6,10 @@ GET_STRING              void -> string
 SET_STRING              string -> Status
 SET_STRING_NOT_EXISTS   string -> Status
 
-LIST_APPEND             long -> Status
+LIST_ADD                long -> Status
 LIST_REMOVE             long -> Status
 LIST_GET                void -> long[]
-LIST_GET_PARTIAL        int[] -> long[]
+LIST_GET_RANGE          long[] -> long[]
 
 SET_ADD                 long -> Status
 SET_REMOVE              long -> Status
