@@ -3,8 +3,8 @@ package reduber;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-class GetString extends StringOperation<Object, String> {
-  GetString(CompletableFuture<String> result, String key) {
+class StringGet extends StringOperation<Object, String> {
+  StringGet(CompletableFuture<String> result, String key) {
     super(result, key, null);
   }
 
