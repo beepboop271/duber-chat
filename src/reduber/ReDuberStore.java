@@ -42,6 +42,8 @@ class ReDuberStore implements Runnable, Serializable {
         ((StringOperation<?, ?>)op).execute(this.stringMap);
       } else if (op instanceof ListOperation) {
         ((ListOperation<?, ?>)op).execute(this.listMap);
+      } else if (op instanceof SetOperation) {
+        ((SetOperation<?, ?>)op).execute(this.setMap);
       }
     }
   }
