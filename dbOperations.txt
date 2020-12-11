@@ -15,3 +15,6 @@ SET_ADD                 long -> Status
 SET_REMOVE              long -> Status
 SET_CONTAINS            long -> Status
 SET_GET                 void -> long[]
+
+SUBSCRIBE               ObjectOutputStream -> Status
+PUBLISH                 Serializable -> Status

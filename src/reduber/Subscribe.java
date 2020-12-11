@@ -10,8 +10,12 @@ import java.util.concurrent.CompletableFuture;
 class Subscribe extends
   Operation<Set<ObjectOutputStream>, ObjectOutputStream, ReDuber.Status> {
 
-  Subscribe(CompletableFuture<ReDuber.Status> result, String key) {
-    super(result, key, null);
+  Subscribe(
+    CompletableFuture<ReDuber.Status> result,
+    String key,
+    ObjectOutputStream args
+  ) {
+    super(result, key, args);
   }
 
   @Override

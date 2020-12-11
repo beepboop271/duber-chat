@@ -6,14 +6,14 @@ import java.io.Serializable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class ReDuberPubSub {
+class ReDuberPubSub {
   private ExecutorService pool;
 
-  public ReDuberPubSub(int numThreads) {
+  ReDuberPubSub(int numThreads) {
     this.pool = Executors.newFixedThreadPool(numThreads);
   }
 
-  public void submit(Serializable message, ObjectOutputStream out) {
+  void submit(Serializable message, ObjectOutputStream out) {
     this.pool.submit(new PublishJob(message, out));
   }
 
@@ -21,7 +21,7 @@ public class ReDuberPubSub {
     private Serializable message;
     private ObjectOutputStream out;
 
-    public PublishJob(Serializable message, ObjectOutputStream out) {
+    private PublishJob(Serializable message, ObjectOutputStream out) {
       this.message = message;
       this.out = out;
     }
