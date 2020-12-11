@@ -15,7 +15,7 @@ class SetGet extends SetOperation<Object, Long[]> {
     if (set == null) {
       this.getResult().complete(null);
     } else {
-      this.getResult().complete((Long[])(set.toArray()));
+      this.getResult().complete(set.toArray(new Long[0]));
     }
   }
 }
