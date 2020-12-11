@@ -5,13 +5,13 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 class ReDuberStore implements Runnable, Serializable {
   private static final long serialVersionUID = 0L;
 
-  private transient BlockingQueue<Operation<?, ?, ?>> opQueue;
+  private transient BlockingQueue<OperationData<?, ?, ?>> opQueue;
   private transient ReDuberPubSub pubSub;
 
   private final Map<String, Long> longMap;
@@ -20,8 +20,8 @@ class ReDuberStore implements Runnable, Serializable {
   private final Map<String, Set<Long>> setMap;
   private final Map<String, Set<ObjectOutputStream>> pubSubMap;
 
-  ReDuberStore(int queueSize, int initialCapacities, int pubSubThreads) {
-    this.opQueue = new ArrayBlockingQueue<>(queueSize);
+  ReDuberStore(int initialCapacities, int pubSubThreads) {
+    this.opQueue = new LinkedBlockingQueue<>();
     this.pubSub = new ReDuberPubSub(pubSubThreads);
 
     this.longMap = new HashMap<>(initialCapacities);
@@ -35,6 +35,9 @@ class ReDuberStore implements Runnable, Serializable {
   @Override
   public void run() {
     while (true) {
+      if (Thread.interrupted()) {
+        return;
+      }
       OperationData<?, ?, ?> op;
       try {
         op = this.opQueue.take();
@@ -59,7 +62,7 @@ class ReDuberStore implements Runnable, Serializable {
     }
   }
 
-  public void put(Operation<?, ?, ?> op) throws InterruptedException {
-    this.opQueue.put(op);
+  public void submit(OperationData<?, ?, ?> op) {
+    this.opQueue.offer(op);
   }
 }
