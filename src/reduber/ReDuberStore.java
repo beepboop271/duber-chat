@@ -1,5 +1,6 @@
 package reduber;
 
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,25 +12,30 @@ class ReDuberStore implements Runnable, Serializable {
   private static final long serialVersionUID = 0L;
 
   private transient BlockingQueue<Operation<?, ?, ?>> opQueue;
+  private transient ReDuberPubSub pubSub;
 
   private final Map<String, Long> longMap;
   private final Map<String, String> stringMap;
   private final Map<String, SortedArray<Long>> listMap;
   private final Map<String, Set<Long>> setMap;
+  private final Map<String, Set<ObjectOutputStream>> pubSubMap;
 
-  ReDuberStore(int queueSize, int initialCapacities) {
+  ReDuberStore(int queueSize, int initialCapacities, int pubSubThreads) {
     this.opQueue = new ArrayBlockingQueue<>(queueSize);
+    this.pubSub = new ReDuberPubSub(pubSubThreads);
 
     this.longMap = new HashMap<>(initialCapacities);
     this.stringMap = new HashMap<>(initialCapacities);
     this.listMap = new HashMap<>(initialCapacities);
     this.setMap = new HashMap<>(initialCapacities);
+
+    this.pubSubMap = new HashMap<>(initialCapacities);
   }
 
   @Override
   public void run() {
     while (true) {
-      Operation<?, ?, ?> op;
+      OperationData<?, ?, ?> op;
       try {
         op = this.opQueue.take();
       } catch (InterruptedException e) {
@@ -37,7 +43,9 @@ class ReDuberStore implements Runnable, Serializable {
         return;
       }
 
-      if (op instanceof LongOperation) {
+      if (op instanceof Publish) {
+        ((Publish)op).execute(this.pubSubMap, this.pubSub);
+      } else if (op instanceof LongOperation) {
         ((LongOperation<?, ?>)op).execute(this.longMap);
       } else if (op instanceof StringOperation) {
         ((StringOperation<?, ?>)op).execute(this.stringMap);
@@ -45,6 +53,8 @@ class ReDuberStore implements Runnable, Serializable {
         ((ListOperation<?, ?>)op).execute(this.listMap);
       } else if (op instanceof SetOperation) {
         ((SetOperation<?, ?>)op).execute(this.setMap);
+      } else if (op instanceof Subscribe) {
+        ((Subscribe)op).execute(this.pubSubMap);
       }
     }
   }

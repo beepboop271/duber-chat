@@ -11,7 +11,6 @@ package reduber;
  */
 public class ReDuber {
   private ReDuberStore store;
-  private ReDuberPubSub pubsub;
 
   public enum Status {
     OK,
@@ -22,10 +21,8 @@ public class ReDuber {
   }
 
   public ReDuber() {
-    this.store = new ReDuberStore(100, 1024);
+    this.store = new ReDuberStore(100, 1024, 10);
     Thread store = new Thread(this.store);
     store.start();
-
-    this.pubsub = new ReDuberPubSub(10);
   }
 }
