@@ -47,6 +47,16 @@ conversation: [
     };
   },
   {
+    action: "DO_PUBSUB_LOGIN";
+    client: {
+      username: string;
+      password: string;
+    };
+    server: {
+      status: "OK" | "ENOTEXISTS" | "EBADARGS";
+    };
+  },
+  {
     action: "CREATE_FRIEND_REQUEST";
     client: {
       targetUsername: string;
