@@ -1,9 +1,9 @@
 package reduber;
 
 import java.io.Serializable;
-import java.util.ArrayDeque;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
@@ -12,10 +12,10 @@ class ReDuberStore implements Runnable, Serializable {
 
   private transient BlockingQueue<Operation<?, ?, ?>> opQueue;
 
-  private final HashMap<String, Long> longMap;
-  private final HashMap<String, String> stringMap;
-  private final HashMap<String, ArrayDeque<Long>> listMap;
-  private final HashMap<String, HashSet<Long>> setMap;
+  private final Map<String, Long> longMap;
+  private final Map<String, String> stringMap;
+  private final Map<String, SortedArray<Long>> listMap;
+  private final Map<String, Set<Long>> setMap;
 
   ReDuberStore(int queueSize, int initialCapacities) {
     this.opQueue = new ArrayBlockingQueue<>(queueSize);
@@ -41,6 +41,10 @@ class ReDuberStore implements Runnable, Serializable {
         ((LongOperation<?, ?>)op).execute(this.longMap);
       } else if (op instanceof StringOperation) {
         ((StringOperation<?, ?>)op).execute(this.stringMap);
+      } else if (op instanceof ListOperation) {
+        ((ListOperation<?, ?>)op).execute(this.listMap);
+      } else if (op instanceof SetOperation) {
+        ((SetOperation<?, ?>)op).execute(this.setMap);
       }
     }
   }

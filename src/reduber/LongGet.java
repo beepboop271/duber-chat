@@ -3,8 +3,8 @@ package reduber;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-class GetLong extends LongOperation<Object, Long> {
-  GetLong(CompletableFuture<Long> result, String key) {
+class LongGet extends LongOperation<Object, Long> {
+  LongGet(CompletableFuture<Long> result, String key) {
     super(result, key, null);
   }
 

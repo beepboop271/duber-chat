@@ -3,17 +3,17 @@ package reduber;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-class SetLongNotExists extends LongOperation<Long, ReDuber.Status> {
-  SetLongNotExists(
+class StringSetNotExists extends StringOperation<String, ReDuber.Status> {
+  StringSetNotExists(
     CompletableFuture<ReDuber.Status> result,
     String key,
-    Long args
+    String args
   ) {
     super(result, key, args);
   }
 
   @Override
-  void execute(Map<String, Long> db) {
+  void execute(Map<String, String> db) {
     String key = this.getKey();
     if (db.containsKey(key)) {
       this.getResult().complete(ReDuber.Status.NO_CHANGE);
