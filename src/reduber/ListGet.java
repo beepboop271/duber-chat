@@ -10,6 +10,11 @@ class ListGet extends ListOperation<Object, Long[]> {
 
   @Override
   void execute(Map<String, SortedArray<Long>> db) {
-    this.getResult().complete(db.get(this.getKey()).toArray());
+    SortedArray<Long> list = db.get(this.getKey());
+    if (list == null) {
+      this.getResult().complete(null);
+    } else {
+      this.getResult().complete(list.toArray());
+    }
   }
 }

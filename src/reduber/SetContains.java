@@ -1,7 +1,7 @@
 package reduber;
 
-import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 class SetContains extends SetOperation<Long, ReDuber.Status> {
@@ -10,11 +10,12 @@ class SetContains extends SetOperation<Long, ReDuber.Status> {
   }
 
   @Override
-  void execute(Map<String, HashSet<Long>> db) {
-    if (db.get(this.getKey()).contains(this.getArgs())) {
-      this.getResult().complete(ReDuber.Status.TRUE);
-    } else {
+  void execute(Map<String, Set<Long>> db) {
+    Set<Long> set = db.get(this.getKey());
+    if ((set == null) || !(set.contains(this.getArgs()))) {
       this.getResult().complete(ReDuber.Status.FALSE);
+    } else {
+      this.getResult().complete(ReDuber.Status.TRUE);
     }
   }
 }

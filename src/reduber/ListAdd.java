@@ -12,6 +12,10 @@ class ListAdd extends ListOperation<Long, ReDuber.Status> {
   void execute(Map<String, SortedArray<Long>> db) {
     SortedArray<Long> list = db.get(this.getKey());
     try {
+      if (list == null) {
+        list = new SortedArray<Long>();
+        db.put(this.getKey(), list);
+      }
       list.add(this.getArgs());
     } catch (Exception e) {
       this.getResult().complete(ReDuber.Status.ERROR);
