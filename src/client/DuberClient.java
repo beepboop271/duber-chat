@@ -8,6 +8,8 @@ package client;
 
 import java.awt.*;
 import javax.swing.*;
+import javax.swing.plaf.DimensionUIResource;
+
 import java.io.*;
 import java.net.*;
 import java.awt.*;
@@ -16,14 +18,16 @@ import java.awt.event.*;
 
 class ChatClient {
   
-  private JButton sendButton, clearButton;
+  private JButton sendButton, clearButton, friendButtonList;
+  //private JButton[] friendButtonList;
   private JTextField typeField;
   private JTextArea msgArea;  
-  private JPanel southPanel;
+  private JPanel southPanel, westPanel;
   private Socket mySocket; //socket for connection
   private BufferedReader input; //reader for network stream
   private PrintWriter output;  //printwriter for network output
   private boolean running = true; //thread status via boolean
+  private String[] names;
   
   public static void main(String[] args) { 
     new ChatClient().go();
@@ -31,13 +35,30 @@ class ChatClient {
     
   public void go() {
     JFrame window = new JFrame("DuberChat");
+    westPanel = new JPanel();
     southPanel = new JPanel();
+    westPanel.setLayout(new GridLayout(0,1));
     southPanel.setLayout(new GridLayout(2,0));
     
     sendButton = new JButton("SEND");
     sendButton.addActionListener(new SendButtonListener());
     clearButton = new JButton("QUIT");
     clearButton.addActionListener(new QuitButtonListener());
+
+    names = new String[5];
+    names[0] = "ryan";
+    names[1] = "kevin";
+    names[2] = "shari";
+    names[3] = "candice";
+    names[4] = "viraj";
+    for(int i =0; i < names.length; i++){
+      friendButtonList = new JButton(names[i]);//creates a new botton with user name on it
+      friendButtonList.setMaximumSize(new Dimension(20, 10));
+      //friendButtonList.setSize(new Dimension(200, 100));//sets the size of the button
+      //PreferredSize(new Dimension(200, 50));
+      friendButtonList.addActionListener(new SendButtonListener());//allows the button to be interacted with
+      westPanel.add(friendButtonList);//adds the new buttom to the list on the left
+    }
     
     JLabel errorLabel = new JLabel("");
     
@@ -51,6 +72,7 @@ class ChatClient {
     southPanel.add(clearButton);
     
     window.add(BorderLayout.CENTER,msgArea);
+    window.add(BorderLayout.WEST,westPanel);
     window.add(BorderLayout.SOUTH,southPanel);
     
     window.setSize(1600,900);
