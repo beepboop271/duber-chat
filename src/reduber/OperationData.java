@@ -2,7 +2,7 @@ package reduber;
 
 import java.util.concurrent.CompletableFuture;
 
-abstract class OperationData<T, I, O> {
+abstract class OperationData<I, O> {
   private final CompletableFuture<O> result;
   private final String key;
   private final I args;

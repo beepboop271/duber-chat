@@ -6,8 +6,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
-class Publish extends
-  OperationData<Set<ObjectOutputStream>, Serializable, ReDuber.Status> {
+class Publish extends OperationData<Serializable, ReDuber.Status> {
 
   Publish(
     CompletableFuture<ReDuber.Status> result,
