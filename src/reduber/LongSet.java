@@ -1,11 +1,10 @@
 package reduber;
 
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 class LongSet extends LongOperation<Long, ReDuber.Status> {
-  LongSet(CompletableFuture<ReDuber.Status> result, String key, Long args) {
-    super(result, key, args);
+  LongSet(String key, Long args) {
+    super(key, args);
   }
 
   @Override

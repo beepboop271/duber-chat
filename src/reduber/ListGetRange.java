@@ -1,11 +1,10 @@
 package reduber;
 
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 class ListGetRange extends ListOperation<Long[], Long[]> {
-  ListGetRange(CompletableFuture<Long[]> result, String key, Long[] args) {
-    super(result, key, args);
+  ListGetRange(String key, Long[] args) {
+    super(key, args);
   }
 
   @Override

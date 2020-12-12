@@ -2,11 +2,10 @@ package reduber;
 
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 
 class SetGet extends SetOperation<Object, Long[]> {
-  SetGet(CompletableFuture<Long[]> result, String key) {
-    super(result, key, null);
+  SetGet(String key) {
+    super(key, null);
   }
 
   @Override

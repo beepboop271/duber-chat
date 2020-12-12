@@ -30,62 +30,49 @@ public class ReDuber {
     store.start();
   }
 
+  private <T> CompletableFuture<T> submit(OperationData<?, T> op) {
+    this.store.submit(op);
+    return op.getResult();
+  }
+
   // long and string ops
 
   public CompletableFuture<Long> longGet(String key) {
-    CompletableFuture<Long> future = new CompletableFuture<>();
-    this.store.submit(new LongGet(future, key));
-    return future;
+    return this.submit(new LongGet(key));
   }
 
   public CompletableFuture<String> stringGet(String key) {
-    CompletableFuture<String> future = new CompletableFuture<>();
-    this.store.submit(new StringGet(future, key));
-    return future;
+    return this.submit(new StringGet(key));
   }
 
   public CompletableFuture<Status> set(String key, long value) {
-    CompletableFuture<Status> future = new CompletableFuture<>();
-    this.store.submit(new LongSet(future, key, value));
-    return future;
+    return this.submit(new LongSet(key, value));
   }
 
   public CompletableFuture<Status> set(String key, String value) {
-    CompletableFuture<Status> future = new CompletableFuture<>();
-    this.store.submit(new StringSet(future, key, value));
-    return future;
+    return this.submit(new StringSet(key, value));
   }
 
   public CompletableFuture<Status> setNotExists(String key, long value) {
-    CompletableFuture<Status> future = new CompletableFuture<>();
-    this.store.submit(new LongSetNotExists(future, key, value));
-    return future;
+    return this.submit(new LongSetNotExists(key, value));
   }
 
   public CompletableFuture<Status> setNotExists(String key, String value) {
-    CompletableFuture<Status> future = new CompletableFuture<>();
-    this.store.submit(new StringSetNotExists(future, key, value));
-    return future;
+    return this.submit(new StringSetNotExists(key, value));
   }
 
   // list ops
 
   public CompletableFuture<Status> listAdd(String key, long value) {
-    CompletableFuture<Status> future = new CompletableFuture<>();
-    this.store.submit(new ListAdd(future, key, value));
-    return future;
+    return this.submit(new ListAdd(key, value));
   }
 
   public CompletableFuture<Status> listRemove(String key, long value) {
-    CompletableFuture<Status> future = new CompletableFuture<>();
-    this.store.submit(new ListRemove(future, key, value));
-    return future;
+    return this.submit(new ListRemove(key, value));
   }
 
   public CompletableFuture<Long[]> listGet(String key) {
-    CompletableFuture<Long[]> future = new CompletableFuture<>();
-    this.store.submit(new ListGet(future, key));
-    return future;
+    return this.submit(new ListGet(key));
   }
 
   public CompletableFuture<Long[]> listGetRange(
@@ -93,53 +80,36 @@ public class ReDuber {
     long startValue,
     int amount
   ) {
-    CompletableFuture<Long[]> future = new CompletableFuture<>();
-    this.store.submit(
-      new ListGetRange(future, key, new Long[] { startValue, (long)amount })
+    return this.submit(
+      new ListGetRange(key, new Long[] { startValue, (long)amount })
     );
-    return future;
   }
 
   // set ops
 
   public CompletableFuture<Status> setAdd(String key, long value) {
-    CompletableFuture<Status> future = new CompletableFuture<>();
-    this.store.submit(new SetAdd(future, key, value));
-    return future;
+    return this.submit(new SetAdd(key, value));
   }
 
   public CompletableFuture<Status> setRemove(String key, long value) {
-    CompletableFuture<Status> future = new CompletableFuture<>();
-    this.store.submit(new SetRemove(future, key, value));
-    return future;
+    return this.submit(new SetRemove(key, value));
   }
 
   public CompletableFuture<Status> setContains(String key, long value) {
-    CompletableFuture<Status> future = new CompletableFuture<>();
-    this.store.submit(new SetContains(future, key, value));
-    return future;
+    return this.submit(new SetContains(key, value));
   }
 
   public CompletableFuture<Long[]> setGet(String key) {
-    CompletableFuture<Long[]> future = new CompletableFuture<>();
-    this.store.submit(new SetGet(future, key));
-    return future;
+    return this.submit(new SetGet(key));
   }
 
   // pubsub
 
-  public CompletableFuture<Status> subscribe(
-    String key,
-    ObjectOutputStream value
-  ) {
-    CompletableFuture<Status> future = new CompletableFuture<>();
-    this.store.submit(new Subscribe(future, key, value));
-    return future;
+  public CompletableFuture<Status> subscribe(String key, ObjectOutputStream value) {
+    return this.submit(new Subscribe(key, value));
   }
 
   public CompletableFuture<Status> publish(String key, Serializable value) {
-    CompletableFuture<Status> future = new CompletableFuture<>();
-    this.store.submit(new Publish(future, key, value));
-    return future;
+    return this.submit(new Publish(key, value));
   }
 }

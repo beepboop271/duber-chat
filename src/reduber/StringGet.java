@@ -1,11 +1,10 @@
 package reduber;
 
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 class StringGet extends StringOperation<Object, String> {
-  StringGet(CompletableFuture<String> result, String key) {
-    super(result, key, null);
+  StringGet(String key) {
+    super(key, null);
   }
 
   @Override

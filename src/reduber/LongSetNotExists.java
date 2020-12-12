@@ -1,15 +1,10 @@
 package reduber;
 
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 class LongSetNotExists extends LongOperation<Long, ReDuber.Status> {
-  LongSetNotExists(
-    CompletableFuture<ReDuber.Status> result,
-    String key,
-    Long args
-  ) {
-    super(result, key, args);
+  LongSetNotExists(String key, Long args) {
+    super(key, args);
   }
 
   @Override

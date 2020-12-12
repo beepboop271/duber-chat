@@ -3,11 +3,10 @@ package reduber;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 
 class SetAdd extends SetOperation<Long, ReDuber.Status> {
-  SetAdd(CompletableFuture<ReDuber.Status> result, String key, Long args) {
-    super(result, key, args);
+  SetAdd(String key, Long args) {
+    super(key, args);
   }
 
   @Override

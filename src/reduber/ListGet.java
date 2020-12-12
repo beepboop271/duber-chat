@@ -1,11 +1,10 @@
 package reduber;
 
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 class ListGet extends ListOperation<Object, Long[]> {
-  ListGet(CompletableFuture<Long[]> result, String key) {
-    super(result, key, null);
+  ListGet(String key) {
+    super(key, null);
   }
 
   @Override

@@ -1,11 +1,10 @@
 package reduber;
 
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 class ListRemove extends ListOperation<Long, ReDuber.Status> {
-  ListRemove(CompletableFuture<ReDuber.Status> result, String key, Long args) {
-    super(result, key, args);
+  ListRemove(String key, Long args) {
+    super(key, args);
   }
 
   @Override

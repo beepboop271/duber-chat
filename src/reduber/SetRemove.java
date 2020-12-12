@@ -2,11 +2,10 @@ package reduber;
 
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 
 class SetRemove extends SetOperation<Long, ReDuber.Status> {
-  SetRemove(CompletableFuture<ReDuber.Status> result, String key, Long args) {
-    super(result, key, args);
+  SetRemove(String key, Long args) {
+    super(key, args);
   }
 
   @Override

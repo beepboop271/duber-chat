@@ -5,17 +5,15 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
-import java.util.concurrent.CompletableFuture;
 
 class Subscribe extends
   Operation<Set<ObjectOutputStream>, ObjectOutputStream, ReDuber.Status> {
 
   Subscribe(
-    CompletableFuture<ReDuber.Status> result,
     String key,
     ObjectOutputStream args
   ) {
-    super(result, key, args);
+    super(key, args);
   }
 
   @Override
