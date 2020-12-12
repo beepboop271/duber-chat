@@ -1,15 +1,13 @@
 package reduber;
 
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 class StringSetNotExists extends StringOperation<String, ReDuber.Status> {
   StringSetNotExists(
-    CompletableFuture<ReDuber.Status> result,
     String key,
     String args
   ) {
-    super(result, key, args);
+    super(key, args);
   }
 
   @Override

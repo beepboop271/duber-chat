@@ -2,11 +2,10 @@ package reduber;
 
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 
 class SetContains extends SetOperation<Long, ReDuber.Status> {
-  SetContains(CompletableFuture<ReDuber.Status> result, String key, Long args) {
-    super(result, key, args);
+  SetContains(String key, Long args) {
+    super(key, args);
   }
 
   @Override

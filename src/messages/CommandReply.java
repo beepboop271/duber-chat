@@ -10,6 +10,7 @@ public class CommandReply extends Message {
     E_BAD_ARGS,
     E_BAD_OPERATION,
     E_NO_PERMISSION,
+    E_SERVER_UNKNOWN,
   }
 
   private final Status status;
@@ -56,5 +57,9 @@ public class CommandReply extends Message {
 
   public static CommandReply noPermission(String detailMessage) {
     return new CommandReply(Status.E_NO_PERMISSION, detailMessage);
+  }
+
+  public static CommandReply serverUnknown() {
+    return new CommandReply(Status.E_SERVER_UNKNOWN);
   }
 }

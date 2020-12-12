@@ -4,17 +4,13 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 
-class Publish extends
-  OperationData<Set<ObjectOutputStream>, Serializable, ReDuber.Status> {
-
+class Publish extends OperationData<Serializable, ReDuber.Status> {
   Publish(
-    CompletableFuture<ReDuber.Status> result,
     String key,
     Serializable args
   ) {
-    super(result, key, args);
+    super(key, args);
   }
 
   void execute(Map<String, Set<ObjectOutputStream>> db, ReDuberPubSub pubSub) {

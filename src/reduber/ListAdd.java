@@ -1,11 +1,10 @@
 package reduber;
 
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 class ListAdd extends ListOperation<Long, ReDuber.Status> {
-  ListAdd(CompletableFuture<ReDuber.Status> result, String key, Long args) {
-    super(result, key, args);
+  ListAdd(String key, Long args) {
+    super(key, args);
   }
 
   @Override

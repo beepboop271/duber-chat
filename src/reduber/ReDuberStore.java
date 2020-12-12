@@ -11,7 +11,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 class ReDuberStore implements Runnable, Serializable {
   private static final long serialVersionUID = 0L;
 
-  private transient BlockingQueue<OperationData<?, ?, ?>> opQueue;
+  private transient BlockingQueue<OperationData<?, ?>> opQueue;
   private transient ReDuberPubSub pubSub;
 
   private final Map<String, Long> longMap;
@@ -38,7 +38,7 @@ class ReDuberStore implements Runnable, Serializable {
       if (Thread.interrupted()) {
         return;
       }
-      OperationData<?, ?, ?> op;
+      OperationData<?, ?> op;
       try {
         op = this.opQueue.take();
       } catch (InterruptedException e) {
@@ -62,7 +62,7 @@ class ReDuberStore implements Runnable, Serializable {
     }
   }
 
-  public void submit(OperationData<?, ?, ?> op) {
+  public void submit(OperationData<?, ?> op) {
     this.opQueue.offer(op);
   }
 }

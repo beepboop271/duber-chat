@@ -2,13 +2,13 @@ package reduber;
 
 import java.util.concurrent.CompletableFuture;
 
-abstract class OperationData<T, I, O> {
+abstract class OperationData<I, O> {
   private final CompletableFuture<O> result;
   private final String key;
   private final I args;
 
-  OperationData(CompletableFuture<O> result, String key, I args) {
-    this.result = result;
+  OperationData(String key, I args) {
+    this.result = new CompletableFuture<>();
     this.key = key;
     this.args = args;
   }

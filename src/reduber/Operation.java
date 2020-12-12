@@ -1,11 +1,10 @@
 package reduber;
 
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
-abstract class Operation<T, I, O> extends OperationData<T, I, O> {
-  Operation(CompletableFuture<O> result, String key, I args) {
-    super(result, key, args);
+abstract class Operation<T, I, O> extends OperationData<I, O> {
+  Operation(String key, I args) {
+    super(key, args);
   }
 
   abstract void execute(Map<String, T> db);
