@@ -1,30 +1,19 @@
 package reduber;
 
-import java.io.ObjectOutputStream;
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.WeakHashMap;
 
-class Subscribe extends
-  Operation<Set<ObjectOutputStream>, ObjectOutputStream, ReDuber.Status> {
-
-  Subscribe(
-    String key,
-    ObjectOutputStream args
-  ) {
+class Subscribe extends Operation<Set<Long>, Long, ReDuber.Status> {
+  Subscribe(String key, Long args) {
     super(key, args);
   }
 
   @Override
-  void execute(Map<String, Set<ObjectOutputStream>> db) {
-    Set<ObjectOutputStream> subs = db.get(this.getKey());
+  void execute(Map<String, Set<Long>> db) {
+    Set<Long> subs = db.get(this.getKey());
     if (subs == null) {
-      // https://www.ibm.com/developerworks/library/j-jtp11225/index.html
-      // https://stackoverflow.com/questions/4062919/why-does-exist-weakhashmap-but-absent-weakset
-      subs = Collections.newSetFromMap(
-        new WeakHashMap<ObjectOutputStream, Boolean>()
-      );
+      subs = new HashSet<>();
       db.put(this.getKey(), subs);
     }
     subs.add(this.getArgs());
