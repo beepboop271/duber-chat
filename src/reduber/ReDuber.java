@@ -105,19 +105,19 @@ public class ReDuber {
 
   // pubsub
 
-  public CompletableFuture<Status> subscribe(String key, Long value) {
-    return this.submit(new Subscribe(key, value));
-  }
-
-  public CompletableFuture<Status> register(
+  public CompletableFuture<Status> pubSubLogin(
     String key,
     Long value,
     ObjectOutputStream out
   ) {
-    return this.submit(new Register(key, value, out));
+    return this.submit(new PubSubLogin(key, value, out));
   }
 
-  public CompletableFuture<Status> publish(String key, Serializable value) {
-    return this.submit(new Publish(key, value));
+  public CompletableFuture<Status> publishSingle(String key, Serializable value) {
+    return this.submit(new PublishSingle(key, value));
+  }
+
+  public CompletableFuture<Status> publishMany(String key, Serializable value) {
+    return this.submit(new PublishMany(key, value));
   }
 }

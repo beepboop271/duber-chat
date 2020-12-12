@@ -6,15 +6,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
 
-class Register extends OperationData<Long, ReDuber.Status> {
+class PubSubLogin extends OperationData<Long, ReDuber.Status> {
   private final ObjectOutputStream out;
 
-  Register(String key, Long args, ObjectOutputStream out) {
+  PubSubLogin(String key, Long args, ObjectOutputStream out) {
     super(key, args);
     this.out = out;
   }
 
-  void register(Map<Long, Set<ObjectOutputStream>> db) {
+  void login(Map<Long, Set<ObjectOutputStream>> db) {
     Set<ObjectOutputStream> streams = db.get(this.getArgs());
     if (streams == null) {
       // https://www.ibm.com/developerworks/library/j-jtp11225/index.html
