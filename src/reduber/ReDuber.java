@@ -105,12 +105,12 @@ public class ReDuber {
 
   // pubsub
 
-  public CompletableFuture<Status> register(
+  public CompletableFuture<Status> pubSubLogin(
     String key,
     Long value,
     ObjectOutputStream out
   ) {
-    return this.submit(new Register(key, value, out));
+    return this.submit(new PubSubLogin(key, value, out));
   }
 
   public CompletableFuture<Status> publishSingle(String key, Serializable value) {
