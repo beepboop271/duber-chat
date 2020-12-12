@@ -31,23 +31,31 @@ class ChatClient {
   private ObjectOutputStream output;
   private boolean running = true; //thread status via boolean
   private String[] names;
+  private JTabbedPane tabbedPane;
 
   
     
   public void go() {
-    // call a method that connects to the server 
-    connect("127.0.0.1",5000);
-
     JFrame window = new JFrame("DuberChat");
+    window.setResizable(false);
+
+    ServerPortPanel serverPortPanel = new ServerPortPanel();
+    LoginPanel loginPanel = new LoginPanel(input,output);
+    
+
+    tabbedPane = new JTabbedPane();
+    tabbedPane.addTab("Login", loginPanel.getPanel());
+    //tabbedPane.addTab(title, component);
+    tabbedPane.addTab("Server", serverPortPanel.getPanel());
+    //tabbedPane.addTab("Create Account", component);
+    //ServerPortPanel serverPortPanel = new ServerPortPanel();
     
     //login screen
-    LoginPanel loginPanel = new LoginPanel(input,output);
-
-    window.add(BorderLayout.CENTER,loginPanel.getPanel());
-    window.setSize(200,200);
+    window.setSize(500,500);
     window.setVisible(true);
+    window.add(tabbedPane);
     boolean login = true;
-    while(login){
+    while(!loginPanel.getLoggedIn()) {
 
     }
 

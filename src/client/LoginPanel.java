@@ -5,6 +5,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 import messages.CommandReply;
 import messages.DoLogin;
@@ -13,64 +14,89 @@ import messages.CommandReply.Status;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.GridLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.concurrent.Flow;
 
 public class LoginPanel extends JPanel implements ActionListener {
   private CommandReply reply;
-  private JButton loginButton;
-  private JTextArea usernameField;  
+  private JButton loginButton, createAccountButton;
+  private JTextField usernameField;
   private JPasswordField passwordField;
-  private JPanel panel;
+  private JPanel westPanel, panel;
+  private FlowLayout layout;
   private ObjectInputStream input; //Stream for network input
   private ObjectOutputStream output;
   private boolean running = true; //thread status via boolean
   private String pass;
-  private JLabel userLabel, passLabel;
+  private boolean loggedIn;
+  private JLabel userLabel, passLabel, errorLabel;
   
   LoginPanel(ObjectInputStream input, ObjectOutputStream output){
     this.input = input;
     this.output = output;
-    usernameField = new JTextArea();
-    passwordField = new JPasswordField();
+    layout = new FlowLayout();
+    usernameField = new JTextField(10);
+    usernameField.setPreferredSize(new Dimension(200,20));
+    passwordField = new JPasswordField(10);
+    passwordField.setPreferredSize(new Dimension(200,20));
     loginButton = new JButton("Login");
+    loginButton.addActionListener(new LoginButtonListener());
+    createAccountButton = new JButton("Create account");
     userLabel = new JLabel("Dubername");
     passLabel = new JLabel("Password");
+    errorLabel = new JLabel("");
+    westPanel = new JPanel();
     panel = new JPanel();
-    panel.setLayout(new GridLayout(0,1));
-    panel.add(userLabel);
-    panel.add(usernameField);
-    panel.add(passLabel);
-    panel.add(passwordField);
+    westPanel.add(userLabel);
+    westPanel.add(usernameField);
+    westPanel.add(passLabel);
+    westPanel.add(passwordField);
+    panel.add(westPanel);
     panel.add(loginButton);
-
+    panel.add(errorLabel);
+    loggedIn = false;
   }
   public JPanel getPanel(){
     return panel;
   }
-  public void actionPerformed(ActionEvent e) {
-    pass = "";
-    for (int i = 0; i < passwordField.getPassword().length; i++){
-      pass += passwordField.getPassword()[i];
-    }
-    synchronized (this.output) {
+  public boolean getLoggedIn(){
+    return loggedIn;
+  }
+  public void setInputOutput(ObjectInputStream input, ObjectOutputStream output){
+    this.input = input;
+    this.output = output;
+  }
+  class LoginButtonListener implements ActionListener {
+    public void actionPerformed(ActionEvent e) {
+      pass = "";
+      for (int i = 0; i < passwordField.getPassword().length; i++){
+        pass += passwordField.getPassword()[i];
+      }
+      synchronized (output) {
+        try {
+          output.writeObject(new DoLogin(usernameField.getText(), pass));
+          output.flush();
+        } catch (IOException error) {
+          System.out.print("Error logging in");
+          error.printStackTrace();
+        }
+      }
       try {
-        this.output.writeObject(new DoLogin(usernameField.getText(), pass));
-        this.output.flush();
-      } catch (IOException error) {
-        System.out.print("Error logging in");
+        reply = (CommandReply)input.readObject();
+        if (reply.getStatus() == Status.OK) {
+          loggedIn = true;
+        } else {
+          errorLabel.setText(reply.getDetailMessage());
+        }
+      } catch (IOException | ClassNotFoundException error) {
+        System.out.print("Error reading info");
         error.printStackTrace();
       }
+      
     }
-    try {
-      reply = (CommandReply)this.input.readObject();
-    } catch (IOException | ClassNotFoundException error) {
-      System.out.print("Error reading info");
-      error.printStackTrace();
-    }
-
-    
   }
-
 }
