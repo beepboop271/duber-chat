@@ -5,12 +5,12 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 
-class Publish extends OperationData<Serializable, ReDuber.Status> {
-  Publish(String key, Serializable args) {
+class PublishMany extends OperationData<Serializable, ReDuber.Status> {
+  PublishMany(String key, Serializable args) {
     super(key, args);
   }
 
-  void publish(
+  void publishMany(
     Map<String, Set<Long>> db,
     Map<Long, Set<ObjectOutputStream>> loggedInUsers,
     ReDuberPubSub pubSub
