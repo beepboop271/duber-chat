@@ -1,0 +1,33 @@
+package reduber;
+
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.util.Map;
+import java.util.Set;
+
+class PublishDirect extends OperationData<Long, ReDuber.Status> {
+  private final Serializable message;
+
+  PublishDirect(Long args, Serializable message) {
+    super("", args);
+    this.message = message;
+  }
+
+  void publishDirect(
+    Map<Long, Set<ObjectOutputStream>> loggedInUsers,
+    ReDuberPubSub pubSub
+  ) {
+    Long sub = this.getArgs();
+    if (sub == null) {
+      this.getResult().complete(ReDuber.Status.OK);
+      return;
+    }
+    Set<ObjectOutputStream> streams = loggedInUsers.get(sub);
+    if (streams != null) {
+      for (ObjectOutputStream stream : streams) {
+        pubSub.submit(this.message, stream);
+      }
+    }
+    this.getResult().complete(ReDuber.Status.OK);
+  }
+}

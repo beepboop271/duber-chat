@@ -111,6 +111,10 @@ public class ReDuber {
     return this.submit(new PubSubLogin(value, out));
   }
 
+  public CompletableFuture<Status> publishDirect(Long recipient, Serializable value) {
+    return this.submit(new PublishDirect(recipient, value));
+  }
+
   public CompletableFuture<Status> publishSingle(String key, Serializable value) {
     return this.submit(new PublishSingle(key, value));
   }

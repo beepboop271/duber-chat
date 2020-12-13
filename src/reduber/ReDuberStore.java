@@ -76,6 +76,8 @@ class ReDuberStore implements Runnable, Serializable {
           ((SetOperation<?, ?>)op).execute(this.setMap);
         } else if (op instanceof PubSubLogin) {
           ((PubSubLogin)op).login(this.loggedInUsers);
+        } else if (op instanceof PublishDirect) {
+          ((PublishDirect)op).publishDirect(this.loggedInUsers, this.pubSub);
         } else {
           Log.warn("Unknown operation", "ReDuberStore", op.getId(), op);
         }
