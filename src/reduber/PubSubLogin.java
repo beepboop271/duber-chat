@@ -6,28 +6,25 @@ import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
 
-class Subscribe extends
-  Operation<Set<ObjectOutputStream>, ObjectOutputStream, ReDuber.Status> {
+class PubSubLogin extends OperationData<Long, ReDuber.Status> {
+  private final ObjectOutputStream out;
 
-  Subscribe(
-    String key,
-    ObjectOutputStream args
-  ) {
+  PubSubLogin(String key, Long args, ObjectOutputStream out) {
     super(key, args);
+    this.out = out;
   }
 
-  @Override
-  void execute(Map<String, Set<ObjectOutputStream>> db) {
-    Set<ObjectOutputStream> subs = db.get(this.getKey());
-    if (subs == null) {
+  void login(Map<Long, Set<ObjectOutputStream>> db) {
+    Set<ObjectOutputStream> streams = db.get(this.getArgs());
+    if (streams == null) {
       // https://www.ibm.com/developerworks/library/j-jtp11225/index.html
       // https://stackoverflow.com/questions/4062919/why-does-exist-weakhashmap-but-absent-weakset
-      subs = Collections.newSetFromMap(
+      streams = Collections.newSetFromMap(
         new WeakHashMap<ObjectOutputStream, Boolean>()
       );
-      db.put(this.getKey(), subs);
+      db.put(this.getArgs(), streams);
     }
-    subs.add(this.getArgs());
+    streams.add(this.out);
     this.getResult().complete(ReDuber.Status.OK);
   }
 }

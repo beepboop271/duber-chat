@@ -16,5 +16,6 @@ SET_REMOVE              long -> Status
 SET_CONTAINS            long -> Status
 SET_GET                 void -> long[]
 
-SUBSCRIBE               ObjectOutputStream -> Status
-PUBLISH                 Serializable -> Status
+REGISTER                long, ObjectOutputStream -> Status
+PUBLISH_SINGLE          Serializable -> Status
+PUBLISH_MANY            Serializable -> Status
