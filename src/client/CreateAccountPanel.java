@@ -8,7 +8,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import messages.CommandReply;
-import messages.DoLogin;
+import messages.CreateAccount;
 import messages.CommandReply.Status;
 
 
@@ -22,9 +22,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.concurrent.Flow;
 
-public class LoginPanel extends JPanel implements ActionListener {
+public class CreateAccountPanel {
   private CommandReply reply;
-  private JButton loginButton;
+  private JButton createAccountButton;
   private JTextField usernameField;
   private JPasswordField passwordField;
   private JPanel westPanel, panel;
@@ -36,7 +36,7 @@ public class LoginPanel extends JPanel implements ActionListener {
   private boolean loggedIn;
   private JLabel userLabel, passLabel, errorLabel;
   
-  LoginPanel(ObjectInputStream input, ObjectOutputStream output){
+  CreateAccountPanel(ObjectInputStream input, ObjectOutputStream output){
     this.input = input;
     this.output = output;
     layout = new FlowLayout();
@@ -44,8 +44,8 @@ public class LoginPanel extends JPanel implements ActionListener {
     usernameField.setPreferredSize(new Dimension(200,20));
     passwordField = new JPasswordField(10);
     passwordField.setPreferredSize(new Dimension(200,20));
-    loginButton = new JButton("Login");
-    loginButton.addActionListener(new LoginButtonListener());
+    createAccountButton = new JButton("Create");
+    createAccountButton.addActionListener(new CreateAccountButtonListener());
     userLabel = new JLabel("Dubername");
     passLabel = new JLabel("Password");
     errorLabel = new JLabel("");
@@ -56,7 +56,7 @@ public class LoginPanel extends JPanel implements ActionListener {
     westPanel.add(passLabel);
     westPanel.add(passwordField);
     panel.add(westPanel);
-    panel.add(loginButton);
+    panel.add(createAccountButton);
     panel.add(errorLabel);
     loggedIn = false;
   }
@@ -70,25 +70,23 @@ public class LoginPanel extends JPanel implements ActionListener {
     this.input = input;
     this.output = output;
   }
-  class LoginButtonListener implements ActionListener {
+  class CreateAccountButtonListener implements ActionListener {
     public void actionPerformed(ActionEvent e) {
-      pass = "";//converts a char[] to String
+      pass = "";
       for (int i = 0; i < passwordField.getPassword().length; i++){
         pass += passwordField.getPassword()[i];
       }
-
-      try{//catchs connection errors
+      try{
         synchronized (output) {
-          try {//catches IOExecptions (error sending object)
-            output.writeObject(new DoLogin(usernameField.getText(), pass));
+          try {
+            output.writeObject(new CreateAccount(usernameField.getText(), pass));
             output.flush();
           } catch (IOException error) {
             errorLabel.setText("Error logging in");
             error.printStackTrace();
           }
         }
-
-        try {//catches errors reading the object
+        try {
           reply = (CommandReply)input.readObject();
           if (reply.getStatus() == Status.OK) {
             loggedIn = true;
@@ -99,10 +97,10 @@ public class LoginPanel extends JPanel implements ActionListener {
           System.out.print("Error reading info");
           error.printStackTrace();
         }
-        
       } catch(NullPointerException error) {
         errorLabel.setText("Error connecting to server");
       }
+      
       
     }
   }

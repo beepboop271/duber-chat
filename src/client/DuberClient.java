@@ -41,22 +41,22 @@ class ChatClient {
 
     ServerPortPanel serverPortPanel = new ServerPortPanel();
     LoginPanel loginPanel = new LoginPanel(input,output);
-    
+    CreateAccountPanel createAccountPanel = new CreateAccountPanel(input, output);
 
     tabbedPane = new JTabbedPane();
     tabbedPane.addTab("Login", loginPanel.getPanel());
-    //tabbedPane.addTab(title, component);
+    tabbedPane.addTab("Create Account", createAccountPanel.getPanel());
     tabbedPane.addTab("Server", serverPortPanel.getPanel());
     //tabbedPane.addTab("Create Account", component);
     //ServerPortPanel serverPortPanel = new ServerPortPanel();
     
     //login screen
-    window.setSize(500,500);
-    window.setVisible(true);
     window.add(tabbedPane);
-    boolean login = true;
+    window.setSize(500,200);
+    window.setVisible(true);
     while(!loginPanel.getLoggedIn()) {
-
+      input = serverPortPanel.
+      loginPanel.
     }
 
     window.setVisible(false);

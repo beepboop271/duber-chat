@@ -19,6 +19,8 @@ public class ServerPortPanel extends JPanel implements ActionListener {
   private JPanel panel, eastPanel, westPanel;
   private JLabel IPLabel, portLabel, errorLabel;
   private Socket mySocket;
+  private ObjectInputStream input;
+  private ObjectOutputStream output;
 
   ServerPortPanel() {
     panel = new JPanel();
@@ -53,9 +55,14 @@ public class ServerPortPanel extends JPanel implements ActionListener {
   public Socket getSocket(){
     return mySocket;
   }
-
+  public ObjectInputStream getInput(){
+    return input;
+  }
+  public ObjectOutputStream getOutput(){
+    return output;
+  }
   public Socket connect(String ip, int port) {
-    System.out.println("Attempting to make a connection..");
+    errorLabel.setText("Attempting to make a connection..");
     try {
       mySocket = new Socket(ip, port); // attempt socket connection (local address). This will wait until a connection is made
       ObjectInputStream input = new ObjectInputStream(mySocket.getInputStream()); // Stream for network input
@@ -63,7 +70,6 @@ public class ServerPortPanel extends JPanel implements ActionListener {
       errorLabel.setText("Connection made.");
     } catch (IOException e) { // connection error occured
       errorLabel.setText("Connection to Server Failed");
-      e.printStackTrace();
     }
     return mySocket;
   }
