@@ -22,7 +22,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.concurrent.Flow;
 
-public class CreateAccountPanel {
+public class CreateAccountPanel extends JPanel implements ActionListener {
   private CommandReply reply;
   private JButton createAccountButton;
   private JTextField usernameField;
@@ -33,7 +33,7 @@ public class CreateAccountPanel {
   private ObjectOutputStream output;
   private boolean running = true; //thread status via boolean
   private String pass;
-  private boolean loggedIn;
+
   private JLabel userLabel, passLabel, errorLabel;
   
   CreateAccountPanel(ObjectInputStream input, ObjectOutputStream output){
@@ -45,7 +45,7 @@ public class CreateAccountPanel {
     passwordField = new JPasswordField(10);
     passwordField.setPreferredSize(new Dimension(200,20));
     createAccountButton = new JButton("Create");
-    createAccountButton.addActionListener(new CreateAccountButtonListener());
+    createAccountButton.addActionListener(this);
     userLabel = new JLabel("Dubername");
     passLabel = new JLabel("Password");
     errorLabel = new JLabel("");
@@ -58,50 +58,50 @@ public class CreateAccountPanel {
     panel.add(westPanel);
     panel.add(createAccountButton);
     panel.add(errorLabel);
-    loggedIn = false;
   }
   public JPanel getPanel(){
     return panel;
   }
-  public boolean getLoggedIn(){
-    return loggedIn;
-  }
+  
   public void setInputOutput(ObjectInputStream input, ObjectOutputStream output){
     this.input = input;
     this.output = output;
   }
-  class CreateAccountButtonListener implements ActionListener {
-    public void actionPerformed(ActionEvent e) {
-      pass = "";
-      for (int i = 0; i < passwordField.getPassword().length; i++){
-        pass += passwordField.getPassword()[i];
-      }
-      try{
-        synchronized (output) {
-          try {
-            output.writeObject(new CreateAccount(usernameField.getText(), pass));
-            output.flush();
-          } catch (IOException error) {
-            errorLabel.setText("Error logging in");
-            error.printStackTrace();
-          }
-        }
+  public void actionPerformed(ActionEvent e) {
+    pass = "";
+    for (int i = 0; i < passwordField.getPassword().length; i++){
+      pass += passwordField.getPassword()[i];
+    }
+    try{
+      synchronized (output) {
+
         try {
-          reply = (CommandReply)input.readObject();
-          if (reply.getStatus() == Status.OK) {
-            loggedIn = true;
-          } else {
-            errorLabel.setText(reply.getDetailMessage());
-          }
-        } catch (IOException | ClassNotFoundException error) {
-          System.out.print("Error reading info");
+          output.writeObject(new CreateAccount(usernameField.getText(), pass));
+          output.flush();
+        } catch (IOException error) {
+          errorLabel.setText("Error creating account");
           error.printStackTrace();
         }
-      } catch(NullPointerException error) {
-        errorLabel.setText("Error connecting to server");
+      }
+
+      try {
+        reply = (CommandReply)input.readObject();
+        if (reply.getStatus() == Status.OK) {
+          errorLabel.setText("Account created! Please login though the login tab.");
+        } else {
+          errorLabel.setText(reply.getDetailMessage());
+        }
+      } catch (IOException | ClassNotFoundException error) {
+        System.out.print("Error reading server response");
+        error.printStackTrace();
       }
       
-      
+    } catch(NullPointerException error) {
+      errorLabel.setText("Error connecting to server");
+      error.printStackTrace();
     }
+    
+    
   }
+
 }

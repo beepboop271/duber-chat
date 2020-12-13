@@ -19,133 +19,65 @@ import javax.swing.*;
 import java.awt.event.*;
 
 class ChatClient {
-  
   private JButton sendButton, clearButton, friendButtonList;
   private JTextField typeField;
-  private JTextArea msgArea, usernameField;  
+  private JTextArea msgArea;
   private JPasswordField passwordField;
-  private JPanel southPanel, westPanel, eastPanel;
+  private JPanel southPanel, westPanel, eastPanel, loginPanel;
   private JPanel southEastPanel, southWestPanel;
-  private Socket mySocket; //socket for connection
+  private Socket mySocket, pubSubSocket; //socket for connection
   private ObjectInputStream input; //Stream for network input
   private ObjectOutputStream output;
   private boolean running = true; //thread status via boolean
   private String[] names;
   private JTabbedPane tabbedPane;
-
-  
+  private ChatInformation chatInfo;
+  private FriendInformation friendInfo;
     
   public void go() {
-    JFrame window = new JFrame("DuberChat");
-    window.setResizable(false);
+    JFrame loginWindow = new JFrame("DuberChat Login");
 
+    loginWindow.setResizable(false);
     ServerPortPanel serverPortPanel = new ServerPortPanel();
+    loginPanel = serverPortPanel.getPanel();
+    loginWindow.add(loginPanel);
+    loginWindow.setSize(500,200);
+    loginWindow.setVisible(true);
+    do{
+      try{
+        Thread.sleep(100);
+      } catch(IllegalArgumentException | InterruptedException e2) {
+      }
+    }while(!serverPortPanel.getConnected());
+    input = serverPortPanel.getInput();
+    output = serverPortPanel.getOutput();
+    loginWindow.remove(loginPanel);
+
+    //login screen
     LoginPanel loginPanel = new LoginPanel(input,output);
     CreateAccountPanel createAccountPanel = new CreateAccountPanel(input, output);
-
     tabbedPane = new JTabbedPane();
     tabbedPane.addTab("Login", loginPanel.getPanel());
     tabbedPane.addTab("Create Account", createAccountPanel.getPanel());
-    tabbedPane.addTab("Server", serverPortPanel.getPanel());
-    //tabbedPane.addTab("Create Account", component);
-    //ServerPortPanel serverPortPanel = new ServerPortPanel();
-    
-    //login screen
-    window.add(tabbedPane);
-    window.setSize(500,200);
-    window.setVisible(true);
+    loginWindow.add(tabbedPane);
     while(!loginPanel.getLoggedIn()) {
-      input = serverPortPanel.
-      loginPanel.
+      try{
+        Thread.sleep(100);
+      } catch(IllegalArgumentException | InterruptedException e2) {
+      }
     }
+    loginWindow.dispose();
 
-    window.setVisible(false);
-    window.setSize(1600,900);
-    //account information retrival
-    names = new String[5];
-    names[0] = "ryan";
-    names[1] = "kevin";
-    names[2] = "shari";
-    names[3] = "candice";
-    names[4] = "viraj";
-    for(int i =0; i < names.length; i++){
-      friendButtonList = new JButton(names[i]);//creates a new botton with user name on it
-      friendButtonList.setMaximumSize(new Dimension(20, 10));
-      //friendButtonList.setSize(new Dimension(200, 100));//sets the size of the button
-      //PreferredSize(new Dimension(200, 50));
-      friendButtonList.addActionListener(new SendButtonListener());//allows the button to be interacted with
-      westPanel.add(friendButtonList);//adds the new buttom to the list on the left
-    }
-    //chat gui
-    westPanel = new JPanel();
-    eastPanel = new JPanel();
-    southPanel = new JPanel();
-    southEastPanel = new JPanel();
-    southWestPanel = new JPanel();
+    JFrame chatWindow = new JFrame("DuberChat");
+    chatWindow.setResizable(false);
+    chatWindow.setSize(1600,900);
     
-    westPanel.setLayout(new GridLayout(0,1));
-    southPanel.setLayout(new GridLayout(0,2));
-    eastPanel.setLayout(new GridLayout(0,1));
-    southEastPanel.setLayout(new GridLayout(0,1));
-    southWestPanel.setLayout(new GridLayout(0,1));
 
-    sendButton = new JButton("SEND");
-    sendButton.addActionListener(new SendButtonListener());
-    clearButton = new JButton("QUIT");
-    clearButton.addActionListener(new QuitButtonListener());
-    
-    JLabel errorLabel = new JLabel("");
-    
-    typeField = new JTextField(10);
-    
-    msgArea = new JTextArea();
-    
-    southWestPanel.add(typeField);
-    southEastPanel.add(sendButton);
-    southEastPanel.add(clearButton);
-    //southPanel.add(errorLabel);
-    southPanel.add(southWestPanel);
-    southPanel.add(southEastPanel);
-    //southPanel.setMaximumSize(new Dimension(900,100));
-    
-    //eastPanel.add(msgArea);
-    //eastPanel.add(southPanel);
-
-    //window.add(BorderLayout.CENTER,eastPanel);
-    window.add(BorderLayout.CENTER,msgArea);
-    window.add(BorderLayout.WEST,westPanel);
-    window.add(BorderLayout.SOUTH,southPanel);
-    
-    
-    window.setSize(1600,900);
-    window.setVisible(true);
-    
     
     // after connecting loop and keep appending[.append()] to the JTextArea
-    
     readMessagesFromServer();
-    window.dispose();
   }
   
-  //Attempts to connect to the server and creates the socket and streams
-  public Socket connect(String ip, int port) { 
-    System.out.println("Attempting to make a connection..");
-    
-    try {
-      mySocket = new Socket(ip, port); //attempt socket connection (local address). This will wait until a connection is made
-
-      ObjectInputStream input = new ObjectInputStream(mySocket.getInputStream()); //Stream for network input
-      ObjectOutputStream output = new ObjectOutputStream(mySocket.getOutputStream()); //Stream for network output
-
-      ObjectInputStream ping = new ObjectInputStream(mySocket.getInputStream());//pings from server to update for messages
-    } catch (IOException e) {  //connection error occured
-      System.out.println("Connection to Server Failed");
-      e.printStackTrace();
-    }
-    
-    System.out.println("Connection made.");
-    return mySocket;
-  }
   public void login(){
     
   }
@@ -186,9 +118,9 @@ class ChatClient {
 
   // QuitButtonListener - Quit the program
     class QuitButtonListener implements ActionListener { 
-     public void actionPerformed(ActionEvent event)  {
-       running=false;
-     }     
+      public void actionPerformed(ActionEvent event)  {
+        running=false;
+      }     
     }
 
   class FriendButtonListener implements ActionListener { 

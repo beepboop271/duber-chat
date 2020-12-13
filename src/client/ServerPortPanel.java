@@ -21,14 +21,16 @@ public class ServerPortPanel extends JPanel implements ActionListener {
   private Socket mySocket;
   private ObjectInputStream input;
   private ObjectOutputStream output;
+  private boolean connected;
 
   ServerPortPanel() {
+    connected = false;
     panel = new JPanel();
     westPanel =  new JPanel();
     connectButton = new JButton("Connect");
-    connectButton.addActionListener(new ConnectButtonListener());
-    IPField = new JTextField("127.0.0.1",10);
-    portField = new JTextField("5000", 10);
+    connectButton.addActionListener(this);
+    IPField = new JTextField("174.119.134.120",10);
+    portField = new JTextField("41047", 10);
     IPLabel = new JLabel("IP Address:");
     portLabel = new JLabel("Port:");
     errorLabel = new JLabel("");
@@ -39,16 +41,10 @@ public class ServerPortPanel extends JPanel implements ActionListener {
     panel.add(westPanel);
     panel.add(connectButton);
     panel.add(errorLabel);
-    //auto connects
-    int port;
-    try {
-      port = Integer.parseInt(portField.getText());
-      connect(IPField.getText(), port);
-    } catch (NumberFormatException error) {
-      errorLabel.setText("Port was not a number");
-    }
   }
-
+  public boolean getConnected() {
+    return connected;
+  }
   public JPanel getPanel() {
     return panel;
   }
@@ -65,25 +61,30 @@ public class ServerPortPanel extends JPanel implements ActionListener {
     errorLabel.setText("Attempting to make a connection..");
     try {
       mySocket = new Socket(ip, port); // attempt socket connection (local address). This will wait until a connection is made
-      ObjectInputStream input = new ObjectInputStream(mySocket.getInputStream()); // Stream for network input
-      ObjectOutputStream output = new ObjectOutputStream(mySocket.getOutputStream()); // Stream for network output
+      input = new ObjectInputStream(mySocket.getInputStream()); // Stream for network input
+      output = new ObjectOutputStream(mySocket.getOutputStream()); // Stream for network output
       errorLabel.setText("Connection made.");
+      
+      try{
+      Thread.sleep(3000);
+      } catch(IllegalArgumentException | InterruptedException e2) {
+      }
+      
+      connected = true;
     } catch (IOException e) { // connection error occured
       errorLabel.setText("Connection to Server Failed");
     }
     return mySocket;
   }
-
-  class ConnectButtonListener implements ActionListener {
-    public void actionPerformed(ActionEvent e) {
-      int port;
-      try {
-        port = Integer.parseInt(portField.getText());
-        connect(IPField.getText(), port);
-      } catch (NumberFormatException error) {
-        errorLabel.setText("Port was not a number");
-      }
+  public void actionPerformed(ActionEvent e) {
+    int port;
+    try {
+      port = Integer.parseInt(portField.getText());
+      connect(IPField.getText(), port);
+    } catch (NumberFormatException error) {
+      errorLabel.setText("Port was not a number");
     }
   }
+  
 }
 

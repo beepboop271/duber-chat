@@ -45,7 +45,7 @@ public class LoginPanel extends JPanel implements ActionListener {
     passwordField = new JPasswordField(10);
     passwordField.setPreferredSize(new Dimension(200,20));
     loginButton = new JButton("Login");
-    loginButton.addActionListener(new LoginButtonListener());
+    loginButton.addActionListener(this);
     userLabel = new JLabel("Dubername");
     passLabel = new JLabel("Password");
     errorLabel = new JLabel("");
@@ -70,40 +70,39 @@ public class LoginPanel extends JPanel implements ActionListener {
     this.input = input;
     this.output = output;
   }
-  class LoginButtonListener implements ActionListener {
-    public void actionPerformed(ActionEvent e) {
-      pass = "";//converts a char[] to String
-      for (int i = 0; i < passwordField.getPassword().length; i++){
-        pass += passwordField.getPassword()[i];
-      }
+  public void actionPerformed(ActionEvent e) {
+    pass = "";//converts a char[] to String
+    for (int i = 0; i < passwordField.getPassword().length; i++){
+      pass += passwordField.getPassword()[i];
+    }
 
-      try{//catchs connection errors
-        synchronized (output) {
-          try {//catches IOExecptions (error sending object)
-            output.writeObject(new DoLogin(usernameField.getText(), pass));
-            output.flush();
-          } catch (IOException error) {
-            errorLabel.setText("Error logging in");
-            error.printStackTrace();
-          }
-        }
-
-        try {//catches errors reading the object
-          reply = (CommandReply)input.readObject();
-          if (reply.getStatus() == Status.OK) {
-            loggedIn = true;
-          } else {
-            errorLabel.setText(reply.getDetailMessage());
-          }
-        } catch (IOException | ClassNotFoundException error) {
-          System.out.print("Error reading info");
+    try{//catchs connection errors
+      synchronized (output) {
+        try {//catches IOExecptions (error sending object)
+          output.writeObject(new DoLogin(usernameField.getText(), pass));
+          output.flush();
+        } catch (IOException error) {
+          errorLabel.setText("Error logging in");
           error.printStackTrace();
         }
-        
-      } catch(NullPointerException error) {
-        errorLabel.setText("Error connecting to server");
+      }
+
+      try {//catches errors reading the object
+        reply = (CommandReply)input.readObject();
+        if (reply.getStatus() == Status.OK) {
+          loggedIn = true;
+        } else {
+          errorLabel.setText(reply.getDetailMessage());
+        }
+      } catch (IOException | ClassNotFoundException error) {
+        System.out.print("Error reading server response");
+        error.printStackTrace();
       }
       
+    } catch(NullPointerException error) {
+      errorLabel.setText("Error connecting to server");
     }
+    
   }
+  
 }
