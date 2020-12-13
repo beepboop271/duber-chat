@@ -26,8 +26,7 @@ public class ReDuber {
 
   public ReDuber() {
     this.store = new ReDuberStore(1024, 10);
-    Thread store = new Thread(this.store);
-    store.start();
+    new Thread(this.store).start();
   }
 
   private <T> CompletableFuture<T> submit(OperationData<?, T> op) {
@@ -105,12 +104,8 @@ public class ReDuber {
 
   // pubsub
 
-  public CompletableFuture<Status> pubSubLogin(
-    String key,
-    Long value,
-    ObjectOutputStream out
-  ) {
-    return this.submit(new PubSubLogin(key, value, out));
+  public CompletableFuture<Status> pubSubLogin(Long value, ObjectOutputStream out) {
+    return this.submit(new PubSubLogin(value, out));
   }
 
   public CompletableFuture<Status> publishSingle(String key, Serializable value) {

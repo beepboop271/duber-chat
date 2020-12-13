@@ -9,8 +9,8 @@ import java.util.WeakHashMap;
 class PubSubLogin extends OperationData<Long, ReDuber.Status> {
   private final ObjectOutputStream out;
 
-  PubSubLogin(String key, Long args, ObjectOutputStream out) {
-    super(key, args);
+  PubSubLogin(Long args, ObjectOutputStream out) {
+    super("", args);
     this.out = out;
   }
 
