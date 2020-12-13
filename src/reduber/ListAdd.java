@@ -2,6 +2,8 @@ package reduber;
 
 import java.util.Map;
 
+import logger.Log;
+
 class ListAdd extends ListOperation<Long, ReDuber.Status> {
   ListAdd(String key, Long args) {
     super(key, args);
@@ -17,6 +19,7 @@ class ListAdd extends ListOperation<Long, ReDuber.Status> {
       }
       list.add(this.getArgs());
     } catch (Exception e) {
+      Log.warn("Failed to execute", "ReDuberStore", this.getId(), this, e);
       this.getResult().complete(ReDuber.Status.ERROR);
       return;
     }

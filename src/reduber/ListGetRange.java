@@ -2,6 +2,8 @@ package reduber;
 
 import java.util.Map;
 
+import logger.Log;
+
 class ListGetRange extends ListOperation<Long[], Long[]> {
   ListGetRange(String key, Long[] args) {
     super(key, args);
@@ -20,6 +22,7 @@ class ListGetRange extends ListOperation<Long[], Long[]> {
         list.getRange(args[0], args[1].intValue())
       );
     } catch (Exception e) {
+      Log.warn("Failed to execute", "ReDuberStore", this.getId(), this, e);
       this.getResult().complete(null);
     }
   }

@@ -4,6 +4,8 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.concurrent.CompletableFuture;
 
+import logger.Log;
+
 /**
  * Thread-safe interface for the ReDuber data store.
  * <s>Redis: REmote DIctionary Server</s> ReDuber: REmote
@@ -25,9 +27,9 @@ public class ReDuber {
   }
 
   public ReDuber() {
+    Log.info("Starting ReDuber", "ReDuber");
     this.store = new ReDuberStore(1024, 10);
-    Thread store = new Thread(this.store);
-    store.start();
+    new Thread(this.store).start();
   }
 
   private <T> CompletableFuture<T> submit(OperationData<?, T> op) {
@@ -105,12 +107,12 @@ public class ReDuber {
 
   // pubsub
 
-  public CompletableFuture<Status> pubSubLogin(
-    String key,
-    Long value,
-    ObjectOutputStream out
-  ) {
-    return this.submit(new PubSubLogin(key, value, out));
+  public CompletableFuture<Status> pubSubLogin(Long value, ObjectOutputStream out) {
+    return this.submit(new PubSubLogin(value, out));
+  }
+
+  public CompletableFuture<Status> publishDirect(Long recipient, Serializable value) {
+    return this.submit(new PublishDirect(recipient, value));
   }
 
   public CompletableFuture<Status> publishSingle(String key, Serializable value) {

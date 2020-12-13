@@ -2,6 +2,8 @@ package reduber;
 
 import java.util.Map;
 
+import logger.Log;
+
 class ListRemove extends ListOperation<Long, ReDuber.Status> {
   ListRemove(String key, Long args) {
     super(key, args);
@@ -17,6 +19,7 @@ class ListRemove extends ListOperation<Long, ReDuber.Status> {
     try {
       list.remove(this.getArgs());
     } catch (Exception e) {
+      Log.warn("Failed to execute", "ReDuberStore", this.getId(), this, e);
       this.getResult().complete(ReDuber.Status.ERROR);
       return;
     }

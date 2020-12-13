@@ -14,7 +14,7 @@ public class Log {
   private Log() {
   }
 
-  private static void log(String level, String source, String message) {
+  private static void log(String level, String message, String source) {
     Log.out.println(
       level
       + " " + Instant.now()
@@ -23,7 +23,7 @@ public class Log {
     );
   }
 
-  private static void log(String level, String source, String message, Object object) {
+  private static void log(String level, String message, String source, Object object) {
     Log.out.println(
       level
       + " " + Instant.now()
@@ -33,21 +33,20 @@ public class Log {
     );
   }
 
-  private static void log(String level, String source, String message, Exception error) {
+  private static void log(String level, String message, String source, Exception error) {
     Log.out.println(
       level
       + " " + Instant.now()
       + " " + source
-      + " '" + message
-      + "'"
+      + " '" + message + "'"
     );
     error.printStackTrace(out);
   }
   
   private static void log(
     String level,
-    String source,
     String message,
+    String source,
     Object object,
     Exception error
   ) {
@@ -61,114 +60,322 @@ public class Log {
     error.printStackTrace(out);
   }
 
-  public static void info(String source, String message) {
+  private static void log(
+    String level,
+    String message,
+    String source,
+    long id
+  ) {
+    Log.out.println(
+      level
+      + " " + Instant.now()
+      + " " + source + "-" + id
+      + " '" + message + "'"
+    );
+  }
+
+  private static void log(
+    String level,
+    String message,
+    String source,
+    long id,
+    Object object
+  ) {
+    Log.out.println(
+      level
+      + " " + Instant.now()
+      + " " + source + "-" + id
+      + " '" + message
+      + "' " + object
+    );
+  }
+
+  private static void log(
+    String level,
+    String message,
+    String source,
+    long id,
+    Exception error
+  ) {
+    Log.out.println(
+      level
+      + " " + Instant.now()
+      + " " + source + "-" + id
+      + " '" + message + "'"
+    );
+    error.printStackTrace(out);
+  }
+
+  private static void log(
+    String level,
+    String message,
+    String source,
+    long id,
+    Object object,
+    Exception error
+  ) {
+    Log.out.println(
+      level
+      + " " + Instant.now()
+      + " " + source + "-" + id
+      + " '" + message
+      + "' " + object
+    );
+    error.printStackTrace(out);
+  }
+
+  public static void info(String message, String source) {
     if (Log.USE_COLOURS) {
-      log(Log.INFO_COLOUR+"INFO", source, message);
+      log(Log.INFO_COLOUR+"INFO", message, source);
     } else {
-      log("INFO", source, message);
+      log("INFO", message, source);
     }
   }
 
-  public static void info(String source, String message, Object object) {
+  public static void info(String message, String source, Object object) {
     if (Log.USE_COLOURS) {
-      log(Log.INFO_COLOUR+"INFO", source, message, object);
+      log(Log.INFO_COLOUR+"INFO", message, source, object);
     } else {
-      log("INFO", source, message, object);
+      log("INFO", message, source, object);
     }
   }
 
-  public static void info(String source, String message, Exception error) {
+  public static void info(String message, String source, Exception error) {
     if (Log.USE_COLOURS) {
-      log(Log.INFO_COLOUR+"INFO", source, message, error);
+      log(Log.INFO_COLOUR+"INFO", message, source, error);
     } else {
-      log("INFO", source, message, error);
+      log("INFO", message, source, error);
     }
   }
 
   public static void info(
-    String source,
     String message,
+    String source,
     Object object,
     Exception error
   ) {
     if (Log.USE_COLOURS) {
-      log(Log.INFO_COLOUR+"INFO", source, message, object, error);
+      log(Log.INFO_COLOUR+"INFO", message, source, object, error);
     } else {
-      log("INFO", source, message, object, error);
+      log("INFO", message, source, object, error);
     }
   }
 
-  public static void warn(String source, String message) {
+  public static void info(String message, String source, long id) {
     if (Log.USE_COLOURS) {
-      log(Log.WARN_COLOUR+"WARN", source, message);
+      log(Log.INFO_COLOUR+"INFO", message, source, id);
     } else {
-      log("WARN", source, message);
+      log("INFO", message, source, id);
     }
   }
 
-  public static void warn(String source, String message, Object object) {
+  public static void info(
+    String message,  
+    String source,
+    long id,
+    Object object
+  ) {
     if (Log.USE_COLOURS) {
-      log(Log.WARN_COLOUR+"WARN", source, message, object);
+      log(Log.INFO_COLOUR+"INFO", message, source, id, object);
     } else {
-      log("WARN", source, message, object);
+      log("INFO", message, source, id, object);
     }
   }
 
-  public static void warn(String source, String message, Exception error) {
+  public static void info(
+    String message,  
+    String source,
+    long id,
+    Exception error
+  ) {
     if (Log.USE_COLOURS) {
-      log(Log.WARN_COLOUR+"WARN", source, message, error);
+      log(Log.INFO_COLOUR+"INFO", message, source, id, error);
     } else {
-      log("WARN", source, message, error);
+      log("INFO", message, source, id, error);
+    }
+  }
+
+  public static void info(
+    String message,  
+    String source,
+    long id,
+    Object object,
+    Exception error
+  ) {
+    if (Log.USE_COLOURS) {
+      log(Log.INFO_COLOUR+"INFO", message, source, id, object, error);
+    } else {
+      log("INFO", message, source, id, object, error);
+    }
+  }
+
+  public static void warn(String message, String source) {
+    if (Log.USE_COLOURS) {
+      log(Log.WARN_COLOUR+"WARN", message, source);
+    } else {
+      log("WARN", message, source);
+    }
+  }
+
+  public static void warn(String message, String source, Object object) {
+    if (Log.USE_COLOURS) {
+      log(Log.WARN_COLOUR+"WARN", message, source, object);
+    } else {
+      log("WARN", message, source, object);
+    }
+  }
+
+  public static void warn(String message, String source, Exception error) {
+    if (Log.USE_COLOURS) {
+      log(Log.WARN_COLOUR+"WARN", message, source, error);
+    } else {
+      log("WARN", message, source, error);
     }
   }
 
   public static void warn(
-    String source,
     String message,
+    String source,
     Object object,
     Exception error
   ) {
     if (Log.USE_COLOURS) {
-      log(Log.WARN_COLOUR+"WARN", source, message, object, error);
+      log(Log.WARN_COLOUR+"WARN", message, source, object, error);
     } else {
-      log("WARN", source, message, object, error);
+      log("WARN", message, source, object, error);
     }
   }
 
-  public static void error(String source, String message) {
+  public static void warn(String message, String source, long id) {
     if (Log.USE_COLOURS) {
-      log(Log.ERROR_COLOUR+"ERROR", source, message);
+      log(Log.WARN_COLOUR+"WARN", message, source, id);
     } else {
-      log("ERROR", source, message);
+      log("WARN", message, source, id);
     }
   }
 
-  public static void error(String source, String message, Object object) {
+  public static void warn(
+    String message,  
+    String source,
+    long id,
+    Object object
+  ) {
     if (Log.USE_COLOURS) {
-      log(Log.ERROR_COLOUR+"ERROR", source, message, object);
+      log(Log.WARN_COLOUR+"WARN", message, source, id, object);
     } else {
-      log("ERROR", source, message, object);
+      log("WARN", message, source, id, object);
     }
   }
 
-  public static void error(String source, String message, Exception error) {
+  public static void warn(
+    String message,  
+    String source,
+    long id,
+    Exception error
+  ) {
     if (Log.USE_COLOURS) {
-      log(Log.ERROR_COLOUR+"ERROR", source, message, error);
+      log(Log.WARN_COLOUR+"WARN", message, source, id, error);
     } else {
-      log("ERROR", source, message, error);
+      log("WARN", message, source, id, error);
+    }
+  }
+
+  public static void warn(
+    String message,  
+    String source,
+    long id,
+    Object object,
+    Exception error
+  ) {
+    if (Log.USE_COLOURS) {
+      log(Log.WARN_COLOUR+"WARN", message, source, id, object, error);
+    } else {
+      log("WARN", message, source, id, object, error);
+    }
+  }
+
+  public static void error(String message, String source) {
+    if (Log.USE_COLOURS) {
+      log(Log.ERROR_COLOUR+"ERROR", message, source);
+    } else {
+      log("ERROR", message, source);
+    }
+  }
+
+  public static void error(String message, String source, Object object) {
+    if (Log.USE_COLOURS) {
+      log(Log.ERROR_COLOUR+"ERROR", message, source, object);
+    } else {
+      log("ERROR", message, source, object);
+    }
+  }
+
+  public static void error(String message, String source, Exception error) {
+    if (Log.USE_COLOURS) {
+      log(Log.ERROR_COLOUR+"ERROR", message, source, error);
+    } else {
+      log("ERROR", message, source, error);
     }
   }
 
   public static void error(
-    String source,
     String message,
+    String source,
     Object object,
     Exception error
   ) {
     if (Log.USE_COLOURS) {
-      log(Log.ERROR_COLOUR+"ERROR", source, message, object, error);
+      log(Log.ERROR_COLOUR+"ERROR", message, source, object, error);
     } else {
-      log("ERROR", source, message, object, error);
+      log("ERROR", message, source, object, error);
+    }
+  }
+  
+  public static void error(String message, String source, long id) {
+    if (Log.USE_COLOURS) {
+      log(Log.ERROR_COLOUR+"ERROR", message, source, id);
+    } else {
+      log("ERROR", message, source, id);
+    }
+  }
+
+  public static void error(
+    String message,  
+    String source,
+    long id,
+    Object object
+  ) {
+    if (Log.USE_COLOURS) {
+      log(Log.ERROR_COLOUR+"ERROR", message, source, id, object);
+    } else {
+      log("ERROR", message, source, id, object);
+    }
+  }
+
+  public static void error(
+    String message,  
+    String source,
+    long id,
+    Exception error
+  ) {
+    if (Log.USE_COLOURS) {
+      log(Log.ERROR_COLOUR+"ERROR", message, source, id, error);
+    } else {
+      log("ERROR", message, source, id, error);
+    }
+  }
+
+  public static void error(
+    String message,  
+    String source,
+    long id,
+    Object object,
+    Exception error
+  ) {
+    if (Log.USE_COLOURS) {
+      log(Log.ERROR_COLOUR+"ERROR", message, source, id, object, error);
+    } else {
+      log("ERROR", message, source, id, object, error);
     }
   }
 }
