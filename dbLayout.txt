@@ -1,0 +1,20 @@
+# USERS
+users.{username}.password : String
+users.{username}.id : Long
+
+users.{userId}.username : String
+users.{userId}.status : String   # ONLINE | AWAY | DONOTDISTURB | OFFLINE
+users.{userId}.message : String  # status message
+users.{userId}.friends : Set
+users.{userId}.outgoingFriendRequests : Set
+users.{userId}.incomingFriendRequests : Set
+users.{userId}.chats : Set
+
+# FRIEND REQUESTS
+friendRequests.{friendRequestId}.sourceUserId : Long
+friendRequests.{friendRequestId}.targetUserId : Long
+
+# CHATS
+chats.{chatId}.type : String
+chats.{chatId}.members : Set
+chats.{chatId}.messages : List

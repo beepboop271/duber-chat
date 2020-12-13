@@ -211,13 +211,15 @@ setup: [
 ],
 serverOnly: [
   {
-    action: "FRIEND_REQUEST_RECEIVED";
+    action: "FRIEND_REQUEST_CREATED";
     friendRequestId: long;
     sourceUsername: string;
+    targetUsername: string;
   },
   {
     action: "FRIEND_REQUEST_FAILED";
     friendRequestId: long;
+    sourceUsername: string;
     targetUsername: string;
   },
   {

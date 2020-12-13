@@ -1,5 +1,8 @@
 package messages;
 
+import reduber.ReDuber;
+import server.ConnectedUser;
+
 public class CreateMessage extends CommandMessage {
   private static final long serialVersionUID = 0L;
 
@@ -9,5 +12,12 @@ public class CreateMessage extends CommandMessage {
   public CreateMessage(long chatId, String message) {
     this.chatId = chatId;
     this.message = message;
+  }
+
+  @Override
+  public CommandReply execute(ReDuber db, ConnectedUser user)
+    throws InterruptedException {
+    // TODO Auto-generated method stub
+    return null;
   }
 }
