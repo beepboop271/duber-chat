@@ -47,6 +47,14 @@ public class ReDuber {
     return this.submit(new StringGet(key));
   }
 
+  public CompletableFuture<Status> longRemove(String key) {
+    return this.submit(new LongRemove(key));
+  }
+
+  public CompletableFuture<Status> stringRemove(String key) {
+    return this.submit(new StringRemove(key));
+  }
+
   public CompletableFuture<Status> set(String key, long value) {
     return this.submit(new LongSet(key, value));
   }
