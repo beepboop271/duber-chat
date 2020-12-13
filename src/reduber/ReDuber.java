@@ -4,6 +4,8 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.concurrent.CompletableFuture;
 
+import logger.Log;
+
 /**
  * Thread-safe interface for the ReDuber data store.
  * <s>Redis: REmote DIctionary Server</s> ReDuber: REmote
@@ -25,6 +27,7 @@ public class ReDuber {
   }
 
   public ReDuber() {
+    Log.info("Starting ReDuber", "ReDuber");
     this.store = new ReDuberStore(1024, 10);
     new Thread(this.store).start();
   }

@@ -6,10 +6,13 @@ import java.io.Serializable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import logger.Log;
+
 class ReDuberPubSub {
   private ExecutorService pool;
 
   ReDuberPubSub(int numThreads) {
+    Log.info("Starting ReDuberPubSub", "ReDuberPubSub");
     this.pool = Executors.newFixedThreadPool(numThreads);
   }
 
@@ -27,13 +30,18 @@ class ReDuberPubSub {
     }
 
     @Override
+    public String toString() {
+      return "PublishJob[message="+message+", out="+out+"]";
+    }
+
+    @Override
     public void run() {
       synchronized (this.out) {
         try {
           this.out.writeObject(this.message);
           this.out.flush();
         } catch (IOException e) {
-          e.printStackTrace();
+          Log.warn("Failed to deliver message", "ReDuberPubSub", this, e);
         }
       }
     }
