@@ -19,7 +19,10 @@ public class DoFriendReject extends CommandMessage {
   @Override
   public CommandReply execute(ReDuber db, ConnectedUser user)
     throws InterruptedException {
-    
+    if (!user.isLoggedIn()) {
+      return CommandReply.noPermission("Not logged in");
+    }
+
     try {
       Long sourceUserId = db.longGet("friendRequests."+this.friendRequestId+".sourceUserId").get();
       if (sourceUserId == null) {

@@ -22,6 +22,10 @@ public class CreateFriendRequest extends CommandMessage {
     ReDuber db,
     ConnectedUser user
   ) throws InterruptedException {
+    if (!user.isLoggedIn()) {
+      return CommandReply.noPermission("Not logged in");
+    }
+
     try {
       Long targetUserId = db.longGet("users."+this.targetUsername+".id").get();
       if (targetUserId == null) {

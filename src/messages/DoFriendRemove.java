@@ -19,6 +19,9 @@ public class DoFriendRemove extends CommandMessage {
   @Override
   public CommandReply execute(ReDuber db, ConnectedUser user)
     throws InterruptedException {
+    if (!user.isLoggedIn()) {
+      return CommandReply.noPermission("Not logged in");
+    }
 
     try {
       ReDuber.Status status = db.setContains(

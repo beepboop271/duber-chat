@@ -16,6 +16,9 @@ public class CreateDm extends CommandMessage {
   public CommandReply execute(ReDuber db, ConnectedUser user)
     throws InterruptedException {
     // TODO Auto-generated method stub
+    if (!user.isLoggedIn()) {
+      return CommandReply.noPermission("Not logged in");
+    }
     return null;
   }
 }
