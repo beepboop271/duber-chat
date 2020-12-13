@@ -85,6 +85,10 @@ public class ReDuber {
     return this.submit(new ListGet(key));
   }
 
+  public CompletableFuture<Long[]> listGetLast(String key, int amount) {
+    return this.submit(new ListGetLast(key, (long)amount));
+  }
+
   public CompletableFuture<Long[]> listGetRange(
     String key,
     long startValue,
