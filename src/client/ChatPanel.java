@@ -21,7 +21,7 @@ public class ChatPanel extends JPanel implements ActionListener {
   private JButton sendButton;
   private JTextField typeField;
   private JTextArea msgArea;
-  private JPanel friendPanel, chatPanel;
+  private JPanel mainPanel, friendPanel, chatPanel;
   private FriendInformation friendInfo;
   private HashMap<String, JPanel> map;
   private ObjectInputStream input; //Stream for network input
@@ -31,6 +31,7 @@ public class ChatPanel extends JPanel implements ActionListener {
     this.input = input;
     this.output = output;
     this.friendInfo = friendInfo;
+    mainPanel = new JPanel();
     map = new HashMap<>();
     friendPanel = new JPanel();
     friendListButton = new JButton[friendInfo.getFriendUsernames().length];
@@ -41,15 +42,19 @@ public class ChatPanel extends JPanel implements ActionListener {
       friendPanel.add(friendListButton[i]);
     }
     chatPanel = new JPanel();
+    mainPanel.add(friendPanel);
+    mainPanel.add(chatPanel);
   }
-
+  public JPanel getPanel(){
+    return mainPanel;
+  }
   public JPanel createChatPanel(FriendInformation friendInfo, int i){
     JPanel panel = new JPanel();
     JLabel chat = new JLabel();
     String chatString ="";
     ChatInformation chatInfo = friendInfo.getChatInfo()[i];
     for (int j = 0; j < chatInfo.getMessages().length; j++){
-      chatString += chatInfo.getAuthorIDs()[j] + ":" + chatInfo.getMessages()[i] + "\n";//adds the author, a semicolon and their message. it then adds a newline
+      chatString += chatInfo.getUserIDs()[j] + ":" + chatInfo.getMessages()[i] + "\n";//adds the author, a semicolon and their message. it then adds a newline
     }
     chat.setText(chatString);
     panel.add(chat);

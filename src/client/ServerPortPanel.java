@@ -64,12 +64,10 @@ public class ServerPortPanel extends JPanel implements ActionListener {
       input = new ObjectInputStream(mySocket.getInputStream()); // Stream for network input
       output = new ObjectOutputStream(mySocket.getOutputStream()); // Stream for network output
       errorLabel.setText("Connection made.");
-      
       try{
       Thread.sleep(3000);
       } catch(IllegalArgumentException | InterruptedException e2) {
       }
-      
       connected = true;
     } catch (IOException e) { // connection error occured
       errorLabel.setText("Connection to Server Failed");

@@ -71,7 +71,20 @@ class ChatClient {
     JFrame chatWindow = new JFrame("DuberChat");
     chatWindow.setResizable(false);
     chatWindow.setSize(1600,900);
-    
+    long[] messageIDs = {1,2,3,4,5};
+    String[] authorIDs = {"john","john","john","john","john"};
+    long[] times = {10,20,30,40};
+    String[] messages = {"hi", "its me", "john", "aaaaa", "idk if this works"};
+    chatInfo = new ChatInformation(messageIDs, authorIDs, times, messages);
+    ChatInformation[] chatInfoArray = {chatInfo};
+    long[] friendIDs = {1};
+    String[] friendUsernames = {"john"};
+    String[] friendStatuses = {"online"};
+    long[] chatIDs = {1};
+    friendInfo = new FriendInformation(friendIDs, friendUsernames, friendStatuses, chatIDs, chatInfoArray);
+    ChatPanel chatPanel = new ChatPanel(friendInfo, input, output);
+    chatWindow.add(chatPanel.getPanel());
+    chatWindow.setVisible(true);
 
     
     // after connecting loop and keep appending[.append()] to the JTextArea
