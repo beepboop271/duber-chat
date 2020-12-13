@@ -22,6 +22,8 @@ public class ServerPortPanel extends JPanel implements ActionListener {
   private ObjectInputStream input;
   private ObjectOutputStream output;
   private boolean connected;
+  private String ip;
+  private int port;
 
   ServerPortPanel() {
     connected = false;
@@ -29,8 +31,8 @@ public class ServerPortPanel extends JPanel implements ActionListener {
     westPanel =  new JPanel();
     connectButton = new JButton("Connect");
     connectButton.addActionListener(this);
-    IPField = new JTextField("174.119.134.120",10);
-    portField = new JTextField("41047", 10);
+    IPField = new JTextField("",10);
+    portField = new JTextField("", 10);
     IPLabel = new JLabel("IP Address:");
     portLabel = new JLabel("Port:");
     errorLabel = new JLabel("");
@@ -57,6 +59,12 @@ public class ServerPortPanel extends JPanel implements ActionListener {
   public ObjectOutputStream getOutput(){
     return output;
   }
+  public int getPort(){
+    return port;
+  }
+  public String getIP(){
+    return ip;
+  }
   public Socket connect(String ip, int port) {
     errorLabel.setText("Attempting to make a connection..");
     try {
@@ -64,6 +72,8 @@ public class ServerPortPanel extends JPanel implements ActionListener {
       input = new ObjectInputStream(mySocket.getInputStream()); // Stream for network input
       output = new ObjectOutputStream(mySocket.getOutputStream()); // Stream for network output
       errorLabel.setText("Connection made.");
+      this.ip = ip;
+      this.port = port;
       try{
       Thread.sleep(3000);
       } catch(IllegalArgumentException | InterruptedException e2) {

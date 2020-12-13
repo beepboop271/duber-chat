@@ -32,9 +32,12 @@ class ChatClient {
   private String[] names;
   private JTabbedPane tabbedPane;
   private ChatInformation chatInfo;
-  private FriendInformation friendInfo;
+  private ChatList chatList;
     
   public void go() {
+
+    /*
+
     JFrame loginWindow = new JFrame("DuberChat Login");
 
     loginWindow.setResizable(false);
@@ -68,6 +71,8 @@ class ChatClient {
     }
     loginWindow.dispose();
 
+    */
+
     JFrame chatWindow = new JFrame("DuberChat");
     chatWindow.setResizable(false);
     chatWindow.setSize(1600,900);
@@ -79,16 +84,18 @@ class ChatClient {
     ChatInformation[] chatInfoArray = {chatInfo};
     long[] friendIDs = {1};
     String[] friendUsernames = {"john"};
-    String[] friendStatuses = {"online"};
+    String[] chatNames = {"online"};
     long[] chatIDs = {1};
-    friendInfo = new FriendInformation(friendIDs, friendUsernames, friendStatuses, chatIDs, chatInfoArray);
-    ChatPanel chatPanel = new ChatPanel(friendInfo, input, output);
+    chatList = new ChatList(friendIDs, friendUsernames, chatNames, chatIDs, chatInfoArray);
+    ChatPanel chatPanel = new ChatPanel(chatList);
+    
     chatWindow.add(chatPanel.getPanel());
     chatWindow.setVisible(true);
 
     
     // after connecting loop and keep appending[.append()] to the JTextArea
     readMessagesFromServer();
+
   }
   
   public void login(){

@@ -1,15 +1,15 @@
 package client;
 
-public class FriendInformation {
+public class ChatList {
   private long[] friendIDs;
   private String[] friendUsernames;
-  private String[] friendStatuses;
+  private String[] chatNames;
   private long[] chatIDs;
   private ChatInformation[] chatInfo;
-  FriendInformation(long[] friendIDs, String[] friendUsernames, String[] friendStatuses, long[] chatIDs, ChatInformation[] chatInfo){
+  ChatList(long[] friendIDs, String[] friendUsernames, String[] chatNames, long[] chatIDs, ChatInformation[] chatInfo){
     this.friendIDs = friendIDs;
     this.friendUsernames = friendUsernames;
-    this.friendStatuses = friendStatuses;
+    this.chatNames = chatNames;
     this.chatIDs = chatIDs;
     this.chatInfo = chatInfo;
   }
@@ -19,8 +19,8 @@ public class FriendInformation {
   public String[] getFriendUsernames(){
     return friendUsernames;
   }
-  public String[] getFriendStatuses(){
-    return friendStatuses;
+  public String[] getChatNames(){
+    return chatNames;
   }
   public long[] getChatIDs(){
     return chatIDs;
