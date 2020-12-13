@@ -75,27 +75,49 @@ class ChatClient {
 
     JFrame chatWindow = new JFrame("DuberChat");
     chatWindow.setResizable(false);
-    chatWindow.setSize(1600,900);
+    chatWindow.setSize(800,450);
+
+    //import user friends data
     long[] messageIDs = {1,2,3,4,5};
     String[] authorIDs = {"john","john","john","john","john"};
-    long[] times = {10,20,30,40};
+    long[] times = {10,20,30,40,50};
     String[] messages = {"hi", "its me", "john", "aaaaa", "idk if this works"};
     chatInfo = new ChatInformation(messageIDs, authorIDs, times, messages);
     ChatInformation[] chatInfoArray = {chatInfo};
-    long[] friendIDs = {1};
-    String[] friendUsernames = {"john"};
-    String[] chatNames = {"online"};
+    String[] chatNames = {"john"};
     long[] chatIDs = {1};
-    chatList = new ChatList(friendIDs, friendUsernames, chatNames, chatIDs, chatInfoArray);
+    chatList = new ChatList(chatNames, chatIDs, chatInfoArray);
     ChatPanel chatPanel = new ChatPanel(chatList);
     
     chatWindow.add(chatPanel.getPanel());
     chatWindow.setVisible(true);
-
+    String message = "";
+    boolean requestPanelOpen = false;
+    do{
+      try{
+        Thread.sleep(100);
+      } catch(IllegalArgumentException | InterruptedException e2) {
+      }
+      if (chatPanel.getRequest() && !requestPanelOpen) {
+        //open new panel
+        System.out.println("create new window");
+        requestPanelOpen = true;
+        chatPanel.setRequest(false);
+        
+      } else if (chatPanel.getRequest()) {
+        //request panel is already open
+        System.out.println("panel open already");
+        chatPanel.setRequest(false);
+      } else if (chatPanel.getSend()) {
+        System.out.print("send message:");
+        message = chatPanel.getMessage();
+        System.out.println(message);
+      }
+    } while(chatPanel.getRunning());
     
     // after connecting loop and keep appending[.append()] to the JTextArea
-    readMessagesFromServer();
-
+    chatWindow.dispose();
+    disconnect();
   }
   
   public void login(){
@@ -103,22 +125,8 @@ class ChatClient {
   }
   
   //Starts a loop waiting for server input and then displays it on the textArea
-  public void readMessagesFromServer() { 
-
-    /*
-    while(running) {  // loop unit a message is received
-      try {
-        input.readObject();
-        
-        
-      }catch (IOException e) { 
-        System.out.println("Failed to receive msg from the server");
-        e.printStackTrace();
-      }
-    }
-    */
-
-    try {  //after leaving the main loop we need to close all the sockets
+  public void disconnect() { 
+    try {  //close all the sockets
       input.close();
       output.close();
       mySocket.close();
@@ -126,32 +134,7 @@ class ChatClient {
       System.out.println("Failed to close socket");
     }
   }
-  //****** Inner Classes for Action Listeners ****
-  
-    // send - send msg to server (also flush), then clear the JTextField
-    class SendButtonListener implements ActionListener { 
-      public void actionPerformed(ActionEvent event)  {
-        //Send a message to the client            
-        typeField.setText(""); 
-      }     
-    }
 
-  // QuitButtonListener - Quit the program
-    class QuitButtonListener implements ActionListener { 
-      public void actionPerformed(ActionEvent event)  {
-        running=false;
-      }     
-    }
-
-  class FriendButtonListener implements ActionListener { 
-    private int friendID;
-    public void actionPerformed(ActionEvent event)  {
-      
-    }
-    public void setFriendID(int ID){
-      this.friendID = ID;
-    }
-  }
   public static void main(String[] args) { 
     new ChatClient().go();
   }
