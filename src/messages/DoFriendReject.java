@@ -46,7 +46,7 @@ public class DoFriendReject extends CommandMessage {
         db.setRemove("users."+targetUserId+".incomingFriendRequests", this.friendRequestId),
         db.longRemove("friendRequests."+this.friendRequestId+".sourceUserId"),
         db.longRemove("friendRequests."+this.friendRequestId+".targetUserId")
-      ).join();
+      ).get();
       return CommandReply.ok();
     } catch (ExecutionException e) {
       Log.warn("Failed to reject friend request", "MessageHandler", this, e);

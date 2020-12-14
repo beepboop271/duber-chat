@@ -53,7 +53,7 @@ public class CreateDm extends CommandMessage {
             "<@"+user.getUserId()+"> created a DM with <@"+this.userId+">"
           ),
           db.listAdd("chats."+chatId+".messages", messageId)
-        ).join();
+        ).get();
         new PubSubDmJoined(
           chatId,
           new Long[] { user.getUserId(), this.userId },

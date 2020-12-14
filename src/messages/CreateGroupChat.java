@@ -50,7 +50,7 @@ public class CreateGroupChat extends CommandMessage {
         CompletableFuture.allOf(
           db.setAdd("chats."+chatId+".members", userId),
           db.setAdd("users."+userId+".chats", chatId)
-        ).join();
+        ).get();
       }
 
       CompletableFuture.allOf(
@@ -61,7 +61,7 @@ public class CreateGroupChat extends CommandMessage {
         db.set("messages."+messageId+".time", System.currentTimeMillis()),
         db.set("messages."+messageId+".message", join.toString()),
         db.listAdd("chats."+chatId+".messages", messageId)
-      ).join();
+      ).get();
       new PubSubGroupChatJoined(chatId, this.userIds, this.name, messageId).execute(db);
       return CommandReply.ok();
     } catch (ExecutionException e) {

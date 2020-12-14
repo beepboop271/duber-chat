@@ -44,7 +44,7 @@ public class CreateFriendRequest extends CommandMessage {
           db.setAdd("users."+targetUserId+".incomingFriendRequests", requestId),
           db.set("friendRequests."+requestId+".sourceUserId", user.getUserId()),
           db.set("friendRequests."+requestId+".targetUserId", targetUserId)
-        ).join();
+        ).get();
         new PubSubFriendRequestCreated(
           requestId,
           user.getUsername(),
