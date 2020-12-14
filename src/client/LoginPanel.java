@@ -64,6 +64,9 @@ public class LoginPanel extends JPanel implements ActionListener {
   public boolean getLoggedIn(){
     return loggedIn;
   }
+  public String getUsername(){
+    return usernameField.getText();
+  }
   public void setInputOutput(ObjectInputStream input, ObjectOutputStream output){
     this.input = input;
     this.output = output;

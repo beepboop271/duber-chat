@@ -36,7 +36,7 @@ class ChatClient {
   private ChatInformation chatInfo;
   private ChatList chatList;
   private int port;
-  private String ip;
+  private String ip, username;
   //private GetReply reply;
     
   public void go() {
@@ -75,16 +75,18 @@ class ChatClient {
       } catch(IllegalArgumentException | InterruptedException e2) {
       }
     }
+    username = loginPanel.getUsername();
     loginWindow.dispose();
     serverPortPanel.disconnect();
     createAccountPanel.disconnect();
+
     //connects pubsub socket
     try {
       pubSubSocket = new Socket(ip, port); // attempt socket connection (local address). This will wait until a connection is made
       pubsubInput = new ObjectInputStream(pubSubSocket.getInputStream()); // Stream for network input
       System.out.println("pubsub Sock and input connected");
     } catch (IOException e) { // connection error occured
-      System.out.println("Connection to pubsub sockt failed");
+      System.out.println("Connection to pubsub socket failed");
     }
 
     JFrame chatWindow = new JFrame("DuberChat");
