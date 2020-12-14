@@ -79,6 +79,9 @@ public class SortedArray<E extends Comparable<E>> implements Serializable {
   }
 
   public E[] getTailRange(int amount) {
+    if (amount == 0) {
+      throw new IllegalArgumentException("nothing requested");
+    }
     int from = Math.max(this.length-amount, 0);
     return Arrays.copyOfRange(this.arr, from, this.length);
   }
