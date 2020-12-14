@@ -1,5 +1,9 @@
 package messages;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+
+import logger.Log;
 import reduber.ReDuber;
 import server.ConnectedUser;
 
@@ -17,10 +21,20 @@ public class DoStatusChange extends CommandMessage {
   @Override
   public CommandReply execute(ReDuber db, ConnectedUser user)
     throws InterruptedException {
-    // TODO Auto-generated method stub
     if (!user.isLoggedIn()) {
       return CommandReply.noPermission("Not logged in");
     }
-    return null;
+
+    try {
+      CompletableFuture.allOf(
+        db.set("users."+user.getUserId()+".status", this.userStatus),
+        db.set("users."+user.getUserId()+".message", this.userMessage)
+      ).get();
+      new PubSubStatusChange(user.getUserId(), this.userStatus, this.userMessage).execute(db);
+      return CommandReply.ok();
+    } catch (ExecutionException e) {
+      Log.warn("Failed to change status", "MessageHandler", this, e);
+    }
+    return CommandReply.serverUnknown();
   }
 }
