@@ -27,7 +27,7 @@ public class PubSubStatusChange extends PubSubMessage {
       if (this.userMessage == null) {
         this.userMessage = db.stringGet("users."+this.userMessage+".message").get();
       }
-      db.publishMany("users."+this.userId+".friends", this);
+      db.publishMany("users."+this.userId+".friends", this).get();
     } catch (ExecutionException e) {
       Log.warn("Failed to submit Publish job", "MessagePublisher", this, e);
     }
