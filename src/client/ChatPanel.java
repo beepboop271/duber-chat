@@ -4,8 +4,10 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.border.Border;
 
 import messages.GetChat;
@@ -26,7 +28,8 @@ public class ChatPanel extends JPanel implements ActionListener {
   private JButton[] chatListButton;
   private JButton sendButton, requestButton;
   private JTextField typeField;
-  private JPanel mainPanel, friendPanel, chatPanel;
+  private JPanel mainPanel, chatPanel, friendListPanel;
+  private JScrollPane chatListPane;
   private JLabel chatLabel;
   private ChatList chatList;
   private HashMap<String, String> map;
@@ -39,7 +42,10 @@ public class ChatPanel extends JPanel implements ActionListener {
     request = false;
     send = false;
     mainPanel = new JPanel();
-    friendPanel = new JPanel();
+    friendListPanel = new JPanel();
+    chatListPane = new JScrollPane(friendListPanel);
+    chatListPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+    chatListPane.setPreferredSize(new Dimension(270,450));
     chatPanel = new JPanel();
     map = new HashMap<>();
     chatLabel = new JLabel("");
@@ -50,18 +56,18 @@ public class ChatPanel extends JPanel implements ActionListener {
 
     requestButton = new JButton("Manage chats and friends");
     requestButton.setActionCommand("request");
-    requestButton.setPreferredSize(new Dimension(250, 50));
+    requestButton.setPreferredSize(new Dimension(240, 50));
     requestButton.addActionListener(this);
-    friendPanel.setPreferredSize(new Dimension(260,450));
-    friendPanel.add(requestButton);
+    friendListPanel.setPreferredSize(new Dimension(270,450));
+    friendListPanel.add(requestButton);
     for (int i = 0; i < chatList.getChatNames().length; i++) {
-      map.put(chatList.getChatNames()[i], createChat(chatList, i));//add the j panel
-      chatListButton[i] = new JButton(chatList.getChatNames()[i]);
-      chatListButton[i].addActionListener(this);
-      chatListButton[i].setActionCommand("chatbutton");
-      chatListButton[i].setPreferredSize(new Dimension(250, 25));
-      chatListButton[i].setHorizontalAlignment(2);
-      friendPanel.add(chatListButton[i]);
+      map.put(chatList.getChatNames()[i], createChat(chatList, i));//adds chat name and chat messages into the map
+      chatListButton[i] = new JButton(chatList.getChatNames()[i]);//create a new button with chat name
+      chatListButton[i].addActionListener(this);//adds the button listener
+      chatListButton[i].setActionCommand("chatbutton");//action command of the button
+      chatListButton[i].setPreferredSize(new Dimension(240, 25));//prefered size of the button
+      chatListButton[i].setHorizontalAlignment(2);//alligns the text left
+      friendListPanel.add(chatListButton[i]);//adds the button to the chat list panel
     }
 
     typeField = new JTextField();
@@ -76,11 +82,10 @@ public class ChatPanel extends JPanel implements ActionListener {
     //adds chat, typefield and the send button to the chat panel
     chatPanel.setPreferredSize(new Dimension(540, 450));
     chatPanel.add(chatLabel);
-    chatPanel.add(typeField);
-    chatPanel.add(sendButton);
+
 
     mainPanel.setLayout(new BorderLayout());
-    mainPanel.add(friendPanel, BorderLayout.WEST);
+    mainPanel.add(chatListPane, BorderLayout.WEST);
     mainPanel.add(chatPanel, BorderLayout.CENTER);
     
   }
@@ -105,10 +110,15 @@ public class ChatPanel extends JPanel implements ActionListener {
       System.out.println("send");
       send = true;
     } else {
-      String chatName = ((JButton)e.getSource()).getText();
-      String chat = map.get(chatName);
+      openChat = ((JButton)e.getSource()).getText();
+      String chat = map.get(openChat);
       chatLabel.setText(chat);
-      chatLabel.setBorder(BorderFactory.createTitledBorder(chatName));
+      chatLabel.setBorder(BorderFactory.createTitledBorder(openChat));
+
+      chatPanel.removeAll();
+      chatPanel.add(chatLabel);
+      chatPanel.add(typeField);
+      chatPanel.add(sendButton);
     }
   }
   public boolean getRunning(){

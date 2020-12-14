@@ -83,6 +83,7 @@ class ChatClient {
     long[] times = {10,20,30,40,50};
     String[] messages = {"hi", "its me", "john", "aaaaa", "idk if this works"};
     chatInfo = new ChatInformation(messageIDs, authorIDs, times, messages);
+
     ChatInformation[] chatInfoArray = {chatInfo};
     String[] chatNames = {"john"};
     long[] chatIDs = {1};
@@ -93,22 +94,53 @@ class ChatClient {
     chatWindow.setVisible(true);
     String message = "";
     boolean requestPanelOpen = false;
+
+    JFrame requestWindow = new JFrame("DuberChat Request");
+    tabbedPane = new JTabbedPane();
+
+    requestWindow.setVisible(false);
+    requestWindow.setResizable(false);
+    requestWindow.setSize(200,300);
+    requestWindow.add(tabbedPane);
+
+    //import UserIDs
+    //for every user id import the friendInfo of it and add to a FriendInformation[]
+    String username = "";
+    String status = "";
+    String usermessage = "";
+    long[] userIDs = {1,2,3,4,5};
+    FriendInformation[] friendInfo = new FriendInformation[5];
+    friendInfo[0] = new FriendInformation("john","online","i hate everything");
+    friendInfo[1] = new FriendInformation("jimmy","online","want die");
+    friendInfo[2] = new FriendInformation("jane","online","why is this so hard");
+    friendInfo[3] = new FriendInformation("joe","online","kevin send help");
+    friendInfo[4] = new FriendInformation("janet","online","end my suffering");
+
+    ListOfFriendID friendIDs = new ListOfFriendID(userIDs, friendInfo);
+    CreateGroupChat createGroupChat = new CreateGroupChat(friendIDs);
+    JPanel createGroupPanel = createGroupChat.getPanel();
+    tabbedPane.addTab("Create Group Chat", createGroupPanel);
+    
     do{
+
       try{
         Thread.sleep(100);
       } catch(IllegalArgumentException | InterruptedException e2) {
       }
+
       if (chatPanel.getRequest() && !requestPanelOpen) {
         //open new panel
         System.out.println("create new window");
         requestPanelOpen = true;
+        requestWindow.setVisible(true);
         chatPanel.setRequest(false);
-        
       } else if (chatPanel.getRequest()) {
         //request panel is already open
         System.out.println("panel open already");
         chatPanel.setRequest(false);
-      } else if (chatPanel.getSend()) {
+      }
+      
+      if (chatPanel.getSend()) {
         System.out.print("send message:");
         message = chatPanel.getMessage();
         System.out.println(message);
