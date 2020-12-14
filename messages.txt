@@ -113,7 +113,7 @@ conversation: [
   {
     action: "CREATE_GROUP_CHAT";
     client: {
-      userIds: long[];
+      userIds: Long[];
       name: string;
     };
     server: {
@@ -147,7 +147,7 @@ setup: [
     client: {};
     server: {
       status: "OK" | "ENOPERMISSION";
-      userIds?: long[];
+      userIds?: Long[];
     };
   },
   {
@@ -167,7 +167,7 @@ setup: [
     client: {};
     server: {
       status: "OK" | "ENOPERMISSION";
-      friendRequestIds?: long[];
+      friendRequestIds?: Long[];
       sourceUsernames?: string[];
       targetUsernames?: string[];
     };
@@ -177,7 +177,7 @@ setup: [
     client: {};
     server: {
       status: "OK" | "ENOPERMISSION";
-      chatIds?: long[];
+      chatIds?: Long[];
     };
   },
   {
@@ -188,7 +188,7 @@ setup: [
     server: {
       status: "OK" | "ENOTEXISTS" | "ENOPERMISSION";
       type?: "DM" | "GROUP";
-      userIds?: long[];
+      userIds?: Long[];
       name?: string;
       lastMessageId?: long;
     };
@@ -202,9 +202,9 @@ setup: [
     };
     server: {
       status: "OK" | "ENOTEXISTS" | "ENOPERMISSION" | "EBADARGS";
-      messageIds?: long[];
-      userIds?: long[];
-      times?: long[];
+      messageIds?: Long[];
+      userIds?: Long[];
+      times?: Long[];
       messages?: string[];
     }
   }
@@ -230,15 +230,15 @@ serverOnly: [
   {
     action: "DM_JOINED";
     chatId: long;
-    userId: long;
-    lastMessageTime: long;
+    userIds: Long[];
+    lastMessageId: long;
   },
   {
     action: "GROUP_CHAT_JOINED";
     chatId: long;
-    userIds: long[];
+    userIds: Long[];
     name: string;
-    lastMessageTime: long;
+    lastMessageId: long;
   },
   {
     action: "MESSAGE_RECEIVED";

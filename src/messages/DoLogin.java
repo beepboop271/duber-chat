@@ -49,7 +49,6 @@ public class DoLogin extends CommandMessage {
     } catch (ExecutionException e) {
       Log.error("Failed to login", "MessageHandler", this, e);
     }
-
     return CommandReply.serverUnknown();
   }
 }

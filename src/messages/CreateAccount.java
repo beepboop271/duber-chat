@@ -50,7 +50,6 @@ public class CreateAccount extends CommandMessage {
     } catch (ExecutionException e) {
       Log.error("Failed to create account", "MessageHandler", this, e);
     }
-
     return CommandReply.serverUnknown();
   }
 }

@@ -8,6 +8,7 @@ users.{userId}.message : String  # status message
 users.{userId}.friends : Set
 users.{userId}.outgoingFriendRequests : Set
 users.{userId}.incomingFriendRequests : Set
+users.{userId}.dms.{friendId} : Long
 users.{userId}.chats : Set
 
 # FRIEND REQUESTS
@@ -16,5 +17,12 @@ friendRequests.{friendRequestId}.targetUserId : Long
 
 # CHATS
 chats.{chatId}.type : String
+chats.{chatId}.name : String  # for group chats
 chats.{chatId}.members : Set
 chats.{chatId}.messages : List
+
+# MESSAGES
+messages.{messageId}.author : Long
+messages.{messageId}.chat : Long
+messages.{messageId}.time : Long
+messages.{messageId}.message : String
