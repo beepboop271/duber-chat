@@ -10,9 +10,8 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.plaf.DimensionUIResource;
 
-import messages.DoLogin;
-import messages.GetChats;
-import messages.GetFriends;
+import messages.*;
+import messages.CommandReply.Status;
 
 import java.io.*;
 import java.net.*;
@@ -37,6 +36,7 @@ class ChatClient {
   private ChatList chatList;
   private int port;
   private String ip, username;
+  private CommandReply commandReply;
   //private GetReply reply;
     
   public void go() {
@@ -54,27 +54,35 @@ class ChatClient {
       } catch(IllegalArgumentException | InterruptedException e2) {
       }
     }while(!serverPortPanel.getConnected());
+    System.out.println("Connected to server");
     input = serverPortPanel.getInput();
     output = serverPortPanel.getOutput();
     mySocket = serverPortPanel.getSocket();
     ip = serverPortPanel.getIP();
     port = serverPortPanel.getPort();
     loginWindow.remove(loginPanel);
+    System.out.println("server connections saved");
 
 
     //login screen
     LoginPanel loginPanel = new LoginPanel(input,output);
     CreateAccountPanel createAccountPanel = new CreateAccountPanel(input, output);
+    JPanel loginPanelHolder = loginPanel.getPanel();
+    JPanel createAccountPanelHolder = createAccountPanel.getPanel();
     tabbedPane = new JTabbedPane();
-    tabbedPane.addTab("Login", loginPanel.getPanel());
-    tabbedPane.addTab("Create Account", createAccountPanel.getPanel());
+    tabbedPane.addTab("Login", loginPanelHolder);
+    tabbedPane.addTab("Create Account", createAccountPanelHolder);
     loginWindow.add(tabbedPane);
+    System.out.println("created tabbed pane");
+    loginWindow.repaint();
     while(!loginPanel.getLoggedIn()) {
       try{
         Thread.sleep(100);
+        System.out.print("ping");
       } catch(IllegalArgumentException | InterruptedException e2) {
       }
     }
+    System.out.println();
     username = loginPanel.getUsername();
     loginWindow.dispose();
     serverPortPanel.disconnect();
@@ -151,14 +159,25 @@ class ChatClient {
     CreateGroupChat createGroupChat = new CreateGroupChat(friendIDs);
     JPanel createGroupPanel = createGroupChat.getPanel();
 
+    long[] friendRequestIds = {1,4,15,22,23,42};
+    String[] sourceUsernames = {"aaaa", "john", "jenny", "joe", "aaaa", "aaaa"};
+    String[] targetUsernames = {"jane", "aaaa", "aaaa", "aaaa", "jennifer", "joel"};
+
+    FriendRequestInformation friendRequestInfo = new FriendRequestInformation(friendRequestIds, sourceUsernames, targetUsernames);
+    FriendRequestPanel friendRequestPanel = new FriendRequestPanel(username, friendRequestInfo);
+    JPanel friendRequest = friendRequestPanel.getPanel();
+
     tabbedPane = new JTabbedPane();
-    JPanel temp = new JPanel();
     JPanel temp2 = new JPanel();
     tabbedPane.addTab("Group Chat", createGroupPanel);
     tabbedPane.addTab("Friends", temp2);
-    tabbedPane.addTab("Friend Requests", temp);
+    tabbedPane.addTab("Friend Requests", friendRequest);
     JFrame requestWindow = new JFrame();
 
+    long requestID;
+    boolean updateFriendRequestList = false;
+    boolean updateFriendList = false;
+    
     do{
 
       try{
@@ -188,6 +207,98 @@ class ChatClient {
         System.out.println(message);
       }
 
+      if (friendRequestPanel.getAccepted()){
+        requestID = friendRequestPanel.getRequestID();
+        
+        try{//catchs connection errors
+          synchronized (output) {
+            try {//sends a get command to accept friend request
+              output.writeObject(new DoFriendAccept(requestID));
+              output.flush();
+            } catch (IOException e) {
+              System.out.println("could not accept friend request");
+            }
+          }
+          try {//catches errors reading the object
+            commandReply = (CommandReply)input.readObject();
+            if (commandReply.getStatus() == Status.OK){
+              System.out.println("friend request accepted");
+              updateFriendRequestList = true;
+            } else {
+              System.out.println("could not accept friend request");
+            }
+          } catch (IOException | ClassNotFoundException error) {
+            System.out.print("Error reading server response");
+            error.printStackTrace();
+          }
+        } catch(NullPointerException error) {
+          System.out.println("error connecting");
+        }
+        friendRequestPanel.setAccepted(false);
+      } else if (friendRequestPanel.getRejected()){
+        requestID = friendRequestPanel.getRequestID();
+        try{//catchs connection errors
+          synchronized (output) {
+            try {//sends a get command to accept friend request
+              output.writeObject(new DoFriendReject(requestID));
+              output.flush();
+            } catch (IOException e) {
+              System.out.println("could not reject friend request");
+            }
+          }
+          try {//catches errors reading the object
+            commandReply = (CommandReply)input.readObject();
+            if (commandReply.getStatus() == Status.OK){
+              System.out.println("friend request rejected");
+              updateFriendRequestList = true;
+            } else {
+              System.out.println("could not reject friend request");
+            }
+          } catch (IOException | ClassNotFoundException error) {
+            System.out.print("Error reading server response");
+            error.printStackTrace();
+          }
+        } catch(NullPointerException error) {
+          System.out.println("error connecting");
+        }
+        friendRequestPanel.setRejected(false);
+      } else if (friendRequestPanel.getCancelled()){
+        requestID = friendRequestPanel.getRequestID();
+        try{//catchs connection errors
+          synchronized (output) {
+            try {//sends a get command to cancel friend request
+              output.writeObject(new DoFriendCancel(requestID));
+              output.flush();
+            } catch (IOException e) {
+              System.out.println("could not cancel friend request");
+            }
+          }
+          try {//catches errors reading the object
+            commandReply = (CommandReply)input.readObject();
+            if (commandReply.getStatus() == Status.OK){
+              System.out.println("friend request cancelled");
+              updateFriendRequestList = true;
+            } else {
+              System.out.println("could not cancel friend request");
+            }
+          } catch (IOException | ClassNotFoundException error) {
+            System.out.print("Error reading server response");
+            error.printStackTrace();
+          }
+        } catch(NullPointerException error) {
+          System.out.println("error connecting");
+        }
+        friendRequestPanel.setRejected(false);
+      }
+
+      if (updateFriendRequestList) {
+        
+        friendRequestPanel.updateList(friendRequestInfo);
+      }
+
+      if (updateFriendList) {
+
+      }
     } while(chatPanel.getRunning());
     
     // after connecting loop and keep appending[.append()] to the JTextArea
