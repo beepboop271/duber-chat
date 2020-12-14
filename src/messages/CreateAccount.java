@@ -42,7 +42,7 @@ public class CreateAccount extends CommandMessage {
           db.set("users."+userId+".username", this.username),
           db.set("users."+userId+".status", "OFFLINE"),
           db.set("users."+userId+".message", "")
-        ).join();
+        ).get();
         return CommandReply.ok();
       } else if (result == ReDuber.Status.NO_CHANGE) {
         return CommandReply.exists("Username is taken");

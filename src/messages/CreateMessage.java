@@ -54,7 +54,7 @@ public class CreateMessage extends CommandMessage {
           db.set("messages."+messageId+".chat", this.chatId),
           db.set("messages."+messageId+".time", time),
           db.set("messages."+messageId+".message", this.message)
-        ).join();
+        ).get();
         new PubSubMessageReceived(
           messageId,
           this.chatId,
