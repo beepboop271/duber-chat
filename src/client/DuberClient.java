@@ -37,12 +37,9 @@ class ChatClient {
   private ChatList chatList;
   private int port;
   private String ip;
-  private reply;
+  //private GetReply reply;
     
   public void go() {
-
-    
-
     JFrame loginWindow = new JFrame("DuberChat Login");
 
     loginWindow.setResizable(false);
@@ -95,13 +92,7 @@ class ChatClient {
     chatWindow.setSize(800,450);
 
     //import user friends data
-    try {
-      output.writeObject(new GetChats());
-      output.flush();
-    } catch (IOException e) {
-      System.out.println("could not get chat");
-    }
-
+    /*
     try{//catchs connection errors
       synchronized (output) {
         try {//sends a get command to retrieve friends
@@ -122,6 +113,7 @@ class ChatClient {
     } catch(NullPointerException error) {
       System.out.println("error connecting");
     }
+    */
 
     long[] messageIDs = {1,2,3,4,5};
     String[] authorIDs = {"john","john","john","john","john"};
