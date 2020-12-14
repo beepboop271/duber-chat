@@ -4,7 +4,7 @@ public class FriendInformation {
   private String username;
   private String status;
   private String usermessage;
-  public FriendInformation(String username, String status, String usermessage){
+  FriendInformation(String username, String status, String usermessage){
     this.username = username;
     this.status = status;
     this.usermessage = usermessage;

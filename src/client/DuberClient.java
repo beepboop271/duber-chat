@@ -11,6 +11,8 @@ import javax.swing.*;
 import javax.swing.plaf.DimensionUIResource;
 
 import messages.DoLogin;
+import messages.GetChats;
+import messages.GetFriends;
 
 import java.io.*;
 import java.net.*;
@@ -26,17 +28,20 @@ class ChatClient {
   private JPanel southPanel, westPanel, eastPanel, loginPanel;
   private JPanel southEastPanel, southWestPanel;
   private Socket mySocket, pubSubSocket; //socket for connection
-  private ObjectInputStream input; //Stream for network input
+  private ObjectInputStream input, pubsubInput; //Stream for network input
   private ObjectOutputStream output;
   private boolean running = true; //thread status via boolean
   private String[] names;
   private JTabbedPane tabbedPane;
   private ChatInformation chatInfo;
   private ChatList chatList;
+  private int port;
+  private String ip;
+  private reply;
     
   public void go() {
 
-    /*
+    
 
     JFrame loginWindow = new JFrame("DuberChat Login");
 
@@ -54,7 +59,11 @@ class ChatClient {
     }while(!serverPortPanel.getConnected());
     input = serverPortPanel.getInput();
     output = serverPortPanel.getOutput();
+    mySocket = serverPortPanel.getSocket();
+    ip = serverPortPanel.getIP();
+    port = serverPortPanel.getPort();
     loginWindow.remove(loginPanel);
+
 
     //login screen
     LoginPanel loginPanel = new LoginPanel(input,output);
@@ -70,14 +79,50 @@ class ChatClient {
       }
     }
     loginWindow.dispose();
-
-    */
+    serverPortPanel.disconnect();
+    createAccountPanel.disconnect();
+    //connects pubsub socket
+    try {
+      pubSubSocket = new Socket(ip, port); // attempt socket connection (local address). This will wait until a connection is made
+      pubsubInput = new ObjectInputStream(pubSubSocket.getInputStream()); // Stream for network input
+      System.out.println("pubsub Sock and input connected");
+    } catch (IOException e) { // connection error occured
+      System.out.println("Connection to pubsub sockt failed");
+    }
 
     JFrame chatWindow = new JFrame("DuberChat");
     chatWindow.setResizable(false);
     chatWindow.setSize(800,450);
 
     //import user friends data
+    try {
+      output.writeObject(new GetChats());
+      output.flush();
+    } catch (IOException e) {
+      System.out.println("could not get chat");
+    }
+
+    try{//catchs connection errors
+      synchronized (output) {
+        try {//sends a get command to retrieve friends
+          output.writeObject(new GetFriends());
+          output.flush();
+        } catch (IOException e) {
+          System.out.println("could not get friends");
+        }
+      }
+      try {//catches errors reading the object
+        reply = input.readObject();
+        
+      } catch (IOException | ClassNotFoundException error) {
+        System.out.print("Error reading server response");
+        error.printStackTrace();
+      }
+
+    } catch(NullPointerException error) {
+      System.out.println("error connecting");
+    }
+
     long[] messageIDs = {1,2,3,4,5};
     String[] authorIDs = {"john","john","john","john","john"};
     long[] times = {10,20,30,40,50};
@@ -89,13 +134,14 @@ class ChatClient {
     long[] chatIDs = {1};
     chatList = new ChatList(chatNames, chatIDs, chatInfoArray);
     ChatPanel chatPanel = new ChatPanel(chatList);
-    
+
+
+
+
     chatWindow.add(chatPanel.getPanel());
     chatWindow.setVisible(true);
     String message = "";
     boolean requestPanelOpen = false;
-
-    
 
     //import UserIDs
     //for every user id import the friendInfo of it and add to a FriendInformation[]
@@ -112,7 +158,11 @@ class ChatClient {
     JPanel createGroupPanel = createGroupChat.getPanel();
 
     tabbedPane = new JTabbedPane();
-    tabbedPane.addTab("Create Group Chat", createGroupPanel);
+    JPanel temp = new JPanel();
+    JPanel temp2 = new JPanel();
+    tabbedPane.addTab("Group Chat", createGroupPanel);
+    tabbedPane.addTab("Friends", temp2);
+    tabbedPane.addTab("Friend Requests", temp);
     JFrame requestWindow = new JFrame();
 
     do{
@@ -147,8 +197,10 @@ class ChatClient {
     } while(chatPanel.getRunning());
     
     // after connecting loop and keep appending[.append()] to the JTextArea
+
     chatWindow.dispose();
     requestWindow.dispose();
+    loginPanel.disconnect();
     disconnect();
   }
   
@@ -160,8 +212,15 @@ class ChatClient {
   public void disconnect() { 
     try {  //close all the sockets
       input.close();
+      System.out.println("closed input");
       output.close();
+      System.out.println("closed output");
       mySocket.close();
+      System.out.println("closed MySocket");
+      pubsubInput.close();
+      System.out.println("closed pubsubInput");
+      pubSubSocket.close();
+      System.out.println("closed pubsubSocket");
     }catch (Exception e) { 
       System.out.println("Failed to close socket");
     }
