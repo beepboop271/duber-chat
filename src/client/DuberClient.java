@@ -81,7 +81,7 @@ class ChatClient {
     long[] messageIDs = {1,2,3,4,5};
     String[] authorIDs = {"john","john","john","john","john"};
     long[] times = {10,20,30,40,50};
-    String[] messages = {"hi", "its me", "john", "aaaaa", "idk if this works"};
+    String[] messages = {"hi, this is going to be a very long message to test if there is text wrapping, but it still needs to be longer", "its me", "john", "aaaaa", "idk if this works"};
     chatInfo = new ChatInformation(messageIDs, authorIDs, times, messages);
 
     ChatInformation[] chatInfoArray = {chatInfo};
@@ -95,19 +95,10 @@ class ChatClient {
     String message = "";
     boolean requestPanelOpen = false;
 
-    JFrame requestWindow = new JFrame("DuberChat Request");
-    tabbedPane = new JTabbedPane();
-
-    requestWindow.setVisible(false);
-    requestWindow.setResizable(false);
-    requestWindow.setSize(200,300);
-    requestWindow.add(tabbedPane);
+    
 
     //import UserIDs
     //for every user id import the friendInfo of it and add to a FriendInformation[]
-    String username = "";
-    String status = "";
-    String usermessage = "";
     long[] userIDs = {1,2,3,4,5};
     FriendInformation[] friendInfo = new FriendInformation[5];
     friendInfo[0] = new FriendInformation("john","online","i hate everything");
@@ -119,8 +110,11 @@ class ChatClient {
     ListOfFriendID friendIDs = new ListOfFriendID(userIDs, friendInfo);
     CreateGroupChat createGroupChat = new CreateGroupChat(friendIDs);
     JPanel createGroupPanel = createGroupChat.getPanel();
+
+    tabbedPane = new JTabbedPane();
     tabbedPane.addTab("Create Group Chat", createGroupPanel);
-    
+    JFrame requestWindow = new JFrame();
+
     do{
 
       try{
@@ -132,6 +126,10 @@ class ChatClient {
         //open new panel
         System.out.println("create new window");
         requestPanelOpen = true;
+        requestWindow = new JFrame("DuberChat Request");
+        requestWindow.setResizable(false);
+        requestWindow.setSize(300,400);
+        requestWindow.add(tabbedPane);
         requestWindow.setVisible(true);
         chatPanel.setRequest(false);
       } else if (chatPanel.getRequest()) {
@@ -145,10 +143,12 @@ class ChatClient {
         message = chatPanel.getMessage();
         System.out.println(message);
       }
+
     } while(chatPanel.getRunning());
     
     // after connecting loop and keep appending[.append()] to the JTextArea
     chatWindow.dispose();
+    requestWindow.dispose();
     disconnect();
   }
   

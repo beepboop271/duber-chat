@@ -5,30 +5,21 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.border.Border;
-
-import messages.GetChat;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ChatPanel extends JPanel implements ActionListener {
   private JButton[] chatListButton;
-  private JButton sendButton, requestButton;
+  private JButton sendButton, requestButton, quitButton;
   private JTextField typeField;
-  private JPanel mainPanel, chatPanel, friendListPanel;
+  private JPanel mainPanel, chatPanel, friendListPanel, leftPanel;
   private JScrollPane chatListPane;
   private JLabel chatLabel;
   private ChatList chatList;
@@ -37,29 +28,33 @@ public class ChatPanel extends JPanel implements ActionListener {
   private boolean running, request, send;
   
   ChatPanel(ChatList chatList){
+    //initialize variables
     this.chatList = chatList;
     running = true;
     request = false;
     send = false;
+    //coment things that use chat list to reference
     mainPanel = new JPanel();
     friendListPanel = new JPanel();
     chatListPane = new JScrollPane(friendListPanel);
     chatListPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
     chatListPane.setPreferredSize(new Dimension(270,450));
     chatPanel = new JPanel();
-    map = new HashMap<>();
+    map = new HashMap<>();//
     chatLabel = new JLabel("");
-    chatLabel.setPreferredSize(new Dimension(500,360));
+    chatLabel.setPreferredSize(new Dimension(500,370));
     chatLabel.setHorizontalAlignment(10);
     chatLabel.setVerticalAlignment(1);
-    chatListButton = new JButton[chatList.getChatNames().length];
+    chatListButton = new JButton[chatList.getChatNames().length];//
 
     requestButton = new JButton("Manage chats and friends");
     requestButton.setActionCommand("request");
     requestButton.setPreferredSize(new Dimension(240, 50));
     requestButton.addActionListener(this);
-    friendListPanel.setPreferredSize(new Dimension(270,450));
-    friendListPanel.add(requestButton);
+
+    friendListPanel.setPreferredSize(new Dimension(270,330));
+    //friendListPanel.add(requestButton);
+    //entire loop
     for (int i = 0; i < chatList.getChatNames().length; i++) {
       map.put(chatList.getChatNames()[i], createChat(chatList, i));//adds chat name and chat messages into the map
       chatListButton[i] = new JButton(chatList.getChatNames()[i]);//create a new button with chat name
@@ -72,20 +67,28 @@ public class ChatPanel extends JPanel implements ActionListener {
 
     typeField = new JTextField();
     typeField.setPreferredSize(new Dimension(400, 25));
+
+    quitButton = new JButton("Quit");
+    quitButton.setActionCommand("quit");
+    quitButton.addActionListener(this);
+
     sendButton = new JButton("Send");
     sendButton.setActionCommand("send");
     sendButton.addActionListener(this);
     sendButton.setPreferredSize(new Dimension(95,25));
 
-
-
     //adds chat, typefield and the send button to the chat panel
     chatPanel.setPreferredSize(new Dimension(540, 450));
     chatPanel.add(chatLabel);
 
+    leftPanel = new JPanel();
+    leftPanel.setLayout(new BorderLayout());
+    leftPanel.add(requestButton, BorderLayout.NORTH);
+    leftPanel.add(chatListPane, BorderLayout.CENTER);
+    leftPanel.add(quitButton, BorderLayout.SOUTH);
 
     mainPanel.setLayout(new BorderLayout());
-    mainPanel.add(chatListPane, BorderLayout.WEST);
+    mainPanel.add(leftPanel, BorderLayout.WEST);
     mainPanel.add(chatPanel, BorderLayout.CENTER);
     
   }
@@ -109,6 +112,9 @@ public class ChatPanel extends JPanel implements ActionListener {
     } else if("send".equals(e.getActionCommand())) {
       System.out.println("send");
       send = true;
+    }else if("quit".equals(e.getActionCommand())) {
+      System.out.println("quit");
+      running = false;
     } else {
       openChat = ((JButton)e.getSource()).getText();
       String chat = map.get(openChat);
