@@ -25,7 +25,7 @@ public class PubSubStatusChange extends PubSubMessage {
         this.userStatus = db.stringGet("users."+this.userId+".status").get();
       }
       if (this.userMessage == null) {
-        this.userMessage = db.stringGet("users."+this.userMessage+".message").get();
+        this.userMessage = db.stringGet("users."+this.userId+".message").get();
       }
       db.publishMany("users."+this.userId+".friends", this).get();
     } catch (ExecutionException e) {
