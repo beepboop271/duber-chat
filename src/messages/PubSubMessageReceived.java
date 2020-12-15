@@ -8,17 +8,17 @@ import reduber.ReDuber;
 public class PubSubMessageReceived extends PubSubMessage {
   private static final long serialVersionUID = 0L;
 
-  private long messageId;
-  private Long chatId;
-  private Long userId;
-  private Long time;
-  private String message;
+  private final long messageId;
+  private final long chatId;
+  private final long userId;
+  private final long time;
+  private final String message;
 
   public PubSubMessageReceived(
     long messageId,
-    Long chatId,
-    Long userId,
-    Long time,
+    long chatId,
+    long userId,
+    long time,
     String message
   ) {
     this.messageId = messageId;
@@ -46,19 +46,6 @@ public class PubSubMessageReceived extends PubSubMessage {
   @Override
   public void execute(ReDuber db) throws InterruptedException {
     try {
-      if (this.chatId == null) {
-        this.chatId = db.longGet("messages."+this.messageId+".chat").get();
-      }
-      if (this.userId == null) {
-        this.userId = db.longGet("messages."+this.messageId+".author").get();
-      }
-      if (this.time == null) {
-        this.time = db.longGet("messages."+this.messageId+".time").get();
-      }
-      if (this.message == null) {
-        this.message =
-          db.stringGet("messages."+this.messageId+".message").get();
-      }
       db.publishMany("chats."+this.chatId+".members", this).get();
     } catch (ExecutionException e) {
       Log.warn("Failed to submit Publish job", "MessagePublisher", this, e);
@@ -69,15 +56,15 @@ public class PubSubMessageReceived extends PubSubMessage {
     return this.messageId;
   }
 
-  public Long getChatId() {
+  public long getChatId() {
     return this.chatId;
   }
 
-  public Long getUserId() {
+  public long getUserId() {
     return this.userId;
   }
 
-  public Long getTime() {
+  public long getTime() {
     return this.time;
   }
 

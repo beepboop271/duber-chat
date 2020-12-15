@@ -9,8 +9,8 @@ public class PubSubFriendRequestFailed extends PubSubDirectMessage {
   private static final long serialVersionUID = 0L;
 
   private final long friendRequestId;
-  private String sourceUsername;
-  private String targetUsername;
+  private final String sourceUsername;
+  private final String targetUsername;
 
   public PubSubFriendRequestFailed(
     long friendRequestId,
@@ -36,26 +36,6 @@ public class PubSubFriendRequestFailed extends PubSubDirectMessage {
   @Override
   public void execute(ReDuber db, long recipient) throws InterruptedException {
     try {
-      if (this.sourceUsername == null) {
-        this.sourceUsername =
-          db.stringGet(
-            "users."
-              +db
-                .longGet("friendRequests."+this.friendRequestId+".sourceUserId")
-                .get()
-              +".username"
-          ).get();
-      }
-      if (this.targetUsername == null) {
-        this.targetUsername =
-          db.stringGet(
-            "users."
-              +db
-                .longGet("friendRequests."+this.friendRequestId+".targetUserId")
-                .get()
-              +".username"
-          ).get();
-      }
       if (recipient == -1) {
         db.publishSingle(
           "friendRequests."+this.friendRequestId+".sourceUserId",
@@ -79,5 +59,9 @@ public class PubSubFriendRequestFailed extends PubSubDirectMessage {
 
   public String getSourceUsername() {
     return this.sourceUsername;
+  }
+
+  public String getTargetUsername() {
+    return this.targetUsername;
   }
 }
