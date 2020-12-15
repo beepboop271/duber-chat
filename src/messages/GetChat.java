@@ -1,12 +1,15 @@
 package messages;
 
+import java.util.concurrent.ExecutionException;
+
+import logger.Log;
 import reduber.ReDuber;
 import server.ConnectedUser;
 
 public class GetChat extends GetMessage {
   private static final long serialVersionUID = 0L;
 
-  private long chatId;
+  private final long chatId;
 
   public GetChat(long chatId) {
     this.chatId = chatId;
@@ -15,8 +18,36 @@ public class GetChat extends GetMessage {
   @Override
   public GetReply execute(ReDuber db, ConnectedUser user)
     throws InterruptedException {
-    // TODO Auto-generated method stub
-    return null;
+    if (!user.isLoggedIn()) {
+      return new GetChatReply(Reply.Status.E_NO_PERMISSION, "Not logged in");
+    }
+
+    try {
+      String type = db.stringGet("chats."+this.chatId+".type").get();
+      if (type == null) {
+        return new GetChatReply(
+          Reply.Status.E_NOT_EXISTS,
+          "Chat does not exist"
+        );
+      }
+      if (
+        db.setContains("chats."+this.chatId+".members", user.getUserId()).get()
+          != ReDuber.Status.TRUE
+      ) {
+        return new GetChatReply(
+          Reply.Status.E_NO_PERMISSION,
+          "Cannot get chat you are not in"
+        );
+      }
+      Long[] users = db.setGet("chats."+this.chatId+".members").get();
+      String name = db.stringGet("chats."+this.chatId+".name").get();
+      Long lastMessage =
+        db.listGetLast("chats."+this.chatId+".messages", 1).get()[0];
+      return new GetChatReply(type, users, name, lastMessage);
+    } catch (ExecutionException e) {
+      Log.warn("Failed to get chat", "MessageHandler", this, e);
+    }
+    return new GetChatReply(Reply.Status.E_SERVER_UNKNOWN);
   }
 
   public static class GetChatReply extends GetReply {
@@ -40,7 +71,15 @@ public class GetChat extends GetMessage {
       this.lastMessageId = lastMessageId;
     }
 
-    public GetChatReply(Status status, String detailMessage) {
+    public GetChatReply(Reply.Status status) {
+      super(status);
+      this.type = null;
+      this.userIds = null;
+      this.name = null;
+      this.lastMessageId = null;
+    }
+
+    public GetChatReply(Reply.Status status, String detailMessage) {
       super(status, detailMessage);
       this.type = null;
       this.userIds = null;

@@ -1,5 +1,8 @@
 package messages;
 
+import java.util.concurrent.ExecutionException;
+
+import logger.Log;
 import reduber.ReDuber;
 import server.ConnectedUser;
 
@@ -12,8 +15,18 @@ public class GetChats extends GetMessage {
   @Override
   public GetReply execute(ReDuber db, ConnectedUser user)
     throws InterruptedException {
-    // TODO Auto-generated method stub
-    return null;
+    if (!user.isLoggedIn()) {
+      return new GetChatsReply(Reply.Status.E_NO_PERMISSION, "Not logged in");
+    }
+
+    try {
+      return new GetChatsReply(
+        db.setGet("users."+user.getUserId()+".chats").get()
+      );
+    } catch (ExecutionException e) {
+      Log.warn("Failed to get chats", "MessageHandler", this, e);
+    }
+    return new GetChatsReply(Reply.Status.E_SERVER_UNKNOWN);
   }
 
   public static class GetChatsReply extends GetReply {
@@ -26,7 +39,12 @@ public class GetChats extends GetMessage {
       this.chatIds = chatIds;
     }
 
-    public GetChatsReply(Status status, String detailMessage) {
+    public GetChatsReply(Reply.Status status) {
+      super(status);
+      this.chatIds = null;
+    }
+
+    public GetChatsReply(Reply.Status status, String detailMessage) {
       super(status, detailMessage);
       this.chatIds = null;
     }

@@ -1,5 +1,8 @@
 package messages;
 
+import java.util.concurrent.ExecutionException;
+
+import logger.Log;
 import reduber.ReDuber;
 import server.ConnectedUser;
 
@@ -12,8 +15,18 @@ public class GetFriends extends GetMessage {
   @Override
   public GetReply execute(ReDuber db, ConnectedUser user)
     throws InterruptedException {
-    // TODO Auto-generated method stub
-    return null;
+    if (!user.isLoggedIn()) {
+      return new GetFriendsReply(Reply.Status.E_NO_PERMISSION, "Not logged in");
+    }
+
+    try {
+      return new GetFriendsReply(
+        db.setGet("users."+user.getUserId()+".friends").get()
+      );
+    } catch (ExecutionException e) {
+      Log.warn("Failed to get friends", "MessageHandler", this, e);
+    }
+    return new GetFriendsReply(Reply.Status.E_SERVER_UNKNOWN);
   }
 
   public static class GetFriendsReply extends GetReply {
@@ -26,7 +39,12 @@ public class GetFriends extends GetMessage {
       this.userIds = userIds;
     }
 
-    public GetFriendsReply(Status status, String detailMessage) {
+    public GetFriendsReply(Reply.Status status) {
+      super(status);
+      this.userIds = null;
+    }
+
+    public GetFriendsReply(Reply.Status status, String detailMessage) {
       super(status, detailMessage);
       this.userIds = null;
     }
