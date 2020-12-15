@@ -34,7 +34,6 @@ public class CreateGroupChat extends JPanel implements ActionListener {
     createButton.setActionCommand("create");
     createButton.addActionListener(this);
     createButton.setPreferredSize(new Dimension(280, 25));
-
     
     mainPanel = new JPanel();
     mainPanel.add(createButton);

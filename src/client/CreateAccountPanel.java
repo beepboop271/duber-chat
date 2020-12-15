@@ -7,9 +7,9 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import messages.CommandReply;
+import messages.Reply;
 import messages.CreateAccount;
-import messages.CommandReply.Status;
+import messages.Reply.Status;
 
 
 import java.awt.event.ActionEvent;
@@ -23,7 +23,7 @@ import java.io.ObjectOutputStream;
 
 
 public class CreateAccountPanel extends JPanel implements ActionListener {
-  private CommandReply reply;
+  private Reply reply;
   private JButton createAccountButton;
   private JTextField usernameField;
   private JPasswordField passwordField;
@@ -85,7 +85,7 @@ public class CreateAccountPanel extends JPanel implements ActionListener {
       }
 
       try {
-        reply = (CommandReply)input.readObject();
+        reply = (Reply)input.readObject();
         if (reply.getStatus() == Status.OK) {
           errorLabel.setText("Account created! Please login though the login tab.");
         } else {

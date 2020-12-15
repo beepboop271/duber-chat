@@ -7,9 +7,9 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import messages.CommandReply;
+import messages.Reply;
 import messages.DoLogin;
-import messages.CommandReply.Status;
+import messages.Reply.Status;
 
 
 import java.awt.event.ActionEvent;
@@ -23,7 +23,7 @@ import java.io.ObjectOutputStream;
 
 
 public class LoginPanel extends JPanel implements ActionListener {
-  private CommandReply reply;
+  private Reply reply;
   private JButton loginButton;
   private JTextField usernameField;
   private JPasswordField passwordField;
@@ -89,7 +89,7 @@ public class LoginPanel extends JPanel implements ActionListener {
       }
 
       try {//catches errors reading the object
-        reply = (CommandReply)input.readObject();
+        reply = (Reply)input.readObject();
         if (reply.getStatus() == Status.OK) {
           loggedIn = true;
         } else {

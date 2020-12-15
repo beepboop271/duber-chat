@@ -13,6 +13,7 @@ public class PubSubInput implements Runnable {
   private ListOfFriendID listOfFriendID;
   private FriendPanel friendPanel;
   private FriendRequestPanel friendRequestPanel;
+  private FriendRequestInformation friendRequestInformation;
   private boolean running;
   private Object pubSubMessage;
   private PubSubDmJoined dmJoined;
@@ -23,7 +24,7 @@ public class PubSubInput implements Runnable {
   private PubSubMessageReceived messageReceived;
   private PubSubStatusChange statusChange;
 
-  PubSubInput(ObjectInputStream pubsubInput, ChatPanel chatPanel, ChatList chatList, CreateGroupChat createGroupChat, ListOfFriendID listOfFriendID, FriendPanel friendPanel, FriendRequestPanel friendRequestPanel, boolean running){
+  PubSubInput(ObjectInputStream pubsubInput, ChatPanel chatPanel, ChatList chatList, CreateGroupChat createGroupChat, ListOfFriendID listOfFriendID, FriendPanel friendPanel, FriendRequestPanel friendRequestPanel, FriendRequestInformation friendRequestInformation, boolean running){
     this.pubsubInput = pubsubInput;
     this.chatPanel = chatPanel;
     this.chatList = chatList;
@@ -31,6 +32,7 @@ public class PubSubInput implements Runnable {
     this.listOfFriendID = listOfFriendID;
     this.friendPanel = friendPanel;
     this.friendRequestPanel = friendRequestPanel;
+    this.friendRequestInformation = friendRequestInformation;
     this.running = true;
   }
 
@@ -45,13 +47,19 @@ public class PubSubInput implements Runnable {
       }
       if (pubSubMessage instanceof PubSubDmJoined){
         dmJoined = ((PubSubDmJoined)pubSubMessage);
-        //dmJoined.getChatId();
+        dmJoined.getChatId();
       } else if (pubSubMessage instanceof PubSubFriendRequestCreated){
-
+        friendRequestCreated = ((PubSubFriendRequestCreated)pubSubMessage);
+        friendRequestInformation.addRequest(friendRequestCreated.getFriendRequestId(), friendRequestCreated.getSourceUsername(), friendRequestCreated.getTargetUsername());
+        friendRequestPanel.updateFriendRequestInformation(friendRequestInformation);
+        System.out.println("got friend req");
       } else if (pubSubMessage instanceof PubSubFriendRequestFailed){
-
+        friendRequestFailed = ((PubSubFriendRequestFailed)pubSubMessage);
+        friendRequestInformation.removeRequest(friendRequestCreated.getFriendRequestId());
+        friendRequestPanel.updateFriendRequestInformation(friendRequestInformation);
+        System.out.print("friend req no accepted");
       } else if (pubSubMessage instanceof PubSubFriendUpdate){
-
+        
       } else if (pubSubMessage instanceof PubSubGroupChatJoined){
 
       } else if (pubSubMessage instanceof PubSubMessageReceived){

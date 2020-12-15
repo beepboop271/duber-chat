@@ -37,9 +37,10 @@ public class FriendPanel extends JPanel implements ActionListener {
     friendListPanel.add(temp);
     friendListPane = new JScrollPane(friendPanel);
     typeField = new JTextField();
-    typeField.setPreferredSize(new Dimension(225,25));
+    typeField.setPreferredSize(new Dimension(200,25));
     sendFriendRequest = new JButton("Add Friend");
     sendFriendRequest.setPreferredSize(new Dimension(60,25));
+    sendFriendRequest.addActionListener(this);
     sendFriendRequest.setActionCommand("send");
     updatePanel();
     mainPanel.add(typeField);
