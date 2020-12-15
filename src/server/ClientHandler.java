@@ -11,6 +11,8 @@ import logger.Log;
 import messages.CommandMessage;
 import messages.DoLogin;
 import messages.DoPubSubLogin;
+import messages.GetMessage;
+import messages.GetReply;
 import messages.Reply;
 import reduber.ReDuber;
 import reduber.ReDuberId;
@@ -92,7 +94,11 @@ class ClientHandler implements Runnable {
               return;
             }
           }
-          Log.info("Sending reply", "ClientHandler", this.sessionId, reply);
+          Log.info("Sending command reply", "ClientHandler", this.sessionId, reply);
+          this.out.writeObject(reply);
+        } else if (o instanceof GetMessage) {
+          GetReply reply = ((GetMessage)o).execute(this.db, this.user);
+          Log.info("Sending get reply", "ClientHandler", this.sessionId, reply);
           this.out.writeObject(reply);
         }
       } catch (IOException e) {
