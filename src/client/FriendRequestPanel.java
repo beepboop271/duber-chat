@@ -34,7 +34,7 @@ public class FriendRequestPanel extends JPanel implements ActionListener {
     this.friendRequestInfo = friendRequestInfo;
     mainPanel = new JPanel();
     mainPanel.setPreferredSize(new Dimension(300, 370));
-    updateList(this.friendRequestInfo);
+    updatePanel();
     
     mainPanel.add(requestListPane);
   }
@@ -63,7 +63,7 @@ public class FriendRequestPanel extends JPanel implements ActionListener {
   public void setCancelled(boolean b){
     cancelled = b;
   }
-  public void updateList(FriendRequestInformation friendRequestInfo){
+  public void updatePanel(){
     int numberOfRequests = friendRequestInfo.getFriendRequestIds().length;
     accept = new JButton[numberOfRequests];
     reject = new JButton[numberOfRequests];
@@ -115,7 +115,10 @@ public class FriendRequestPanel extends JPanel implements ActionListener {
       listPanel.add(friendRequestPanel[i]);
     }
   }
-
+  public void updateFriendRequestInformation(FriendRequestInformation friendRequestInfo){
+    this.friendRequestInfo = friendRequestInfo;
+    updatePanel();
+  }
   public void actionPerformed(ActionEvent e) {
     if ("accept".equals(e.getActionCommand())) {
       JButton temp = ((JButton)e.getSource());//text is the name of the account that the users sends or recieves a message from

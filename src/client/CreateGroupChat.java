@@ -21,12 +21,29 @@ public class CreateGroupChat extends JPanel implements ActionListener {
 
   CreateGroupChat(ListOfFriendID friendIDs){
     this.friendIDs = friendIDs;
-    map = new HashMap<>();
     friendListPanel = new JPanel();
     friendListPane = new JScrollPane(friendListPanel);
     friendListPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
     friendListPanel.setPreferredSize(new Dimension(300, 360));
     friendListPane.setPreferredSize(new Dimension(300, 370));
+    friendListPanel.add(new JPanel());//temp panel
+
+    updatePanel();
+
+    createButton = new JButton("Create group chat");
+    createButton.setActionCommand("create");
+    createButton.addActionListener(this);
+    createButton.setPreferredSize(new Dimension(280, 25));
+
+    
+    mainPanel = new JPanel();
+    mainPanel.add(createButton);
+    mainPanel.add(friendListPane);
+    
+  }
+  public void updatePanel(){
+    friendListPanel.removeAll();
+    map = new HashMap<>();
     String tempFriendName;
     friendIDsBox = new JCheckBox[friendIDs.getFriendInfo().length];
     for (int i = 0; i < friendIDs.getFriendInfo().length; i++) {
@@ -40,18 +57,11 @@ public class CreateGroupChat extends JPanel implements ActionListener {
       map.put(tempFriendName, friendIDsBox[i]);
       friendListPanel.add(friendIDsBox[i]);
     }
-    createButton = new JButton("Create group chat");
-    createButton.setActionCommand("create");
-    createButton.addActionListener(this);
-    createButton.setPreferredSize(new Dimension(280, 25));
-
-    
-    mainPanel = new JPanel();
-    mainPanel.add(createButton);
-    mainPanel.add(friendListPane);
-    
   }
-
+  public void updateListOfFriendID(ListOfFriendID friendIDs) {
+    this.friendIDs = friendIDs;
+    updatePanel();
+  }
   public JPanel getPanel(){
     return mainPanel;
   }
