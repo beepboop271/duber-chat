@@ -39,7 +39,11 @@ public class DoLogin extends CommandMessage {
 
         user.login(this.username, userId);
         db.set("users."+userId+".status", "ONLINE").get();
-        new PubSubStatusChange(userId, "ONLINE", null).execute(db);
+        new PubSubStatusChange(
+          userId,
+          "ONLINE",
+          db.stringGet("users."+userId+".message").get()
+        ).execute(db);
 
         return CommandReply.ok();
       } else {
