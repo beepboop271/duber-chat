@@ -46,7 +46,7 @@ public class DoFriendRemove extends CommandMessage {
         CompletableFuture.allOf(
           db.setRemove("users."+this.userId+".friends", user.getUserId()),
           db.setRemove("users."+user.getUserId()+".friends", this.userId)
-        );
+        ).get();
       }
     } catch (ExecutionException e) {
       Log.warn("Failed to remove friend", "MessageHandler", this, e);

@@ -13,8 +13,8 @@ public class SortedArray<E extends Comparable<E>> implements Serializable {
 
   @SuppressWarnings("unchecked")
   public SortedArray() {
-    this.arr = ((E[])new Comparable[capacity]);
     this.capacity = SortedArray.MIN_CAPACITY;
+    this.arr = ((E[])new Comparable[this.capacity]);
     this.length = 0;
   }
 
@@ -45,9 +45,15 @@ public class SortedArray<E extends Comparable<E>> implements Serializable {
 
   private int getInsertionIndex(E element) {
     // attempts to place equal elements appear later, but not guaranteed
+    if (this.length == 0) {
+      return 0;
+    }
 
     // most likely case: element belongs in the first few elements
     for (int i = 1; i <= 5; ++i) {
+      if (i > this.length) {
+        return 0;
+      }
       if (element.compareTo(this.arr[this.length-i]) >= 0) {
         return this.length-i+1;
       }

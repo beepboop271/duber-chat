@@ -1,5 +1,8 @@
 package messages;
 
+import java.util.concurrent.ExecutionException;
+
+import logger.Log;
 import reduber.ReDuber;
 import server.ConnectedUser;
 
@@ -12,8 +15,58 @@ public class GetFriendRequests extends GetMessage {
   @Override
   public GetReply execute(ReDuber db, ConnectedUser user)
     throws InterruptedException {
-    // TODO Auto-generated method stub
-    return null;
+    if (!user.isLoggedIn()) {
+      return new GetFriendRequestsReply(
+        Reply.Status.E_NO_PERMISSION,
+        "Not logged in"
+      );
+    }
+
+    try {
+      Long[] outgoing = db.listGet("users."+user.getUserId()+".outgoingFriendRequests").get();
+      Long[] incoming = db.listGet("users."+user.getUserId()+".incomingFriendRequests").get();
+
+      Long[] requests = new Long[outgoing.length+incoming.length];
+      String[] sources = new String[requests.length];
+      String[] targets = new String[requests.length];
+      int i = 0;
+      for (long id : outgoing) {
+        requests[i] = id;
+        sources[i] =
+          db.stringGet(
+            "users."
+              +db.longGet("friendRequests."+id+".sourceUserId").get()
+              +".username"
+          ).get();
+        targets[i] =
+          db.stringGet(
+            "users."
+              +db.longGet("friendRequests."+id+".targetUserId").get()
+              +".username"
+          ).get();
+        ++i;
+      }
+      for (long id : incoming) {
+        requests[i] = id;
+        sources[i] =
+          db.stringGet(
+            "users."
+              +db.longGet("friendRequests."+id+".sourceUserId").get()
+              +".username"
+          ).get();
+        targets[i] =
+          db.stringGet(
+            "users."
+              +db.longGet("friendRequests."+id+".targetUserId").get()
+              +".username"
+          ).get();
+        ++i;
+      }
+      return new GetFriendRequestsReply(requests, sources, targets);
+    } catch (ExecutionException e) {
+      Log.warn("Failed to get friend requests", "MessageHandler", this, e);
+    }
+    return new GetFriendRequestsReply(Reply.Status.E_SERVER_UNKNOWN);
   }
 
   public static class GetFriendRequestsReply extends GetReply {
@@ -34,7 +87,14 @@ public class GetFriendRequests extends GetMessage {
       this.targetUsernames = targetUsernames;
     }
 
-    public GetFriendRequestsReply(Status status, String detailMessage) {
+    public GetFriendRequestsReply(Reply.Status status) {
+      super(status);
+      this.friendRequestIds = null;
+      this.sourceUsernames = null;
+      this.targetUsernames = null;
+    }
+
+    public GetFriendRequestsReply(Reply.Status status, String detailMessage) {
       super(status, detailMessage);
       this.friendRequestIds = null;
       this.sourceUsernames = null;

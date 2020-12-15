@@ -59,6 +59,8 @@ public class DoFriendAccept extends CommandMessage {
             "users."+targetUserId+".incomingFriendRequests",
             this.friendRequestId
           ),
+          db.setRemove("users."+sourceUserId+".pendingFriends", targetUserId),
+          db.setRemove("users."+targetUserId+".pendingFriends", sourceUserId),
           db.setAdd("users."+sourceUserId+".friends", targetUserId),
           db.setAdd("users."+targetUserId+".friends", sourceUserId),
           db.longRemove("friendRequests."+this.friendRequestId+".sourceUserId"),
