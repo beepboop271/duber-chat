@@ -22,10 +22,10 @@ public class DoFriendReject extends CommandMessage {
   }
 
   @Override
-  public CommandReply execute(ReDuber db, ConnectedUser user)
+  public Reply execute(ReDuber db, ConnectedUser user)
     throws InterruptedException {
     if (!user.isLoggedIn()) {
-      return CommandReply.noPermission("Not logged in");
+      return Reply.noPermission("Not logged in");
     }
 
     try {
@@ -33,13 +33,13 @@ public class DoFriendReject extends CommandMessage {
         "friendRequests."+this.friendRequestId+".sourceUserId"
       ).get();
       if (sourceUserId == null) {
-        return CommandReply.notExists("Friend request does not exist");
+        return Reply.notExists("Friend request does not exist");
       }
       Long targetUserId = db.longGet(
         "friendRequests."+this.friendRequestId+".targetUserId"
       ).get();
       if (user.getUserId() != targetUserId) {
-        return CommandReply.badOperation(
+        return Reply.badOperation(
           "Cannot reject a friend request not addressed to you"
         );
       }
@@ -74,10 +74,10 @@ public class DoFriendReject extends CommandMessage {
           db.longRemove("friendRequests."+this.friendRequestId+".targetUserId")
         )
         .get();
-      return CommandReply.ok();
+      return Reply.ok();
     } catch (ExecutionException e) {
       Log.warn("Failed to reject friend request", "MessageHandler", this, e);
     }
-    return CommandReply.serverUnknown();
+    return Reply.serverUnknown();
   }
 }

@@ -31,10 +31,10 @@ public class CreateGroupChat extends CommandMessage {
   }
 
   @Override
-  public CommandReply execute(ReDuber db, ConnectedUser user)
+  public Reply execute(ReDuber db, ConnectedUser user)
     throws InterruptedException {
     if (!user.isLoggedIn()) {
-      return CommandReply.noPermission("Not logged in");
+      return Reply.noPermission("Not logged in");
     }
 
     try {
@@ -44,12 +44,12 @@ public class CreateGroupChat extends CommandMessage {
           userId
         ).get();
         if (status == ReDuber.Status.FALSE) {
-          return CommandReply.notExists(
+          return Reply.notExists(
             "User(s) does not exist or is not friends with you"
           );
         } else if (status != ReDuber.Status.TRUE) {
           Log.warn("Failed to create group chat", "MessageHandler", this);
-          return CommandReply.serverUnknown();
+          return Reply.serverUnknown();
         }
       }
 
@@ -84,10 +84,10 @@ public class CreateGroupChat extends CommandMessage {
         .get();
       new PubSubGroupChatJoined(chatId, this.userIds, this.name, messageId)
         .execute(db);
-      return CommandReply.ok();
+      return Reply.ok();
     } catch (ExecutionException e) {
       Log.warn("Failed to create group chat", "MessageHandler", this, e);
     }
-    return CommandReply.serverUnknown();
+    return Reply.serverUnknown();
   }
 }

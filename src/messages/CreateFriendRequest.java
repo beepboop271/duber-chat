@@ -23,23 +23,23 @@ public class CreateFriendRequest extends CommandMessage {
   }
 
   @Override
-  public CommandReply execute(ReDuber db, ConnectedUser user)
+  public Reply execute(ReDuber db, ConnectedUser user)
     throws InterruptedException {
     if (!user.isLoggedIn()) {
-      return CommandReply.noPermission("Not logged in");
+      return Reply.noPermission("Not logged in");
     }
 
     try {
       Long targetUserId = db.longGet("users."+this.targetUsername+".id").get();
       if (targetUserId == null) {
-        return CommandReply.notExists("Given username does not exist");
+        return Reply.notExists("Given username does not exist");
       }
       ReDuber.Status result = db.setContains(
         "users."+user.getUserId()+".friends",
         targetUserId
       ).get();
       if (result == ReDuber.Status.TRUE) {
-        return CommandReply.exists("Already friends with the given username");
+        return Reply.exists("Already friends with the given username");
       } else if (result == ReDuber.Status.FALSE) {
         long requestId = ReDuberId.getId();
         CompletableFuture.allOf(
@@ -61,11 +61,11 @@ public class CreateFriendRequest extends CommandMessage {
           user.getUsername(),
           this.targetUsername
         ).execute(db, targetUserId);
-        return CommandReply.ok();
+        return Reply.ok();
       }
     } catch (ExecutionException e) {
       Log.warn("Failed to create friend request", "MessageHandler", this, e);
     }
-    return CommandReply.serverUnknown();
+    return Reply.serverUnknown();
   }
 }

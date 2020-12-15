@@ -23,10 +23,10 @@ public class CreateDm extends CommandMessage {
   }
 
   @Override
-  public CommandReply execute(ReDuber db, ConnectedUser user)
+  public Reply execute(ReDuber db, ConnectedUser user)
     throws InterruptedException {
     if (!user.isLoggedIn()) {
-      return CommandReply.noPermission("Not logged in");
+      return Reply.noPermission("Not logged in");
     }
 
     try {
@@ -35,10 +35,10 @@ public class CreateDm extends CommandMessage {
         this.userId
       ).get();
       if (status == ReDuber.Status.FALSE) {
-        return CommandReply.notExists("User does not exist or is not friends with you");
+        return Reply.notExists("User does not exist or is not friends with you");
       } else if (status == ReDuber.Status.TRUE) {
         if (db.longGet("users."+user.getUserId()+".dms."+this.userId) != null) {
-          return CommandReply.exists("DM chat exists already");
+          return Reply.exists("DM chat exists already");
         }
         long chatId = ReDuberId.getId();
         long messageId = ReDuberId.getId();
@@ -66,11 +66,11 @@ public class CreateDm extends CommandMessage {
           new Long[] { user.getUserId(), this.userId },
           messageId
         ).execute(db);
-        return CommandReply.ok();
+        return Reply.ok();
       }
     } catch (ExecutionException e) {
       Log.warn("Failed to create DM chat", "MessageHandler", this, e);
     }
-    return CommandReply.serverUnknown();
+    return Reply.serverUnknown();
   }
 }

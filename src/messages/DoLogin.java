@@ -23,17 +23,17 @@ public class DoLogin extends CommandMessage {
   }
 
   @Override
-  public CommandReply execute(ReDuber db, ConnectedUser user)
+  public Reply execute(ReDuber db, ConnectedUser user)
     throws InterruptedException {
     if (user.isLoggedIn()) {
-      return CommandReply.badOperation("User already logged in");
+      return Reply.badOperation("User already logged in");
     }
 
     try {
       String password = db.stringGet("users."+this.username+".password").get();
 
       if (password == null) {
-        return CommandReply.notExists("Username does not exist");
+        return Reply.notExists("Username does not exist");
       } else if (password.equals(this.password)) {
         long userId = db.longGet("users."+this.username+".id").get();
 
@@ -45,13 +45,13 @@ public class DoLogin extends CommandMessage {
           db.stringGet("users."+userId+".message").get()
         ).execute(db);
 
-        return CommandReply.ok();
+        return Reply.ok();
       } else {
-        return CommandReply.badArgs("Password is incorrect");
+        return Reply.badArgs("Password is incorrect");
       }
     } catch (ExecutionException e) {
       Log.error("Failed to login", "MessageHandler", this, e);
     }
-    return CommandReply.serverUnknown();
+    return Reply.serverUnknown();
   }
 }

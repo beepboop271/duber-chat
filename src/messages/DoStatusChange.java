@@ -28,10 +28,10 @@ public class DoStatusChange extends CommandMessage {
   }
 
   @Override
-  public CommandReply execute(ReDuber db, ConnectedUser user)
+  public Reply execute(ReDuber db, ConnectedUser user)
     throws InterruptedException {
     if (!user.isLoggedIn()) {
-      return CommandReply.noPermission("Not logged in");
+      return Reply.noPermission("Not logged in");
     }
 
     try {
@@ -46,10 +46,10 @@ public class DoStatusChange extends CommandMessage {
         this.userStatus,
         this.userMessage
       ).execute(db);
-      return CommandReply.ok();
+      return Reply.ok();
     } catch (ExecutionException e) {
       Log.warn("Failed to change status", "MessageHandler", this, e);
     }
-    return CommandReply.serverUnknown();
+    return Reply.serverUnknown();
   }
 }

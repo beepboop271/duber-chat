@@ -22,10 +22,10 @@ public class DoFriendRemove extends CommandMessage {
   }
 
   @Override
-  public CommandReply execute(ReDuber db, ConnectedUser user)
+  public Reply execute(ReDuber db, ConnectedUser user)
     throws InterruptedException {
     if (!user.isLoggedIn()) {
-      return CommandReply.noPermission("Not logged in");
+      return Reply.noPermission("Not logged in");
     }
 
     try {
@@ -34,7 +34,7 @@ public class DoFriendRemove extends CommandMessage {
         this.userId
       ).get();
       if (status == ReDuber.Status.FALSE) {
-        return CommandReply.notExists(
+        return Reply.notExists(
           "User does not exist or is not friends with you"
         );
       } else if (status == ReDuber.Status.TRUE) {
@@ -51,6 +51,6 @@ public class DoFriendRemove extends CommandMessage {
     } catch (ExecutionException e) {
       Log.warn("Failed to remove friend", "MessageHandler", this, e);
     }
-    return CommandReply.serverUnknown();
+    return Reply.serverUnknown();
   }
 }

@@ -29,7 +29,7 @@ public class CreateAccount extends CommandMessage {
   }
 
   @Override
-  public CommandReply execute(ReDuber db, ConnectedUser user)
+  public Reply execute(ReDuber db, ConnectedUser user)
     throws InterruptedException {
     try {
       // plain text passwords lol
@@ -47,13 +47,13 @@ public class CreateAccount extends CommandMessage {
             db.set("users."+userId+".message", "")
           )
           .get();
-        return CommandReply.ok();
+        return Reply.ok();
       } else if (result == ReDuber.Status.NO_CHANGE) {
-        return CommandReply.exists("Username is taken");
+        return Reply.exists("Username is taken");
       }
     } catch (ExecutionException e) {
       Log.error("Failed to create account", "MessageHandler", this, e);
     }
-    return CommandReply.serverUnknown();
+    return Reply.serverUnknown();
   }
 }
