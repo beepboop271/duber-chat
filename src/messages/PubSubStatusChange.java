@@ -9,8 +9,8 @@ public class PubSubStatusChange extends PubSubMessage {
   private static final long serialVersionUID = 0L;
 
   private final long userId;
-  private String userStatus;
-  private String userMessage;
+  private final String userStatus;
+  private final String userMessage;
 
   public PubSubStatusChange(long userId, String userStatus, String message) {
     this.userId = userId;
@@ -32,12 +32,6 @@ public class PubSubStatusChange extends PubSubMessage {
   @Override
   public void execute(ReDuber db) throws InterruptedException {
     try {
-      if (this.userStatus == null) {
-        this.userStatus = db.stringGet("users."+this.userId+".status").get();
-      }
-      if (this.userMessage == null) {
-        this.userMessage = db.stringGet("users."+this.userId+".message").get();
-      }
       db.publishMany("users."+this.userId+".friends", this).get();
     } catch (ExecutionException e) {
       Log.warn("Failed to submit Publish job", "MessagePublisher", this, e);
