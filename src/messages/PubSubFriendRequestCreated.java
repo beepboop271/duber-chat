@@ -24,7 +24,7 @@ public class PubSubFriendRequestCreated extends PubSubDirectMessage {
 
   @Override
   public String toString() {
-    return "PublishFriendRequestReceived[friendRequestId="
+    return "PubSubFriendRequestReceived[friendRequestId="
       +this.friendRequestId
       +", sourceUsername="
       +this.sourceUsername
