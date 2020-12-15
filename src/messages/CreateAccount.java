@@ -21,14 +21,16 @@ public class CreateAccount extends CommandMessage {
 
   @Override
   public String toString() {
-    return "CreateAccount[password="+password+", username="+username+"]";
+    return "CreateAccount[username="
+      +this.username
+      +", password="
+      +this.password
+      +"]";
   }
 
   @Override
-  public CommandReply execute(
-    ReDuber db,
-    ConnectedUser user
-  ) throws InterruptedException {
+  public CommandReply execute(ReDuber db, ConnectedUser user)
+    throws InterruptedException {
     try {
       // plain text passwords lol
       String key = "users."+this.username+".password";
@@ -37,12 +39,14 @@ public class CreateAccount extends CommandMessage {
       if (result == ReDuber.Status.OK) {
         // no atomic batch operations lol
         long userId = ReDuberId.getId();
-        CompletableFuture.allOf(
-          db.set("users."+this.username+".id", userId),
-          db.set("users."+userId+".username", this.username),
-          db.set("users."+userId+".status", "OFFLINE"),
-          db.set("users."+userId+".message", "")
-        ).get();
+        CompletableFuture
+          .allOf(
+            db.set("users."+this.username+".id", userId),
+            db.set("users."+userId+".username", this.username),
+            db.set("users."+userId+".status", "OFFLINE"),
+            db.set("users."+userId+".message", "")
+          )
+          .get();
         return CommandReply.ok();
       } else if (result == ReDuber.Status.NO_CHANGE) {
         return CommandReply.exists("Username is taken");

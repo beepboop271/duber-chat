@@ -1,5 +1,6 @@
 package messages;
 
+import java.util.Arrays;
 import java.util.StringJoiner;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -21,6 +22,15 @@ public class CreateGroupChat extends CommandMessage {
   }
 
   @Override
+  public String toString() {
+    return "CreateGroupChat[name="
+      +this.name
+      +", userIds="
+      +Arrays.toString(this.userIds)
+      +"]";
+  }
+
+  @Override
   public CommandReply execute(ReDuber db, ConnectedUser user)
     throws InterruptedException {
     if (!user.isLoggedIn()) {
@@ -34,7 +44,9 @@ public class CreateGroupChat extends CommandMessage {
           userId
         ).get();
         if (status == ReDuber.Status.FALSE) {
-          return CommandReply.notExists("User(s) does not exist or is not friends with you");
+          return CommandReply.notExists(
+            "User(s) does not exist or is not friends with you"
+          );
         } else if (status != ReDuber.Status.TRUE) {
           Log.warn("Failed to create group chat", "MessageHandler", this);
           return CommandReply.serverUnknown();
@@ -43,26 +55,35 @@ public class CreateGroupChat extends CommandMessage {
 
       long chatId = ReDuberId.getId();
       long messageId = ReDuberId.getId();
-      StringJoiner join = new StringJoiner(", ", "<@"+user.getUserId()+"> added ", " to the chat");
+      StringJoiner join = new StringJoiner(
+        ", ",
+        "<@"+user.getUserId()+"> added ",
+        " to the chat"
+      );
 
       for (long userId : this.userIds) {
         join.add("<@"+userId+">");
-        CompletableFuture.allOf(
-          db.setAdd("chats."+chatId+".members", userId),
-          db.setAdd("users."+userId+".chats", chatId)
-        ).get();
+        CompletableFuture
+          .allOf(
+            db.setAdd("chats."+chatId+".members", userId),
+            db.setAdd("users."+userId+".chats", chatId)
+          )
+          .get();
       }
 
-      CompletableFuture.allOf(
-        db.set("chats."+chatId+".type", "GROUP"),
-        db.set("chats."+chatId+".name", this.name),
-        db.set("messages."+messageId+".author", 0),
-        db.set("messages."+messageId+".chat", chatId),
-        db.set("messages."+messageId+".time", System.currentTimeMillis()),
-        db.set("messages."+messageId+".message", join.toString()),
-        db.listAdd("chats."+chatId+".messages", messageId)
-      ).get();
-      new PubSubGroupChatJoined(chatId, this.userIds, this.name, messageId).execute(db);
+      CompletableFuture
+        .allOf(
+          db.set("chats."+chatId+".type", "GROUP"),
+          db.set("chats."+chatId+".name", this.name),
+          db.set("messages."+messageId+".author", 0),
+          db.set("messages."+messageId+".chat", chatId),
+          db.set("messages."+messageId+".time", System.currentTimeMillis()),
+          db.set("messages."+messageId+".message", join.toString()),
+          db.listAdd("chats."+chatId+".messages", messageId)
+        )
+        .get();
+      new PubSubGroupChatJoined(chatId, this.userIds, this.name, messageId)
+        .execute(db);
       return CommandReply.ok();
     } catch (ExecutionException e) {
       Log.warn("Failed to create group chat", "MessageHandler", this, e);

@@ -18,6 +18,11 @@ public class CreateDm extends CommandMessage {
   }
 
   @Override
+  public String toString() {
+    return "CreateDm[userId="+this.userId+"]";
+  }
+
+  @Override
   public CommandReply execute(ReDuber db, ConnectedUser user)
     throws InterruptedException {
     if (!user.isLoggedIn()) {
@@ -37,23 +42,25 @@ public class CreateDm extends CommandMessage {
         }
         long chatId = ReDuberId.getId();
         long messageId = ReDuberId.getId();
-        CompletableFuture.allOf(
-          db.set("chats."+chatId+".type", "DM"),
-          db.setAdd("chats."+chatId+".members", user.getUserId()),
-          db.setAdd("chats."+chatId+".members", this.userId),
-          db.set("users."+user.getUserId()+".dms."+this.userId, chatId),
-          db.set("users."+this.userId+".dms."+user.getUserId(), chatId),
-          db.setAdd("users."+user.getUserId()+".chats", chatId),
-          db.setAdd("users."+this.userId+".chats", chatId),
-          db.set("messages."+messageId+".author", 0),
-          db.set("messages."+messageId+".chat", chatId),
-          db.set("messages."+messageId+".time", System.currentTimeMillis()),
-          db.set(
-            "messages."+messageId+".message",
-            "<@"+user.getUserId()+"> created a DM with <@"+this.userId+">"
-          ),
-          db.listAdd("chats."+chatId+".messages", messageId)
-        ).get();
+        CompletableFuture
+          .allOf(
+            db.set("chats."+chatId+".type", "DM"),
+            db.setAdd("chats."+chatId+".members", user.getUserId()),
+            db.setAdd("chats."+chatId+".members", this.userId),
+            db.set("users."+user.getUserId()+".dms."+this.userId, chatId),
+            db.set("users."+this.userId+".dms."+user.getUserId(), chatId),
+            db.setAdd("users."+user.getUserId()+".chats", chatId),
+            db.setAdd("users."+this.userId+".chats", chatId),
+            db.set("messages."+messageId+".author", 0),
+            db.set("messages."+messageId+".chat", chatId),
+            db.set("messages."+messageId+".time", System.currentTimeMillis()),
+            db.set(
+              "messages."+messageId+".message",
+              "<@"+user.getUserId()+"> created a DM with <@"+this.userId+">"
+            ),
+            db.listAdd("chats."+chatId+".messages", messageId)
+          )
+          .get();
         new PubSubDmJoined(
           chatId,
           new Long[] { user.getUserId(), this.userId },

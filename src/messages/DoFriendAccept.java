@@ -17,6 +17,11 @@ public class DoFriendAccept extends CommandMessage {
   }
 
   @Override
+  public String toString() {
+    return "DoFriendAccept[friendRequestId="+this.friendRequestId+"]";
+  }
+
+  @Override
   public CommandReply execute(ReDuber db, ConnectedUser user)
     throws InterruptedException {
     if (!user.isLoggedIn()) {
@@ -24,13 +29,19 @@ public class DoFriendAccept extends CommandMessage {
     }
 
     try {
-      Long sourceUserId = db.longGet("friendRequests."+this.friendRequestId+".sourceUserId").get();
+      Long sourceUserId = db.longGet(
+        "friendRequests."+this.friendRequestId+".sourceUserId"
+      ).get();
       if (sourceUserId == null) {
         return CommandReply.notExists("Friend request does not exist");
       }
-      Long targetUserId = db.longGet("friendRequests."+this.friendRequestId+".targetUserId").get();
+      Long targetUserId = db.longGet(
+        "friendRequests."+this.friendRequestId+".targetUserId"
+      ).get();
       if (user.getUserId() != targetUserId) {
-        return CommandReply.badOperation("Cannot accept a friend request not addressed to you");
+        return CommandReply.badOperation(
+          "Cannot accept a friend request not addressed to you"
+        );
       }
 
       new PubSubFriendUpdate(targetUserId, PubSubFriendUpdate.Type.ADD)
@@ -38,14 +49,22 @@ public class DoFriendAccept extends CommandMessage {
       new PubSubFriendUpdate(sourceUserId, PubSubFriendUpdate.Type.ADD)
         .execute(db, targetUserId);
 
-      CompletableFuture.allOf(
-        db.setRemove("users."+sourceUserId+".outgoingFriendRequests", this.friendRequestId),
-        db.setRemove("users."+targetUserId+".incomingFriendRequests", this.friendRequestId),
-        db.setAdd("users."+sourceUserId+".friends", targetUserId),
-        db.setAdd("users."+targetUserId+".friends", sourceUserId),
-        db.longRemove("friendRequests."+this.friendRequestId+".sourceUserId"),
-        db.longRemove("friendRequests."+this.friendRequestId+".targetUserId")
-      ).get();
+      CompletableFuture
+        .allOf(
+          db.setRemove(
+            "users."+sourceUserId+".outgoingFriendRequests",
+            this.friendRequestId
+          ),
+          db.setRemove(
+            "users."+targetUserId+".incomingFriendRequests",
+            this.friendRequestId
+          ),
+          db.setAdd("users."+sourceUserId+".friends", targetUserId),
+          db.setAdd("users."+targetUserId+".friends", sourceUserId),
+          db.longRemove("friendRequests."+this.friendRequestId+".sourceUserId"),
+          db.longRemove("friendRequests."+this.friendRequestId+".targetUserId")
+        )
+        .get();
       return CommandReply.ok();
     } catch (ExecutionException e) {
       Log.warn("Failed to accept friend request", "MessageHandler", this, e);

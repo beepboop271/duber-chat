@@ -92,6 +92,7 @@ class ClientHandler implements Runnable {
               return;
             }
           }
+          Log.info("Sending reply", "ClientHandler", this.sessionId, reply);
           this.out.writeObject(reply);
         }
       } catch (IOException e) {

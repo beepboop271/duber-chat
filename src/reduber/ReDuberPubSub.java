@@ -31,7 +31,7 @@ class ReDuberPubSub {
 
     @Override
     public String toString() {
-      return "PublishJob[message="+message+", out="+out+"]";
+      return "PublishJob[message="+this.message+", out="+this.out+"]";
     }
 
     @Override

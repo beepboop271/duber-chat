@@ -29,6 +29,21 @@ public class PubSubMessageReceived extends PubSubMessage {
   }
 
   @Override
+  public String toString() {
+    return "PubSubMessageReceived[chatId="
+      +this.chatId
+      +", message="
+      +this.message
+      +", userId="
+      +this.userId
+      +", messageId="
+      +this.messageId
+      +", time="
+      +this.time
+      +"]";
+  }
+
+  @Override
   public void execute(ReDuber db) throws InterruptedException {
     try {
       if (this.chatId == null) {
@@ -41,7 +56,8 @@ public class PubSubMessageReceived extends PubSubMessage {
         this.time = db.longGet("messages."+this.messageId+".time").get();
       }
       if (this.message == null) {
-        this.message = db.stringGet("messages."+this.messageId+".message").get();
+        this.message =
+          db.stringGet("messages."+this.messageId+".message").get();
       }
       db.publishMany("chats."+this.chatId+".members", this).get();
     } catch (ExecutionException e) {

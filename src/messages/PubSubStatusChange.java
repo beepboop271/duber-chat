@@ -19,13 +19,24 @@ public class PubSubStatusChange extends PubSubMessage {
   }
 
   @Override
+  public String toString() {
+    return "PubSubStatusChange[userId="
+      +this.userId
+      +", userStatus="
+      +this.userStatus
+      +", userMessage="
+      +this.userMessage
+      +"]";
+  }
+
+  @Override
   public void execute(ReDuber db) throws InterruptedException {
     try {
       if (this.userStatus == null) {
         this.userStatus = db.stringGet("users."+this.userId+".status").get();
       }
       if (this.userMessage == null) {
-        this.userMessage = db.stringGet("users."+this.userMessage+".message").get();
+        this.userMessage = db.stringGet("users."+this.userId+".message").get();
       }
       db.publishMany("users."+this.userId+".friends", this).get();
     } catch (ExecutionException e) {

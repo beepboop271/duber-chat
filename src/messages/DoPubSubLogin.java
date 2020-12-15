@@ -19,14 +19,16 @@ public class DoPubSubLogin extends CommandMessage {
 
   @Override
   public String toString() {
-    return "DoPubSubLogin[password="+password+", username="+username+"]";
+    return "DoPubSubLogin[username="
+      +this.username
+      +", password="
+      +this.password
+      +"]";
   }
 
   @Override
-  public CommandReply execute(
-    ReDuber db,
-    ConnectedUser user
-  ) throws InterruptedException {
+  public CommandReply execute(ReDuber db, ConnectedUser user)
+    throws InterruptedException {
     if (user.isLoggedIn()) {
       return CommandReply.badOperation("User already logged in PubSub");
     }
@@ -36,7 +38,7 @@ public class DoPubSubLogin extends CommandMessage {
 
       if (password == null) {
         return CommandReply.notExists("Username does not exist");
-      } else if (password.equals(this.password)) {        
+      } else if (password.equals(this.password)) {
         long userId = db.longGet("users."+this.username+".id").get();
 
         user.login(this.username, userId);

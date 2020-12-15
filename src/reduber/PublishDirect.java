@@ -13,6 +13,17 @@ class PublishDirect extends OperationData<Long, ReDuber.Status> {
     this.message = message;
   }
 
+  @Override
+  public String toString() {
+    return "PublishDirect[key="
+      +this.getKey()
+      +", args="+this.getArgs()
+      +", message="+this.message
+      +", id="+this.getId()
+      +", result="+this.getResult()
+      +"]";
+  }
+
   void publishDirect(
     Map<Long, Set<ObjectOutputStream>> loggedInUsers,
     ReDuberPubSub pubSub

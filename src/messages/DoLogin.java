@@ -19,14 +19,12 @@ public class DoLogin extends CommandMessage {
 
   @Override
   public String toString() {
-    return "DoLogin[password="+password+", username="+username+"]";
+    return "DoLogin[username="+this.username+", password="+this.password+"]";
   }
 
   @Override
-  public CommandReply execute(
-    ReDuber db,
-    ConnectedUser user
-  ) throws InterruptedException {
+  public CommandReply execute(ReDuber db, ConnectedUser user)
+    throws InterruptedException {
     if (user.isLoggedIn()) {
       return CommandReply.badOperation("User already logged in");
     }
@@ -40,8 +38,9 @@ public class DoLogin extends CommandMessage {
         long userId = db.longGet("users."+this.username+".id").get();
 
         user.login(this.username, userId);
+        db.set("users."+userId+".status", "ONLINE").get();
         new PubSubStatusChange(userId, "ONLINE", null).execute(db);
-        
+
         return CommandReply.ok();
       } else {
         return CommandReply.badArgs("Password is incorrect");
