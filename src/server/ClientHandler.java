@@ -9,9 +9,9 @@ import java.util.concurrent.ExecutionException;
 
 import logger.Log;
 import messages.CommandMessage;
-import messages.CommandReply;
 import messages.DoLogin;
 import messages.DoPubSubLogin;
+import messages.Reply;
 import reduber.ReDuber;
 import reduber.ReDuberId;
 
@@ -80,7 +80,7 @@ class ClientHandler implements Runnable {
 
       try {
         if (o instanceof CommandMessage) {
-          CommandReply reply = ((CommandMessage)o).execute(this.db, this.user);
+          Reply reply = ((CommandMessage)o).execute(this.db, this.user);
           if (o instanceof DoLogin) {
             if (this.user.isLoggedIn()) {
               Log.info("Logged in", "ClientHandler", this.sessionId, o);
