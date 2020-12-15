@@ -18,11 +18,11 @@ public class Log {
     int code = text.hashCode();
     // large prime number xor to shake up the bits a little so
     // very close ids aren't just off by a few rgb values
-    code = code ^ (code*48611);
-    // darkest possible colour is (96, 96, 96)
-    int r = (code & 0xff) | 96;
-    int g = ((code & 0xff00)>>8) | 96;
-    int b = ((code & 0xff0000)>>16) | 96;
+    code = code ^ (code*32452843);
+    // darkest possible colour is (64, 64, 64)
+    int r = (code & 0xff) | 64;
+    int g = ((code & 0xff00)>>8) | 64;
+    int b = ((code & 0xff0000)>>16) | 64;
 
     return String.format("\u001B[38;2;%d;%d;%dm", r, g, b);
   }
