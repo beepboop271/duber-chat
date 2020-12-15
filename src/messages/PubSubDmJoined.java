@@ -1,21 +1,20 @@
 package messages;
 
-import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
 import logger.Log;
 import reduber.ReDuber;
 
-public class PubSubDmJoined extends PubSubMessage {
+public class PubSubDmJoined extends PubSubDirectMessage {
   private static final long serialVersionUID = 0L;
 
   private final long chatId;
-  private final Long[] userIds;
+  private final long userId;
   private final long lastMessageId;
 
-  public PubSubDmJoined(long chatId, Long[] userIds, long lastMessageId) {
+  public PubSubDmJoined(long chatId, long userId, long lastMessageId) {
     this.chatId = chatId;
-    this.userIds = userIds;
+    this.userId = userId;
     this.lastMessageId = lastMessageId;
   }
 
@@ -23,17 +22,17 @@ public class PubSubDmJoined extends PubSubMessage {
   public String toString() {
     return "PubSubDmJoined[chatId="
       +this.chatId
-      +", userIds="
-      +Arrays.toString(this.userIds)
+      +", userId="
+      +this.userId
       +", lastMessageId="
       +this.lastMessageId
       +"]";
   }
 
   @Override
-  public void execute(ReDuber db) throws InterruptedException {
+  public void execute(ReDuber db, long recipient) throws InterruptedException {
     try {
-      db.publishMany("chats."+this.chatId+".members", this).get();
+      db.publishDirect(recipient, this).get();
     } catch (ExecutionException e) {
       Log.warn("Failed to submit Publish job", "MessagePublisher", this, e);
     }
@@ -43,8 +42,8 @@ public class PubSubDmJoined extends PubSubMessage {
     return this.chatId;
   }
 
-  public Long[] getUserIds() {
-    return this.userIds;
+  public long getUserId() {
+    return this.userId;
   }
 
   public long getLastMessageId() {

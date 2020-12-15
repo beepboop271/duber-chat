@@ -63,9 +63,14 @@ public class CreateDm extends CommandMessage {
           .get();
         new PubSubDmJoined(
           chatId,
-          new Long[] { user.getUserId(), this.userId },
+          this.userId,
           messageId
-        ).execute(db);
+        ).execute(db, user.getUserId());
+        new PubSubDmJoined(
+          chatId,
+          user.getUserId(),
+          messageId
+        ).execute(db, this.userId);
         return Reply.ok();
       }
     } catch (ExecutionException e) {

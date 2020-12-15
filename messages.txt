@@ -197,8 +197,8 @@ setup: [
     action: "GET_MESSAGES";
     client: {
       chatId: long;
-      beforeMessageId: long;
-      amount: long;
+      startMessageId: long;
+      amount: int;
     };
     server: {
       status: "OK" | "ENOTEXISTS" | "ENOPERMISSION" | "EBADARGS";
@@ -230,7 +230,7 @@ serverOnly: [
   {
     action: "DM_JOINED";
     chatId: long;
-    userIds: Long[];
+    userId: long;
     lastMessageId: long;
   },
   {
