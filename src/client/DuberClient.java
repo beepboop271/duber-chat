@@ -326,7 +326,7 @@ class ChatClient {
 
       if (updateFriendRequestList) {
 
-        friendRequestPanel.updatePanel(friendRequestInfo);
+        //friendRequestPanel.updatePanel(friendRequestInfo);
       }
 
       if (updateFriendList) {

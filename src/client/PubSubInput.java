@@ -45,7 +45,7 @@ public class PubSubInput implements Runnable {
       }
       if (pubSubMessage instanceof PubSubDmJoined){
         dmJoined = ((PubSubDmJoined)pubSubMessage);
-        dmJoined.getChatId();
+        //dmJoined.getChatId();
       } else if (pubSubMessage instanceof PubSubFriendRequestCreated){
 
       } else if (pubSubMessage instanceof PubSubFriendRequestFailed){
@@ -61,6 +61,10 @@ public class PubSubInput implements Runnable {
       }
       
     }
-    pubsubInput.close();
+    try{
+      pubsubInput.close();
+    }catch (Exception e) { 
+      System.out.println("Failed to close socket");
+    }
   }
 }
