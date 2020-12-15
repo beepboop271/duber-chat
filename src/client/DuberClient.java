@@ -35,7 +35,7 @@ class ChatClient {
   private ChatInformation chatInfo;
   private ChatList chatList;
   private int port;
-  private String ip, username;
+  private String ip, username, password;
   private Reply commandReply;
   private PubSubMessage pubSubMessage;
   //private GetReply reply;
@@ -63,6 +63,11 @@ class ChatClient {
     port = serverPortPanel.getPort();
     loginWindow.remove(loginPanel);
     System.out.println("server connections saved");
+    
+    try{
+      Thread.sleep(1000);
+    } catch(IllegalArgumentException | InterruptedException e2) {
+    }
 
 
     //login screen
@@ -85,13 +90,16 @@ class ChatClient {
     }
     System.out.println();
     username = loginPanel.getUsername();
+    password = loginPanel.getPassword();
     loginWindow.dispose();
     
 
     //connects pubsub socket
     try {
       pubSubSocket = new Socket(ip, port); // attempt socket connection (local address). This will wait until a connection is made
+      ObjectOutputStream pubsubOutput = new ObjectOutputStream(pubSubSocket.getOutputStream());
       pubsubInput = new ObjectInputStream(pubSubSocket.getInputStream()); // Stream for network input
+      pubsubOutput.writeObject(new DoPubSubLogin(username, password));
       System.out.println("pubsub Sock and input connected");
     } catch (IOException e) { // connection error occured
       System.out.println("Connection to pubsub socket failed");
@@ -126,7 +134,7 @@ class ChatClient {
     */
 
     long[] messageIDs = {};
-    String[] authorIDs = {};
+    long[] authorIDs = {};
     long[] times = {};
     String[] messages = {};
     chatInfo = new ChatInformation(messageIDs, authorIDs, times, messages);
@@ -177,7 +185,7 @@ class ChatClient {
     boolean updateFriendRequestList = false;
     boolean updateFriendList = false;
     
-    Runnable pubSub = new PubSubInput(pubsubInput, chatPanel, chatList, createGroupChat, friendIDs, friendPanel, friendRequestPanel, friendRequestInfo,running);
+    Runnable pubSub = new PubSubInput(pubsubInput, input, output, chatPanel, chatList, createGroupChat, friendIDs, friendPanel, friendRequestPanel, friendRequestInfo, running);
     Thread t = new Thread(pubSub);
     t.start();
 
@@ -213,7 +221,6 @@ class ChatClient {
 
       if (friendRequestPanel.getAccepted()){
         requestID = friendRequestPanel.getRequestID();
-        
         try{//catchs connection errors
           synchronized (output) {
             try {//sends a get command to accept friend request
@@ -235,6 +242,7 @@ class ChatClient {
             System.out.print("Error reading server response");
             error.printStackTrace();
           }
+
         } catch(NullPointerException error) {
           System.out.println("error connecting");
         }
@@ -307,9 +315,9 @@ class ChatClient {
               System.out.println("could not create friend request");
             }
           }
-          /*
+          
           try {//catches errors reading the object
-            commandReply = (CommandReply)input.readObject();
+            commandReply = (Reply)input.readObject();
             if (commandReply.getStatus() == Status.OK){
               System.out.println("friend request created");
             } else {
@@ -319,7 +327,7 @@ class ChatClient {
             System.out.print("Error reading server response");
             error.printStackTrace();
           }
-          */
+          
         } catch(NullPointerException error) {
           System.out.println("error connecting");
         }

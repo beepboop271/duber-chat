@@ -65,6 +65,7 @@ public class FriendRequestPanel extends JPanel implements ActionListener {
   }
   public void updatePanel(){
     int numberOfRequests = friendRequestInfo.getFriendRequestIds().length;
+    mainPanel.removeAll();
     accept = new JButton[numberOfRequests];
     reject = new JButton[numberOfRequests];
     cancel = new JButton[numberOfRequests];
@@ -114,6 +115,7 @@ public class FriendRequestPanel extends JPanel implements ActionListener {
       }
       listPanel.add(friendRequestPanel[i]);
     }
+    mainPanel.add(requestListPane);
   }
   public void updateFriendRequestInformation(FriendRequestInformation friendRequestInfo){
     this.friendRequestInfo = friendRequestInfo;

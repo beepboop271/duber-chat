@@ -56,4 +56,5 @@ public class ListOfFriendID {
     this.userIDs = newUserIDs;
     this.friendInfo = newFriendInfo;
   }
+  
 }

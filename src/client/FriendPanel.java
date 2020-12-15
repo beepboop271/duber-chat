@@ -32,16 +32,17 @@ public class FriendPanel extends JPanel implements ActionListener {
     mainPanel = new JPanel();
     mainPanel.setPreferredSize(new Dimension(300,390));
     friendListPanel = new JPanel();
-    friendListPanel.setPreferredSize(new Dimension(300,350));
+    friendListPanel.setPreferredSize(new Dimension(300,340));
     JPanel temp = new JPanel();
     friendListPanel.add(temp);
     friendListPane = new JScrollPane(friendPanel);
     typeField = new JTextField();
-    typeField.setPreferredSize(new Dimension(200,25));
+    typeField.setPreferredSize(new Dimension(280,25));
     sendFriendRequest = new JButton("Add Friend");
-    sendFriendRequest.setPreferredSize(new Dimension(60,25));
+    sendFriendRequest.setPreferredSize(new Dimension(280,25));
     sendFriendRequest.addActionListener(this);
     sendFriendRequest.setActionCommand("send");
+    mainPanel.add(new JPanel());
     updatePanel();
     mainPanel.add(typeField);
     mainPanel.add(sendFriendRequest);
@@ -55,6 +56,7 @@ public class FriendPanel extends JPanel implements ActionListener {
   }
   public void updatePanel(){
     //update friend panel
+    mainPanel.removeAll();
     friendLabel = new JLabel[listOfFriendID.getUserIDs().length];
     removeFriend = new JButton[listOfFriendID.getUserIDs().length];
     map = new HashMap<>();
@@ -69,6 +71,9 @@ public class FriendPanel extends JPanel implements ActionListener {
       friendListPanel.add(removeFriend[i]);
       map.put(removeFriend[i], listOfFriendID.getUserIDs()[i]);
     }
+    mainPanel.add(typeField);
+    mainPanel.add(sendFriendRequest);
+    mainPanel.add(friendListPane);
   }
   public void updateListOfFriendID(ListOfFriendID listOfFriendID){
     this.listOfFriendID = listOfFriendID;

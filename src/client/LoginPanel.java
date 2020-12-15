@@ -67,6 +67,10 @@ public class LoginPanel extends JPanel implements ActionListener {
   public String getUsername(){
     return usernameField.getText();
   }
+  public String getPassword(){
+    return pass;
+  }
+  
   public void setInputOutput(ObjectInputStream input, ObjectOutputStream output){
     this.input = input;
     this.output = output;
@@ -80,6 +84,7 @@ public class LoginPanel extends JPanel implements ActionListener {
     try{//catchs connection errors
       synchronized (output) {
         try {//catches IOExecptions (error sending object)
+          System.out.println("hi");
           output.writeObject(new DoLogin(usernameField.getText(), pass));
           output.flush();
         } catch (IOException error) {
