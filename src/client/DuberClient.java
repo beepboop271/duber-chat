@@ -11,7 +11,7 @@ import javax.swing.*;
 import javax.swing.plaf.DimensionUIResource;
 
 import messages.*;
-import messages.CommandReply.Status;
+import messages.Reply.Status;
 
 import java.io.*;
 import java.net.*;
@@ -36,7 +36,7 @@ class ChatClient {
   private ChatList chatList;
   private int port;
   private String ip, username;
-  private CommandReply commandReply;
+  private Reply commandReply;
   private PubSubMessage pubSubMessage;
   //private GetReply reply;
     
@@ -177,7 +177,7 @@ class ChatClient {
     boolean updateFriendRequestList = false;
     boolean updateFriendList = false;
     
-    Runnable pubSub = new PubSubInput(pubsubInput, chatPanel, chatList, createGroupChat, friendIDs, friendPanel, friendRequestPanel, running);
+    Runnable pubSub = new PubSubInput(pubsubInput, chatPanel, chatList, createGroupChat, friendIDs, friendPanel, friendRequestPanel, friendRequestInfo,running);
     Thread t = new Thread(pubSub);
     t.start();
 
@@ -224,7 +224,7 @@ class ChatClient {
             }
           }
           try {//catches errors reading the object
-            commandReply = (CommandReply)input.readObject();
+            commandReply = (Reply)input.readObject();
             if (commandReply.getStatus() == Status.OK){
               System.out.println("friend request accepted");
               updateFriendRequestList = true;
@@ -251,7 +251,7 @@ class ChatClient {
             }
           }
           try {//catches errors reading the object
-            commandReply = (CommandReply)input.readObject();
+            commandReply = (Reply)input.readObject();
             if (commandReply.getStatus() == Status.OK){
               System.out.println("friend request rejected");
               updateFriendRequestList = true;
@@ -278,7 +278,7 @@ class ChatClient {
             }
           }
           try {//catches errors reading the object
-            commandReply = (CommandReply)input.readObject();
+            commandReply = (Reply)input.readObject();
             if (commandReply.getStatus() == Status.OK){
               System.out.println("friend request cancelled");
               updateFriendRequestList = true;
@@ -297,6 +297,7 @@ class ChatClient {
 
       if (friendPanel.getSend()){
         String friendName = friendPanel.getMessage();
+        System.out.println(friendName);
         try{//catchs connection errors
           synchronized (output) {
             try {//sends a get command to cancel friend request
@@ -306,6 +307,7 @@ class ChatClient {
               System.out.println("could not create friend request");
             }
           }
+          /*
           try {//catches errors reading the object
             commandReply = (CommandReply)input.readObject();
             if (commandReply.getStatus() == Status.OK){
@@ -317,6 +319,7 @@ class ChatClient {
             System.out.print("Error reading server response");
             error.printStackTrace();
           }
+          */
         } catch(NullPointerException error) {
           System.out.println("error connecting");
         }
