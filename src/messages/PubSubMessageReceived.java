@@ -30,7 +30,7 @@ public class PubSubMessageReceived extends PubSubMessage {
 
   @Override
   public String toString() {
-    return "PubSubMessageReceived [chatId="
+    return "PubSubMessageReceived[chatId="
       +this.chatId
       +", message="
       +this.message

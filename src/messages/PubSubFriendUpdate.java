@@ -23,7 +23,7 @@ public class PubSubFriendUpdate extends PubSubDirectMessage {
 
   @Override
   public String toString() {
-    return "PubSubFriendUpdate [type="+this.type+", userId="+this.userId+"]";
+    return "PubSubFriendUpdate[type="+this.type+", userId="+this.userId+"]";
   }
 
   @Override

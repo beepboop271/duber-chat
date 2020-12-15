@@ -18,10 +18,10 @@ abstract class OperationData<I, O> {
   @Override
   public String toString() {
     return this.getClass().getSimpleName()
-      +"[id="+id
-      +", args="+args
-      +", key="+key
-      +", result="+result
+      +"[key="+this.key
+      +", args="+this.args
+      +", id="+this.id
+      +", result="+this.result
       +"]";
   }
 

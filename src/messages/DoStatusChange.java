@@ -20,7 +20,7 @@ public class DoStatusChange extends CommandMessage {
 
   @Override
   public String toString() {
-    return "DoStatusChange [userStatus="
+    return "DoStatusChange[userStatus="
       +this.userStatus
       +", userMessage="
       +this.userMessage

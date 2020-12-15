@@ -28,7 +28,7 @@ public class PubSubGroupChatJoined extends PubSubMessage {
 
   @Override
   public String toString() {
-    return "PubSubGroupChatJoined [chatId="
+    return "PubSubGroupChatJoined[chatId="
       +this.chatId
       +", name="
       +this.name

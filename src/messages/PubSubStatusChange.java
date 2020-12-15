@@ -20,7 +20,7 @@ public class PubSubStatusChange extends PubSubMessage {
 
   @Override
   public String toString() {
-    return "PubSubStatusChange [userId="
+    return "PubSubStatusChange[userId="
       +this.userId
       +", userStatus="
       +this.userStatus
