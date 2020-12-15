@@ -35,13 +35,13 @@ public class GetFriendRequests extends GetMessage {
         sources[i] =
           db.stringGet(
             "users."
-              +db.longGet("friendRequests."+id+".sourceUserId")
+              +db.longGet("friendRequests."+id+".sourceUserId").get()
               +".username"
           ).get();
         targets[i] =
           db.stringGet(
             "users."
-              +db.longGet("friendRequests."+id+".targetUserId")
+              +db.longGet("friendRequests."+id+".targetUserId").get()
               +".username"
           ).get();
         ++i;
@@ -51,13 +51,13 @@ public class GetFriendRequests extends GetMessage {
         sources[i] =
           db.stringGet(
             "users."
-              +db.longGet("friendRequests."+id+".sourceUserId")
+              +db.longGet("friendRequests."+id+".sourceUserId").get()
               +".username"
           ).get();
         targets[i] =
           db.stringGet(
             "users."
-              +db.longGet("friendRequests."+id+".targetUserId")
+              +db.longGet("friendRequests."+id+".targetUserId").get()
               +".username"
           ).get();
         ++i;
