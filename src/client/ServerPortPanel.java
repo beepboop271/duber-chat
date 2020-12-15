@@ -31,8 +31,8 @@ public class ServerPortPanel extends JPanel implements ActionListener {
     westPanel =  new JPanel();
     connectButton = new JButton("Connect");
     connectButton.addActionListener(this);
-    IPField = new JTextField("",10);
-    portField = new JTextField("", 10);
+    IPField = new JTextField("174.119.134.120",10);
+    portField = new JTextField("41047", 10);
     IPLabel = new JLabel("IP Address:");
     portLabel = new JLabel("Port:");
     errorLabel = new JLabel("");
@@ -74,10 +74,6 @@ public class ServerPortPanel extends JPanel implements ActionListener {
       errorLabel.setText("Connection made.");
       this.ip = ip;
       this.port = port;
-      try{
-      Thread.sleep(3000);
-      } catch(IllegalArgumentException | InterruptedException e2) {
-      }
       connected = true;
     } catch (IOException e) { // connection error occured
       errorLabel.setText("Connection to Server Failed");
@@ -91,6 +87,18 @@ public class ServerPortPanel extends JPanel implements ActionListener {
       connect(IPField.getText(), port);
     } catch (NumberFormatException error) {
       errorLabel.setText("Port was not a number");
+    }
+  }
+  public void disconnect(){
+    try {  //close all the sockets
+      input.close();
+      System.out.println("closed input");
+      output.close();
+      System.out.println("closed output");
+      mySocket.close();
+      System.out.println("closed MySocket");
+    }catch (Exception e) { 
+      System.out.println("Failed to close socket");
     }
   }
   

@@ -104,4 +104,15 @@ public class CreateAccountPanel extends JPanel implements ActionListener {
     
   }
 
+  public void disconnect(){
+    try {  //close all the sockets
+      input.close();
+      System.out.println("closed input");
+      output.close();
+      System.out.println("closed output");
+    }catch (Exception e) { 
+      System.out.println("Failed to close socket");
+    }
+  }
+
 }

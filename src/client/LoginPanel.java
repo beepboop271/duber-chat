@@ -28,7 +28,6 @@ public class LoginPanel extends JPanel implements ActionListener {
   private JTextField usernameField;
   private JPasswordField passwordField;
   private JPanel westPanel, panel;
-  private FlowLayout layout;
   private ObjectInputStream input; //Stream for network input
   private ObjectOutputStream output;
   private boolean running = true; //thread status via boolean
@@ -39,7 +38,6 @@ public class LoginPanel extends JPanel implements ActionListener {
   LoginPanel(ObjectInputStream input, ObjectOutputStream output){
     this.input = input;
     this.output = output;
-    layout = new FlowLayout();
     usernameField = new JTextField(10);
     usernameField.setPreferredSize(new Dimension(200,20));
     passwordField = new JPasswordField(10);
@@ -65,6 +63,9 @@ public class LoginPanel extends JPanel implements ActionListener {
   }
   public boolean getLoggedIn(){
     return loggedIn;
+  }
+  public String getUsername(){
+    return usernameField.getText();
   }
   public void setInputOutput(ObjectInputStream input, ObjectOutputStream output){
     this.input = input;
@@ -102,7 +103,16 @@ public class LoginPanel extends JPanel implements ActionListener {
     } catch(NullPointerException error) {
       errorLabel.setText("Error connecting to server");
     }
-    
   }
   
+  public void disconnect(){
+    try {  //close all the sockets
+      input.close();
+      System.out.println("closed input");
+      output.close();
+      System.out.println("closed output");
+    }catch (Exception e) { 
+      System.out.println("Failed to close socket");
+    }
+  }
 }
