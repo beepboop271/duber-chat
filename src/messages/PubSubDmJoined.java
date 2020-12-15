@@ -1,5 +1,6 @@
 package messages;
 
+import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
 import logger.Log;
@@ -19,20 +20,32 @@ public class PubSubDmJoined extends PubSubMessage {
   }
 
   @Override
+  public String toString() {
+    return "PubSubDmJoined[chatId="
+      +this.chatId
+      +", userIds="
+      +Arrays.toString(this.userIds)
+      +", lastMessageId="
+      +this.lastMessageId
+      +"]";
+  }
+
+  @Override
   public void execute(ReDuber db) throws InterruptedException {
     try {
       if (this.userIds == null) {
         this.userIds = db.setGet("chats."+this.chatId+".members").get();
       }
       if (this.lastMessageId == null) {
-        Long[] messages = db.listGetLast("chats."+this.chatId+".messages", 1).get();
+        Long[] messages =
+          db.listGetLast("chats."+this.chatId+".messages", 1).get();
         if (messages.length > 0) {
           this.lastMessageId = messages[0];
         }
       }
       db.publishMany("chats."+this.chatId+".members", this).get();
     } catch (ExecutionException e) {
-      Log.warn("Failed to submit Publish job",  "MessagePublisher", this, e);
+      Log.warn("Failed to submit Publish job", "MessagePublisher", this, e);
     }
   }
 }

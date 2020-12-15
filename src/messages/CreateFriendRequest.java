@@ -18,10 +18,13 @@ public class CreateFriendRequest extends CommandMessage {
   }
 
   @Override
-  public CommandReply execute(
-    ReDuber db,
-    ConnectedUser user
-  ) throws InterruptedException {
+  public String toString() {
+    return "CreateFriendRequest[targetUsername="+this.targetUsername+"]";
+  }
+
+  @Override
+  public CommandReply execute(ReDuber db, ConnectedUser user)
+    throws InterruptedException {
     if (!user.isLoggedIn()) {
       return CommandReply.noPermission("Not logged in");
     }
@@ -40,7 +43,10 @@ public class CreateFriendRequest extends CommandMessage {
       } else if (result == ReDuber.Status.FALSE) {
         long requestId = ReDuberId.getId();
         CompletableFuture.allOf(
-          db.setAdd("users."+user.getUserId()+".outgoingFriendRequests", requestId),
+          db.setAdd(
+            "users."+user.getUserId()+".outgoingFriendRequests",
+            requestId
+          ),
           db.setAdd("users."+targetUserId+".incomingFriendRequests", requestId),
           db.set("friendRequests."+requestId+".sourceUserId", user.getUserId()),
           db.set("friendRequests."+requestId+".targetUserId", targetUserId)

@@ -19,6 +19,17 @@ public class PubSubStatusChange extends PubSubMessage {
   }
 
   @Override
+  public String toString() {
+    return "PubSubStatusChange [userId="
+      +this.userId
+      +", userStatus="
+      +this.userStatus
+      +", userMessage="
+      +this.userMessage
+      +"]";
+  }
+
+  @Override
   public void execute(ReDuber db) throws InterruptedException {
     try {
       if (this.userStatus == null) {

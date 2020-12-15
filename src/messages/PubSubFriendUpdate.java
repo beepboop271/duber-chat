@@ -22,6 +22,11 @@ public class PubSubFriendUpdate extends PubSubDirectMessage {
   }
 
   @Override
+  public String toString() {
+    return "PubSubFriendUpdate [type="+this.type+", userId="+this.userId+"]";
+  }
+
+  @Override
   public void execute(ReDuber db, long recipient) throws InterruptedException {
     try {
       db.publishDirect(recipient, this).get();

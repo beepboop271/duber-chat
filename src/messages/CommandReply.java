@@ -25,6 +25,15 @@ public class CommandReply extends Message {
     this(status, "");
   }
 
+  @Override
+  public String toString() {
+    return "CommandReply[status="
+      +this.status
+      +", detailMessage="
+      +this.detailMessage
+      +"]";
+  }
+
   public Status getStatus() {
     return this.status;
   }

@@ -19,6 +19,15 @@ public class DoStatusChange extends CommandMessage {
   }
 
   @Override
+  public String toString() {
+    return "DoStatusChange [userStatus="
+      +this.userStatus
+      +", userMessage="
+      +this.userMessage
+      +"]";
+  }
+
+  @Override
   public CommandReply execute(ReDuber db, ConnectedUser user)
     throws InterruptedException {
     if (!user.isLoggedIn()) {
@@ -26,11 +35,17 @@ public class DoStatusChange extends CommandMessage {
     }
 
     try {
-      CompletableFuture.allOf(
-        db.set("users."+user.getUserId()+".status", this.userStatus),
-        db.set("users."+user.getUserId()+".message", this.userMessage)
-      ).get();
-      new PubSubStatusChange(user.getUserId(), this.userStatus, this.userMessage).execute(db);
+      CompletableFuture
+        .allOf(
+          db.set("users."+user.getUserId()+".status", this.userStatus),
+          db.set("users."+user.getUserId()+".message", this.userMessage)
+        )
+        .get();
+      new PubSubStatusChange(
+        user.getUserId(),
+        this.userStatus,
+        this.userMessage
+      ).execute(db);
       return CommandReply.ok();
     } catch (ExecutionException e) {
       Log.warn("Failed to change status", "MessageHandler", this, e);

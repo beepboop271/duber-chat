@@ -24,9 +24,12 @@ public class PubSubFriendRequestCreated extends PubSubDirectMessage {
 
   @Override
   public String toString() {
-    return "PublishFriendRequestReceived["
-      +"friendRequestId="+friendRequestId
-      +", sourceUsername="+sourceUsername
+    return "PublishFriendRequestReceived[friendRequestId="
+      +this.friendRequestId
+      +", sourceUsername="
+      +this.sourceUsername
+      +", targetUsername="
+      +this.targetUsername
       +"]";
   }
 
@@ -34,22 +37,34 @@ public class PubSubFriendRequestCreated extends PubSubDirectMessage {
   public void execute(ReDuber db, long recipient) throws InterruptedException {
     try {
       if (this.sourceUsername == null) {
-        this.sourceUsername = db.stringGet(
-          "users."
-          +db.longGet("friendRequests."+this.friendRequestId+".sourceUserId").get()
-          +".username"
-        ).get();
+        this.sourceUsername =
+          db.stringGet(
+            "users."
+              +db
+                .longGet("friendRequests."+this.friendRequestId+".sourceUserId")
+                .get()
+              +".username"
+          ).get();
       }
       if (this.targetUsername == null) {
-        this.targetUsername = db.stringGet(
-          "users."
-          +db.longGet("friendRequests."+this.friendRequestId+".targetUserId").get()
-          +".username"
-        ).get();
+        this.targetUsername =
+          db.stringGet(
+            "users."
+              +db
+                .longGet("friendRequests."+this.friendRequestId+".targetUserId")
+                .get()
+              +".username"
+          ).get();
       }
       if (recipient == -1) {
-        db.publishSingle("friendRequests."+this.friendRequestId+".sourceUserId", this).get();
-        db.publishSingle("friendRequests."+this.friendRequestId+".targetUserId", this).get();
+        db.publishSingle(
+          "friendRequests."+this.friendRequestId+".sourceUserId",
+          this
+        ).get();
+        db.publishSingle(
+          "friendRequests."+this.friendRequestId+".targetUserId",
+          this
+        ).get();
       } else {
         db.publishDirect(recipient, this).get();
       }
