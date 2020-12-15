@@ -37,7 +37,7 @@ public class CreateDm extends CommandMessage {
       if (status == ReDuber.Status.FALSE) {
         return Reply.notExists("User does not exist or is not friends with you");
       } else if (status == ReDuber.Status.TRUE) {
-        if (db.longGet("users."+user.getUserId()+".dms."+this.userId) != null) {
+        if (db.longGet("users."+user.getUserId()+".dms."+this.userId).get() != null) {
           return Reply.exists("DM chat exists already");
         }
         long chatId = ReDuberId.getId();
