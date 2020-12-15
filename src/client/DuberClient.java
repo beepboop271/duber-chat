@@ -37,6 +37,7 @@ class ChatClient {
   private int port;
   private String ip, username;
   private CommandReply commandReply;
+  private PubSubMessage pubSubMessage;
   //private GetReply reply;
     
   public void go() {
@@ -85,8 +86,7 @@ class ChatClient {
     System.out.println();
     username = loginPanel.getUsername();
     loginWindow.dispose();
-    serverPortPanel.disconnect();
-    createAccountPanel.disconnect();
+    
 
     //connects pubsub socket
     try {
@@ -125,15 +125,15 @@ class ChatClient {
     }
     */
 
-    long[] messageIDs = {1,2,3,4,5};
-    String[] authorIDs = {"john","john","john","john","john"};
-    long[] times = {10,20,30,40,50};
-    String[] messages = {"hi, this is going to be a very long message to test if there is text wrapping, but it still needs to be longer", "its me", "john", "aaaaa", "idk if this works"};
+    long[] messageIDs = {};
+    String[] authorIDs = {};
+    long[] times = {};
+    String[] messages = {};
     chatInfo = new ChatInformation(messageIDs, authorIDs, times, messages);
 
-    ChatInformation[] chatInfoArray = {chatInfo};
-    String[] chatNames = {"john"};
-    long[] chatIDs = {1};
+    ChatInformation[] chatInfoArray = {};
+    String[] chatNames = {};
+    long[] chatIDs = {};
     chatList = new ChatList(chatNames, chatIDs, chatInfoArray);
     ChatPanel chatPanel = new ChatPanel(chatList);
 
@@ -147,30 +147,29 @@ class ChatClient {
 
     //import UserIDs
     //for every user id import the friendInfo of it and add to a FriendInformation[]
-    long[] userIDs = {1,2,3,4,5};
-    FriendInformation[] friendInfo = new FriendInformation[5];
-    friendInfo[0] = new FriendInformation("john","online","i hate everything");
-    friendInfo[1] = new FriendInformation("jimmy","online","want die");
-    friendInfo[2] = new FriendInformation("jane","online","why is this so hard");
-    friendInfo[3] = new FriendInformation("joe","online","kevin send help");
-    friendInfo[4] = new FriendInformation("janet","online","end my suffering");
+    long[] userIDs = {};
+    FriendInformation[] friendInfo = new  FriendInformation[0];
 
     ListOfFriendID friendIDs = new ListOfFriendID(userIDs, friendInfo);
     CreateGroupChat createGroupChat = new CreateGroupChat(friendIDs);
+
     JPanel createGroupPanel = createGroupChat.getPanel();
 
-    long[] friendRequestIds = {1,4,15,22,23,42};
-    String[] sourceUsernames = {"aaaa", "john", "jenny", "joe", "aaaa", "aaaa"};
-    String[] targetUsernames = {"jane", "aaaa", "aaaa", "aaaa", "jennifer", "joel"};
+    long[] friendRequestIds = {};
+    String[] sourceUsernames = {};
+    String[] targetUsernames = {};
 
     FriendRequestInformation friendRequestInfo = new FriendRequestInformation(friendRequestIds, sourceUsernames, targetUsernames);
     FriendRequestPanel friendRequestPanel = new FriendRequestPanel(username, friendRequestInfo);
+
     JPanel friendRequest = friendRequestPanel.getPanel();
 
+    FriendPanel friendPanel = new FriendPanel(friendIDs);
+    JPanel friendListPanel = friendPanel.getPanel();
+
     tabbedPane = new JTabbedPane();
-    JPanel temp2 = new JPanel();
     tabbedPane.addTab("Group Chat", createGroupPanel);
-    tabbedPane.addTab("Friends", temp2);
+    tabbedPane.addTab("Friends", friendListPanel);
     tabbedPane.addTab("Friend Requests", friendRequest);
     JFrame requestWindow = new JFrame();
 
@@ -178,13 +177,18 @@ class ChatClient {
     boolean updateFriendRequestList = false;
     boolean updateFriendList = false;
     
+    Runnable pubSub = new PubSubInput(pubsubInput, chatPanel, chatList, createGroupChat, friendIDs, friendPanel, friendRequestPanel, running);
+    Thread t = new Thread(pubSub);
+    t.start();
+
     do{
 
       try{
         Thread.sleep(100);
       } catch(IllegalArgumentException | InterruptedException e2) {
       }
-
+      
+      
       if (chatPanel.getRequest() && !requestPanelOpen) {
         //open new panel
         System.out.println("create new window");
@@ -288,12 +292,41 @@ class ChatClient {
         } catch(NullPointerException error) {
           System.out.println("error connecting");
         }
-        friendRequestPanel.setRejected(false);
+        friendRequestPanel.setCancelled(false);
       }
 
+      if (friendPanel.getSend()){
+        String friendName = friendPanel.getMessage();
+        try{//catchs connection errors
+          synchronized (output) {
+            try {//sends a get command to cancel friend request
+              output.writeObject(new CreateFriendRequest(friendName));
+              output.flush();
+            } catch (IOException e) {
+              System.out.println("could not create friend request");
+            }
+          }
+          try {//catches errors reading the object
+            commandReply = (CommandReply)input.readObject();
+            if (commandReply.getStatus() == Status.OK){
+              System.out.println("friend request created");
+            } else {
+              System.out.println("could not create friend request");
+            }
+          } catch (IOException | ClassNotFoundException error) {
+            System.out.print("Error reading server response");
+            error.printStackTrace();
+          }
+        } catch(NullPointerException error) {
+          System.out.println("error connecting");
+        }
+      }
+
+
+
       if (updateFriendRequestList) {
-        
-        friendRequestPanel.updateList(friendRequestInfo);
+
+        friendRequestPanel.updatePanel(friendRequestInfo);
       }
 
       if (updateFriendList) {
@@ -305,6 +338,8 @@ class ChatClient {
 
     chatWindow.dispose();
     requestWindow.dispose();
+    serverPortPanel.disconnect();
+    createAccountPanel.disconnect();
     loginPanel.disconnect();
     disconnect();
   }
