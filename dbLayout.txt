@@ -6,6 +6,7 @@ users.{userId}.username : String
 users.{userId}.status : String   # ONLINE | AWAY | DONOTDISTURB | OFFLINE
 users.{userId}.message : String  # status message
 users.{userId}.friends : Set
+users.{userId}.pendingFriends : Set  # user has an outgoing to or incoming from
 users.{userId}.outgoingFriendRequests : Set
 users.{userId}.incomingFriendRequests : Set
 users.{userId}.dms.{friendId} : Long
