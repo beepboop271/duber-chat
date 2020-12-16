@@ -32,7 +32,7 @@ public class PubSubInput implements Runnable {
   private Reply reply;
   private String username;
 
-
+  //import all major panels and their main object used
   PubSubInput(ObjectInputStream pubsubInput, ObjectInputStream input, ObjectOutputStream output,
             ChatPanel chatPanel, ChatList chatList, CreateGroupChatPanel createGroupChat, ListOfFriendID listOfFriendID, 
             FriendPanel friendPanel, FriendRequestPanel friendRequestPanel, FriendRequestInformation friendRequestInformation, boolean running, String username){
@@ -60,16 +60,15 @@ public class PubSubInput implements Runnable {
         error.printStackTrace();
         return;
       }
-      if (pubSubMessage instanceof PubSubDmJoined){
+      //tests to see what pubsub mesage it is
+      if (pubSubMessage instanceof PubSubDmJoined){//joins a dm
         dmJoined = ((PubSubDmJoined)pubSubMessage);
-        System.out.println("inv to join dm");
         try{//catchs connection errors
           synchronized (output) {
             try {
               output.writeObject(new GetUser(dmJoined.getUserId()));
               output.flush();
             } catch (IOException e) {
-              System.out.println("could not get friend name");
             }
           }
           try {//catches errors reading the object
@@ -89,19 +88,19 @@ public class PubSubInput implements Runnable {
         }
 
         dmJoined.getChatId();
-      } else if (pubSubMessage instanceof PubSubFriendRequestCreated){
+      } else if (pubSubMessage instanceof PubSubFriendRequestCreated){//friend request info to be stored
         friendRequestCreated = ((PubSubFriendRequestCreated)pubSubMessage);
         friendRequestInformation.addRequest(friendRequestCreated.getFriendRequestId(), friendRequestCreated.getSourceUsername(), friendRequestCreated.getTargetUsername());
         friendRequestPanel.updateFriendRequestInformation(friendRequestInformation);
         System.out.println("got friend req");
 
-      } else if (pubSubMessage instanceof PubSubFriendRequestFailed){
+      } else if (pubSubMessage instanceof PubSubFriendRequestFailed){//cancelled or rejected friend requests
         friendRequestFailed = ((PubSubFriendRequestFailed)pubSubMessage);
         friendRequestInformation.removeRequest(friendRequestCreated.getFriendRequestId());
         friendRequestPanel.updateFriendRequestInformation(friendRequestInformation);
         System.out.print("friend req no accepted");
 
-      } else if (pubSubMessage instanceof PubSubFriendUpdate){
+      } else if (pubSubMessage instanceof PubSubFriendUpdate){//updates the friend list
         friendUpdate = ((PubSubFriendUpdate)pubSubMessage);
         if (friendUpdate.getType() == Type.ADD){
           System.out.println("friend has been obtained");
@@ -140,12 +139,12 @@ public class PubSubInput implements Runnable {
           listOfFriendID.removeFriend(friendUpdate.getUserId());//removes friend
           friendPanel.updateListOfFriendID(listOfFriendID);
         }
-      } else if (pubSubMessage instanceof PubSubGroupChatJoined){
+      } else if (pubSubMessage instanceof PubSubGroupChatJoined){//joins a group chat
         groupChatJoined = ((PubSubGroupChatJoined)pubSubMessage);
         chatList.addChat(groupChatJoined.getName(), groupChatJoined.getChatId(), new ChatInformation(), groupChatJoined.getLastMessageId());
         chatPanel.chatUpdate(chatList);
 
-      } else if (pubSubMessage instanceof PubSubMessageReceived){
+      } else if (pubSubMessage instanceof PubSubMessageReceived){//adds a message to a chat
         messageReceived = ((PubSubMessageReceived)pubSubMessage);
         for (int i = 0; i < chatList.getChatIDs().length; i++){
           if (chatList.getChatIDs()[i] == messageReceived.getChatId()){
@@ -154,12 +153,13 @@ public class PubSubInput implements Runnable {
         }
         
         
-      } else if (pubSubMessage instanceof PubSubStatusChange){
+      } else if (pubSubMessage instanceof PubSubStatusChange){//changes a user's status
         statusChange = ((PubSubStatusChange)pubSubMessage);
         
       }
       
     }
+    //exits and closes sockets
     try{
       pubsubInput.close();
     }catch (Exception e) { 

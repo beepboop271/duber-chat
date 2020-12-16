@@ -62,12 +62,11 @@ public class CreateAccountPanel extends JPanel implements ActionListener {
   public JPanel getPanel(){
     return panel;
   }
-  
   public void setInputOutput(ObjectInputStream input, ObjectOutputStream output){
     this.input = input;
     this.output = output;
   }
-  public void actionPerformed(ActionEvent e) {
+  public void actionPerformed(ActionEvent e) {//sends the username and password for account creation
     pass = "";
     for (int i = 0; i < passwordField.getPassword().length; i++){
       pass += passwordField.getPassword()[i];
@@ -104,14 +103,14 @@ public class CreateAccountPanel extends JPanel implements ActionListener {
     
   }
 
-  public void disconnect(){
+  public void disconnect(){//disconnects all streams and sockets
     try {  //close all the sockets
       input.close();
-      System.out.println("closed input");
+
       output.close();
-      System.out.println("closed output");
+
     }catch (Exception e) { 
-      System.out.println("Failed to close socket");
+
     }
   }
 

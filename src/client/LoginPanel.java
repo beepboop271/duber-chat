@@ -58,6 +58,7 @@ public class LoginPanel extends JPanel implements ActionListener {
     panel.add(errorLabel);
     loggedIn = false;
   }
+  //getters
   public JPanel getPanel(){
     return panel;
   }
@@ -70,12 +71,11 @@ public class LoginPanel extends JPanel implements ActionListener {
   public String getPassword(){
     return pass;
   }
-  
   public void setInputOutput(ObjectInputStream input, ObjectOutputStream output){
     this.input = input;
     this.output = output;
   }
-  public void actionPerformed(ActionEvent e) {
+  public void actionPerformed(ActionEvent e) {//attempts a login with the given filled out type field and password field
     pass = "";//converts a char[] to String
     for (int i = 0; i < passwordField.getPassword().length; i++){
       pass += passwordField.getPassword()[i];
@@ -84,7 +84,6 @@ public class LoginPanel extends JPanel implements ActionListener {
     try{//catchs connection errors
       synchronized (output) {
         try {//catches IOExecptions (error sending object)
-          System.out.println("hi");
           output.writeObject(new DoLogin(usernameField.getText(), pass));
           output.flush();
         } catch (IOException error) {
@@ -109,13 +108,11 @@ public class LoginPanel extends JPanel implements ActionListener {
       errorLabel.setText("Error connecting to server");
     }
   }
-  
+  //disconnects all socket and streams
   public void disconnect(){
-    try {  //close all the sockets
+    try {
       input.close();
-      System.out.println("closed input");
       output.close();
-      System.out.println("closed output");
     }catch (Exception e) { 
       System.out.println("Failed to close socket");
     }

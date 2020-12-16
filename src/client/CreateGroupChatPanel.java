@@ -49,6 +49,7 @@ public class CreateGroupChatPanel extends JPanel implements ActionListener {
     mainPanel.add(friendListPane);
     
   }
+  //updates the panel with new info
   public void updatePanel(){
     friendListPanel.removeAll();
     map = new HashMap<>();
@@ -66,10 +67,12 @@ public class CreateGroupChatPanel extends JPanel implements ActionListener {
       friendListPanel.add(friendIDsBox[i]);
     }
   }
+  //updates the info, then updates the panel
   public void updateListOfFriendID(ListOfFriendID friendIDs) {
     this.friendIDs = friendIDs;
     updatePanel();
   }
+  //getters
   public JPanel getPanel(){
     return mainPanel;
   }
@@ -79,8 +82,15 @@ public class CreateGroupChatPanel extends JPanel implements ActionListener {
   public Long[] getMembers(){
     return members;
   }
+  public String getMessage(){
+    String message = typeField.getText();
+    typeField.setText("");
+    create = false;
+    return message;
+  }
+  //buttons presses that are then sorted
   public void actionPerformed(ActionEvent e) {
-    if ("create".equals(e.getActionCommand())) {
+    if ("create".equals(e.getActionCommand())) {//creates a croup chat
       create = true;
       System.out.println("Creating group with following members:");
       int count = 0;
@@ -90,7 +100,7 @@ public class CreateGroupChatPanel extends JPanel implements ActionListener {
           count += 1;
         }
       }
-      if (count > 0) {//cecks that there is at least one member
+      if (count > 0) {//checks that there is at least one member
         members = new Long[count];
         for (int i = 0; i < friendIDsBox.length; i++){
           if (friendIDsBox[i].isSelected()){
@@ -108,11 +118,5 @@ public class CreateGroupChatPanel extends JPanel implements ActionListener {
       }
 
     }
-  }
-  public String getMessage(){
-    String message = typeField.getText();
-    typeField.setText("");
-    create = false;
-    return message;
   }
 }

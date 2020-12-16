@@ -35,12 +35,20 @@ public class FriendPanel extends JPanel implements ActionListener {
 
     updatePanel();
   }
+  //getters
   public JPanel getPanel(){
     return mainPanel;
   }
   public boolean getSend(){
     return send;
   }
+  public String getMessage(){
+    String message = typeField.getText();
+    typeField.setText("");
+    send = false;
+    return message;
+  }
+  //updates the panel
   public void updatePanel(){
     //update friend panel
     mainPanel.removeAll();
@@ -78,7 +86,7 @@ public class FriendPanel extends JPanel implements ActionListener {
       tempPanel.add(removeFriend[i]);
       friendListPanel.add(tempPanel);
       map.put(removeFriend[i], listOfFriendID.getUserIDs()[i]);
-      System.out.println("creating new friend");
+
     }
     mainPanel.add(typeField);
     mainPanel.add(sendFriendRequest);
@@ -87,26 +95,21 @@ public class FriendPanel extends JPanel implements ActionListener {
     friendListPane.repaint();
     mainPanel.repaint();
   }
+  //updates info and then updates panel
   public void updateListOfFriendID(ListOfFriendID listOfFriendID){
     this.listOfFriendID = listOfFriendID;
     updatePanel();
   }
   
   public void actionPerformed(ActionEvent e) {
-    if ("send".equals(e.getActionCommand())) {
+    if ("send".equals(e.getActionCommand())) {//send a friend request
       send = true;
-    } else if("remove".equals(e.getActionCommand())) {
+    } else if("remove".equals(e.getActionCommand())) {//remove a friend
       JButton temp = ((JButton)e.getSource());
       friendID = map.get(temp);
       remove = true;
     } else {
       
     }
-  }
-  public String getMessage(){
-    String message = typeField.getText();
-    typeField.setText("");
-    send = false;
-    return message;
   }
 }

@@ -38,6 +38,7 @@ public class ChatPanel extends JPanel implements ActionListener {
     
     updatePanel();
   }
+  //updates the panel
   public void updatePanel(){
     mainPanel.removeAll();
 
@@ -64,7 +65,6 @@ public class ChatPanel extends JPanel implements ActionListener {
     chatListButton = new JButton[chatList.getChatNames().length];//
     //entire loop
     for (int i = 0; i < chatList.getChatNames().length; i++) {
-      System.out.println("chatname" + chatList.getChatNames()[i]);
       map.put(chatList.getChatNames()[i], createChat(chatList, i));//adds chat name and chat messages into the map
       chatListButton[i] = new JButton(chatList.getChatNames()[i]);//create a new button with chat name
       chatListButton[i].addActionListener(this);//adds the button listener
@@ -101,6 +101,7 @@ public class ChatPanel extends JPanel implements ActionListener {
     mainPanel.add(chatPanel, BorderLayout.CENTER);
 
   }
+  //updates the chatList and then imeadiatly updates the panel
   public void chatUpdate(ChatList chatList){
     this.chatList = chatList;
     updatePanel();
@@ -108,6 +109,7 @@ public class ChatPanel extends JPanel implements ActionListener {
   public JPanel getPanel(){
     return mainPanel;
   }
+  //creates a string to bes output as the chat
   public String createChat(ChatList chatList, int i){
     String chatString ="";
     ChatInformation chatInfo = chatList.getChatInfo()[i];
@@ -118,17 +120,15 @@ public class ChatPanel extends JPanel implements ActionListener {
     chatString += "<html>";
     return chatString;
   }
+  //if a button is pressed, sort it by its action
   public void actionPerformed(ActionEvent e) {
-    if ("request".equals(e.getActionCommand())) {
-      System.out.println("request");
+    if ("request".equals(e.getActionCommand())) {//opens up the request panel
       request = true;
-    } else if("send".equals(e.getActionCommand())) {
-      System.out.println("send");
+    } else if("send".equals(e.getActionCommand())) {//sends a message
       send = true;
-    }else if("quit".equals(e.getActionCommand())) {
-      System.out.println("quit");
+    }else if("quit".equals(e.getActionCommand())) {//quits the program
       running = false;
-    } else {
+    } else {//opens a chat room
       openChat = ((JButton)e.getSource()).getText();
       String chat = map.get(openChat);
       chatLabel.setText(chat);
@@ -140,6 +140,7 @@ public class ChatPanel extends JPanel implements ActionListener {
       chatPanel.add(sendButton);
     }
   }
+  //getters and setters
   public boolean getRunning(){
     return running;
   }

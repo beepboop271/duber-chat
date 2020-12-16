@@ -17,6 +17,7 @@ public class ChatInformation {
     this.times = new long[0];
     this.messages = new String[0];
   }
+  //getters
   public long[] getMessageIDs(){
     return messageIDs;
   }
@@ -29,6 +30,7 @@ public class ChatInformation {
   public String[] getMessages(){
     return messages;
   }
+  //add message to the message list(array)
   public void addMessage(long messageID, long userID, long time, String message){
     long[] newMessageIDs = new long[messages.length + 1];
     long[] newUserIDs = new long[messages.length + 1];

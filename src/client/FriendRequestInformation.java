@@ -9,6 +9,7 @@ public class FriendRequestInformation {
     this.sourceUsernames = sourceUsernames;
     this.targetUsernames = targetUsernames;
   }
+  //getters
   public long[] getFriendRequestIds(){
     return friendRequestIds;
   }
@@ -18,6 +19,7 @@ public class FriendRequestInformation {
   public String[] getTargetUsernames(){
     return targetUsernames;
   }
+  //adding a new friend request
   public void addRequest(long requestID, String sourceUsername, String targetUsername){
     long[] newFriendRequestIds = new long[friendRequestIds.length + 1];
     String[] newSourceUsernames = new String[friendRequestIds.length + 1];
@@ -34,6 +36,7 @@ public class FriendRequestInformation {
     this.sourceUsernames = newSourceUsernames;
     this.targetUsernames = newTargetUsernames;
   }
+  //two import ways of removing a friend request
   public void removeRequest(long requestID){
     int index = -1;
     for(int i = 0; i < friendRequestIds.length; i++){

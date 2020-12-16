@@ -37,7 +37,7 @@ public class FriendRequestPanel extends JPanel implements ActionListener {
     updatePanel();
     
   }
-
+  //getters and setters
   public JPanel getPanel(){
     return mainPanel;
   }
@@ -62,6 +62,7 @@ public class FriendRequestPanel extends JPanel implements ActionListener {
   public void setCancelled(boolean b){
     cancelled = b;
   }
+  //updates the panel
   public void updatePanel(){
     int numberOfRequests = friendRequestInfo.getFriendRequestIds().length;
     mainPanel.removeAll();
@@ -116,25 +117,23 @@ public class FriendRequestPanel extends JPanel implements ActionListener {
     }
     mainPanel.add(requestListPane);
   }
+  //updates info and then updates the panel
   public void updateFriendRequestInformation(FriendRequestInformation friendRequestInfo){
     this.friendRequestInfo = friendRequestInfo;
     updatePanel();
   }
   public void actionPerformed(ActionEvent e) {
-    if ("accept".equals(e.getActionCommand())) {
+    if ("accept".equals(e.getActionCommand())) {//accept friend request
       JButton temp = ((JButton)e.getSource());//text is the name of the account that the users sends or recieves a message from
       requestID = map.get(temp);
-      System.out.println("accept requestID: " + requestID);
       accepted = true;
-    } else if("reject".equals(e.getActionCommand())) {
+    } else if("reject".equals(e.getActionCommand())) {//rejects friend requests
       JButton temp = ((JButton)e.getSource());
       requestID = map.get(temp);
-      System.out.println("reject requestID: " + requestID);
       rejected = true;
-    }else if("cancel".equals(e.getActionCommand())) {
+    }else if("cancel".equals(e.getActionCommand())) {//cancels a friend request
       JButton temp = ((JButton)e.getSource());
       requestID = map.get(temp);
-      System.out.println("cancel requestID: " + requestID);
       cancelled = true;
     } else {
       

@@ -9,6 +9,7 @@ public class FriendInformation {
     this.status = status;
     this.usermessage = usermessage;
   }
+  //getters
   public String getUsername(){
     return username;
   }

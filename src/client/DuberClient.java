@@ -38,11 +38,10 @@ class ChatClient {
   private String ip, username, password;
   private Reply commandReply;
   private PubSubMessage pubSubMessage;
-  //private GetReply reply;
     
   public void go() {
     JFrame loginWindow = new JFrame("DuberChat Login");
-
+    //creates the connection socket window
     loginWindow.setResizable(false);
     ServerPortPanel serverPortPanel = new ServerPortPanel();
     loginPanel = serverPortPanel.getPanel();
@@ -55,6 +54,7 @@ class ChatClient {
       } catch(IllegalArgumentException | InterruptedException e2) {
       }
     }while(!serverPortPanel.getConnected());
+    //takes some info back from serverPortPanel
     System.out.println("Connected to server");
     input = serverPortPanel.getInput();
     output = serverPortPanel.getOutput();
@@ -79,16 +79,14 @@ class ChatClient {
     tabbedPane.addTab("Login", loginPanelHolder);
     tabbedPane.addTab("Create Account", createAccountPanelHolder);
     loginWindow.add(tabbedPane);
-    System.out.println("created tabbed pane");
     loginWindow.repaint();
     while(!loginPanel.getLoggedIn()) {
       try{
         Thread.sleep(100);
-        System.out.print("ping");
       } catch(IllegalArgumentException | InterruptedException e2) {
       }
     }
-    System.out.println();
+    
     username = loginPanel.getUsername();
     password = loginPanel.getPassword();
     loginWindow.dispose();
@@ -109,7 +107,7 @@ class ChatClient {
     chatWindow.setResizable(false);
     chatWindow.setSize(800,450);
 
-    //import user friends data
+    //it was supposed to import user friends data
     /*
     try{//catchs connection errors
       synchronized (output) {
@@ -133,6 +131,7 @@ class ChatClient {
     }
     */
 
+    //creeating empty variables
     long[] messageIDs = {};
     long[] authorIDs = {};
     long[] times = {};
@@ -146,16 +145,11 @@ class ChatClient {
     chatList = new ChatList(chatNames, chatIDs, chatInfoArray, lastMessageId);
     ChatPanel chatPanel = new ChatPanel(chatList);
 
-
-
-
     chatWindow.add(chatPanel.getPanel());
     chatWindow.setVisible(true);
     String message = "";
     boolean requestPanelOpen = false;
 
-    //import UserIDs
-    //for every user id import the friendInfo of it and add to a FriendInformation[]
     long[] userIDs = {};
     FriendInformation[] friendInfo = new  FriendInformation[0];
 
@@ -176,6 +170,7 @@ class ChatClient {
     FriendPanel friendPanel = new FriendPanel(friendIDs);
     JPanel friendListPanel = friendPanel.getPanel();
 
+    //creates a tabbed pane with the group creation, friend list and friend requests
     tabbedPane = new JTabbedPane();
     tabbedPane.addTab("Group Chat", createGroupPanel);
     tabbedPane.addTab("Friends", friendListPanel);
@@ -192,17 +187,15 @@ class ChatClient {
 
     String friendName;
 
-    do{
+    do{//while running loop
 
       try{
         Thread.sleep(100);
       } catch(IllegalArgumentException | InterruptedException e2) {
       }
       
-      
-      if (chatPanel.getRequest() && !requestPanelOpen) {
+      if (chatPanel.getRequest() && !requestPanelOpen) {//opens a request panel
         //open new panel
-        System.out.println("create new window");
         requestPanelOpen = true;
         requestWindow = new JFrame("DuberChat Request");
         requestWindow.setResizable(false);
@@ -210,19 +203,17 @@ class ChatClient {
         requestWindow.add(tabbedPane);
         requestWindow.setVisible(true);
         chatPanel.setRequest(false);
-      } else if (chatPanel.getRequest()) {
+      } else if (chatPanel.getRequest()) {//makes sure there is only one open request panel
         //request panel is already open
         System.out.println("panel open already");
         chatPanel.setRequest(false);
       }
       
-      if (chatPanel.getSend()) {
-        System.out.print("send message:");
+      if (chatPanel.getSend()) {//sends a message
         message = chatPanel.getMessage();
-        System.out.println(message);
       }
 
-      if (friendRequestPanel.getAccepted()){
+      if (friendRequestPanel.getAccepted()){//test to see if there is a friend request accepted
         requestID = friendRequestPanel.getRequestID();
         try{//catchs connection errors
           synchronized (output) {
@@ -251,7 +242,7 @@ class ChatClient {
           System.out.println("error connecting");
         }
         friendRequestPanel.setAccepted(false);
-      } else if (friendRequestPanel.getRejected()){
+      } else if (friendRequestPanel.getRejected()){//tests for if there is a rejected friend request
         requestID = friendRequestPanel.getRequestID();
         try{//catchs connection errors
           synchronized (output) {
@@ -280,7 +271,7 @@ class ChatClient {
           System.out.println("error connecting");
         }
         friendRequestPanel.setRejected(false);
-      } else if (friendRequestPanel.getCancelled()){
+      } else if (friendRequestPanel.getCancelled()){//tests for if there is a cancelled friend request
         requestID = friendRequestPanel.getRequestID();
         try{//catchs connection errors
           synchronized (output) {
@@ -311,7 +302,7 @@ class ChatClient {
         friendRequestPanel.setCancelled(false);
       }
 
-      if (friendPanel.getSend()){
+      if (friendPanel.getSend()){//tests for it there is a new out going send friend request
         friendName = friendPanel.getMessage();
         System.out.println(friendName);
         try{//catchs connection errors
@@ -341,7 +332,7 @@ class ChatClient {
         }
       }
 
-      if (createGroupChat.getCreate()){
+      if (createGroupChat.getCreate()){//tests for if there is a creation of a group chat
         String name = createGroupChat.getMessage();
         System.out.println(name);
         try{//catchs connection errors
@@ -371,18 +362,8 @@ class ChatClient {
         }
       }
 
-      if (updateFriendRequestList) {
-
-        //friendRequestPanel.updatePanel(friendRequestInfo);
-      }
-
-      if (updateFriendList) {
-
-      }
     } while(chatPanel.getRunning());
-    
-    // after connecting loop and keep appending[.append()] to the JTextArea
-
+    //disposes of all window and disconnects all sockets
     chatWindow.dispose();
     requestWindow.dispose();
     serverPortPanel.disconnect();
@@ -391,23 +372,13 @@ class ChatClient {
     disconnect();
   }
   
-  public void login(){
-    
-  }
-  
-  //Starts a loop waiting for server input and then displays it on the textArea
   public void disconnect() { 
     try {  //close all the sockets
       input.close();
-      System.out.println("closed input");
       output.close();
-      System.out.println("closed output");
       mySocket.close();
-      System.out.println("closed MySocket");
       pubsubInput.close();
-      System.out.println("closed pubsubInput");
       pubSubSocket.close();
-      System.out.println("closed pubsubSocket");
     }catch (Exception e) { 
       System.out.println("Failed to close socket");
     }

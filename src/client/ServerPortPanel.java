@@ -44,6 +44,7 @@ public class ServerPortPanel extends JPanel implements ActionListener {
     panel.add(connectButton);
     panel.add(errorLabel);
   }
+  //getters
   public boolean getConnected() {
     return connected;
   }
@@ -65,7 +66,7 @@ public class ServerPortPanel extends JPanel implements ActionListener {
   public String getIP(){
     return ip;
   }
-  public Socket connect(String ip, int port) {
+  public Socket connect(String ip, int port) {//attempts to make a connection with the server
     errorLabel.setText("Attempting to make a connection..");
     try {
       mySocket = new Socket(ip, port); // attempt socket connection (local address). This will wait until a connection is made
@@ -80,7 +81,7 @@ public class ServerPortPanel extends JPanel implements ActionListener {
     }
     return mySocket;
   }
-  public void actionPerformed(ActionEvent e) {
+  public void actionPerformed(ActionEvent e) {//button pushed to connect to the server
     int port;
     try {
       port = Integer.parseInt(portField.getText());
@@ -92,11 +93,8 @@ public class ServerPortPanel extends JPanel implements ActionListener {
   public void disconnect(){
     try {  //close all the sockets
       input.close();
-      System.out.println("closed input");
       output.close();
-      System.out.println("closed output");
       mySocket.close();
-      System.out.println("closed MySocket");
     }catch (Exception e) { 
       System.out.println("Failed to close socket");
     }

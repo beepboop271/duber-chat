@@ -11,6 +11,7 @@ public class ChatList {
     this.chatInfo = chatInfo;
     this.lastMessageId = lastMessageId;
   }
+  //getters
   public String[] getChatNames(){
     return chatNames;
   }
@@ -23,6 +24,7 @@ public class ChatList {
   public long[] getLastMessageId(){
     return lastMessageId;
   }
+  //adds a new chat to the chat list
   public void addChat(String chatName, long chatID, ChatInformation newChatInfo, long newLastMessageId){
     String[] newChatNames = new String[chatNames.length + 1];
     long[] newChatIDs = new long[chatNames.length + 1];

@@ -7,19 +7,18 @@ public class ListOfFriendID {
     this.userIDs = userIDs;
     this.friendInfo = friendInfo;
   }
-
+  //getters
   public long[] getUserIDs(){
     return userIDs;
   }
   public FriendInformation[] getFriendInfo(){
     return friendInfo;
   }
+  //removes a friend
   public void removeFriend(long ID){
     int index = -1;
     for (int i = 0; i < userIDs.length; i++){
       if (ID == userIDs[i]){
-        System.out.println(ID);
-        System.out.println(userIDs[i]);
         index = i;
       }
     }
@@ -44,20 +43,18 @@ public class ListOfFriendID {
       this.friendInfo = newFriendInfo;
     }
   }
+  //adds a friend
   public void addFriend(long newID, FriendInformation newFriend){
     long[] newUserIDs = new long[userIDs.length + 1];//new array one larger
     FriendInformation[] newFriendInfo = new FriendInformation[newUserIDs.length];
     for (int i = 0; i < userIDs.length; i++){
-      System.out.println(userIDs[i]);
+
       newUserIDs[i] = userIDs[i];
       newFriendInfo[i] = friendInfo[i];
     }
     //adds the new friend at the end of the array
     newUserIDs[newUserIDs.length - 1] = newID;
     newFriendInfo[newUserIDs.length - 1] = newFriend;
-
-    System.out.println(newUserIDs[newUserIDs.length - 1]);
-    System.out.println(newFriendInfo[newUserIDs.length - 1].getUsername());
 
     //reassigns the new IDs into the object
     this.userIDs = newUserIDs;
