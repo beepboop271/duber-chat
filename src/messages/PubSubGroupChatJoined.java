@@ -47,4 +47,20 @@ public class PubSubGroupChatJoined extends PubSubMessage {
       Log.warn("Failed to submit Publish job", "MessagePublisher", this, e);
     }
   }
+
+  public long getChatId() {
+    return this.chatId;
+  }
+
+  public Long[] getUserIds() {
+    return this.userIds;
+  }
+
+  public String getName() {
+    return this.name;
+  }
+
+  public long getLastMessageId() {
+    return this.lastMessageId;
+  }
 }
