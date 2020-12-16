@@ -5,6 +5,13 @@ import java.util.concurrent.ExecutionException;
 import logger.Log;
 import reduber.ReDuber;
 
+/**
+ * A server-published message which indicates a user's
+ * friends list has changed. Either they made a new friend
+ * or lost one.
+ *
+ * @author Kevin Qiao
+ */
 public class PubSubFriendUpdate extends PubSubDirectMessage {
   private static final long serialVersionUID = 0L;
 

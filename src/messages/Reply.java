@@ -1,5 +1,11 @@
 package messages;
 
+/**
+ * A response to a request message made by a client
+ * containing a status.
+ *
+ * @author Kevin Qiao
+ */
 public class Reply extends Message {
   private static final long serialVersionUID = 0L;
 

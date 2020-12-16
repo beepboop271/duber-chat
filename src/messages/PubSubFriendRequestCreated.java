@@ -5,6 +5,14 @@ import java.util.concurrent.ExecutionException;
 import logger.Log;
 import reduber.ReDuber;
 
+/**
+ * A server-published message which indicates a friend
+ * request was created. The same message is delivered to
+ * both the user who created the request and the user who
+ * receives it.
+ *
+ * @author Kevin Qiao
+ */
 public class PubSubFriendRequestCreated extends PubSubDirectMessage {
   private static final long serialVersionUID = 0L;
 

@@ -7,6 +7,11 @@ import logger.Log;
 import reduber.ReDuber;
 import server.ConnectedUser;
 
+/**
+ * A message for retrieval of the chats a user is in.
+ *
+ * @author Kevin Qiao
+ */
 public class GetChats extends GetMessage {
   private static final long serialVersionUID = 0L;
 
@@ -35,6 +40,12 @@ public class GetChats extends GetMessage {
     return new GetChatsReply(Reply.Status.E_SERVER_UNKNOWN);
   }
 
+  /**
+   * A message containing a requested array of chats a user is
+   * in.
+   *
+   * @author Kevin Qiao
+   */
   public static class GetChatsReply extends GetReply {
     private static final long serialVersionUID = 0L;
 

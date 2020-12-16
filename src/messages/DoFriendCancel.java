@@ -7,6 +7,12 @@ import logger.Log;
 import reduber.ReDuber;
 import server.ConnectedUser;
 
+/**
+ * A message which cancels an outgoing friend request that
+ * was sent.
+ *
+ * @author Kevin Qiao
+ */
 public class DoFriendCancel extends CommandMessage {
   private static final long serialVersionUID = 0L;
 

@@ -6,6 +6,12 @@ import logger.Log;
 import reduber.ReDuber;
 import server.ConnectedUser;
 
+/**
+ * A message which logs in a {@link server.ConnectedUser} for
+ * the intention of being converted to a PubSub socket.
+ *
+ * @author Kevin Qiao
+ */
 public class DoPubSubLogin extends CommandMessage {
   private static final long serialVersionUID = 0L;
 

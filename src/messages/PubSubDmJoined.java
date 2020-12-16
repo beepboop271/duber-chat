@@ -5,6 +5,12 @@ import java.util.concurrent.ExecutionException;
 import logger.Log;
 import reduber.ReDuber;
 
+/**
+ * A server-published message which indicates a user has
+ * joined a DM chat.
+ *
+ * @author Kevin Qiao
+ */
 public class PubSubDmJoined extends PubSubDirectMessage {
   private static final long serialVersionUID = 0L;
 

@@ -7,6 +7,11 @@ import logger.Log;
 import reduber.ReDuber;
 import server.ConnectedUser;
 
+/**
+ * A message which rejects an incoming friend request.
+ *
+ * @author Kevin Qiao
+ */
 public class DoFriendReject extends CommandMessage {
   private static final long serialVersionUID = 0L;
 

@@ -6,6 +6,12 @@ import java.util.concurrent.ExecutionException;
 import logger.Log;
 import reduber.ReDuber;
 
+/**
+ * A server-published message which indicates a user has
+ * joined a group chat.
+ *
+ * @author Kevin Qiao
+ */
 public class PubSubGroupChatJoined extends PubSubMessage {
   private static final long serialVersionUID = 0L;
 

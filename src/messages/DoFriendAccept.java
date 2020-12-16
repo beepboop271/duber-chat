@@ -7,6 +7,11 @@ import logger.Log;
 import reduber.ReDuber;
 import server.ConnectedUser;
 
+/**
+ * A message which accepts an incoming friend request.
+ *
+ * @author Kevin Qiao
+ */
 public class DoFriendAccept extends CommandMessage {
   private static final long serialVersionUID = 0L;
 

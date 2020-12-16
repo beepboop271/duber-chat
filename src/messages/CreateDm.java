@@ -8,6 +8,11 @@ import reduber.ReDuber;
 import reduber.ReDuberId;
 import server.ConnectedUser;
 
+/**
+ * A message which creates a DM chat.
+ *
+ * @author Kevin Qiao
+ */
 public class CreateDm extends CommandMessage {
   private static final long serialVersionUID = 0L;
 

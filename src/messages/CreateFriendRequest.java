@@ -8,6 +8,11 @@ import reduber.ReDuber;
 import reduber.ReDuberId;
 import server.ConnectedUser;
 
+/**
+ * A message which creates an outgoing friend request.
+ *
+ * @author Kevin Qiao
+ */
 public class CreateFriendRequest extends CommandMessage {
   private static final long serialVersionUID = 0L;
 

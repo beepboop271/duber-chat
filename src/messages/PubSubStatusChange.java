@@ -5,6 +5,12 @@ import java.util.concurrent.ExecutionException;
 import logger.Log;
 import reduber.ReDuber;
 
+/**
+ * A server-published message which indicates that a
+ * friend's status or status message has changed.
+ *
+ * @author Kevin Qiao
+ */
 public class PubSubStatusChange extends PubSubMessage {
   private static final long serialVersionUID = 0L;
 

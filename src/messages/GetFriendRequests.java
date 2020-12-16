@@ -7,6 +7,12 @@ import logger.Log;
 import reduber.ReDuber;
 import server.ConnectedUser;
 
+/**
+ * A message for retrieval of the pending friend requests
+ * involving a user.
+ *
+ * @author Kevin Qiao
+ */
 public class GetFriendRequests extends GetMessage {
   private static final long serialVersionUID = 0L;
 
@@ -75,6 +81,12 @@ public class GetFriendRequests extends GetMessage {
     return new GetFriendRequestsReply(Reply.Status.E_SERVER_UNKNOWN);
   }
 
+  /**
+   * A message containing requested data about the pending
+   * friend requests involving a user.
+   *
+   * @author Kevin Qiao
+   */
   public static class GetFriendRequestsReply extends GetReply {
     private static final long serialVersionUID = 0L;
 
