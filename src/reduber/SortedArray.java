@@ -18,23 +18,6 @@ public class SortedArray<E extends Comparable<E>> implements Serializable {
     this.length = 0;
   }
 
-  @Override
-  public String toString() {
-    if (this.length == 0) {
-      return "SortedArray[]";
-    }
-
-    StringBuilder sb = new StringBuilder();
-    sb.append("SortedArray[\n");
-    for (int i = 0; i < this.length-1; ++i) {
-      sb.append(this.arr[i].toString()).append(",\n");
-    }
-    // add last element without a comma
-    return sb.append(this.arr[this.length-1].toString())
-      .append("\n]")
-      .toString();
-  }
-
   public int add(E element) {
     int index = this.getInsertionIndex(element);
 
@@ -43,13 +26,14 @@ public class SortedArray<E extends Comparable<E>> implements Serializable {
     return this.length;
   }
 
+  // attempts to place equal elements appear later, but not guaranteed
   private int getInsertionIndex(E element) {
-    // attempts to place equal elements appear later, but not guaranteed
     if (this.length == 0) {
       return 0;
     }
 
-    // most likely case: element belongs in the first few elements
+    // assume the most likely case is that
+    // the element belongs in the first few spots
     for (int i = 1; i <= 5; ++i) {
       if (i > this.length) {
         return 0;
