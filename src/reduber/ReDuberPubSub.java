@@ -8,6 +8,12 @@ import java.util.concurrent.Executors;
 
 import logger.Log;
 
+/**
+ * Manages and receives requests for a thread pool that
+ * executes {@link PublishJob}s.
+ *
+ * @author Kevin Qiao
+ */
 class ReDuberPubSub {
   private ExecutorService pool;
 
@@ -20,6 +26,12 @@ class ReDuberPubSub {
     this.pool.submit(new PublishJob(message, out));
   }
 
+  /**
+   * A job that delivers a single message to a single
+   * subscriber.
+   *
+   * @author Kevin Qiao
+   */
   private static class PublishJob implements Runnable {
     private Serializable message;
     private ObjectOutputStream out;

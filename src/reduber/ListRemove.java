@@ -4,6 +4,11 @@ import java.util.Map;
 
 import logger.Log;
 
+/**
+ * An operation which removes a long from a list.
+ *
+ * @author Kevin Qiao
+ */
 class ListRemove extends ListOperation<Long, ReDuber.Status> {
   ListRemove(String key, Long args) {
     super(key, args);

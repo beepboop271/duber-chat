@@ -5,12 +5,15 @@ import logger.Log;
 import reduber.ReDuber;
 import server.Server;
 
+/**
+ * Launches the Duber Chat server.
+ */
 public class ServerMain {
   public static void main(String[] args) {
     try {
       Log.info("Starting server", "Server");
       new Thread(new Server(
-        new ServerSocket(41047),
+        new ServerSocket(5000),
         new ReDuber()
       )).start();
     } catch (IOException e) {

@@ -7,6 +7,11 @@ import logger.Log;
 import reduber.ReDuber;
 import server.ConnectedUser;
 
+/**
+ * A message for retrieval of data for a specific chat.
+ *
+ * @author Kevin Qiao
+ */
 public class GetChat extends GetMessage {
   private static final long serialVersionUID = 0L;
 
@@ -56,6 +61,11 @@ public class GetChat extends GetMessage {
     return new GetChatReply(Reply.Status.E_SERVER_UNKNOWN);
   }
 
+  /**
+   * A message containing requested data for a specific chat.
+   *
+   * @author Kevin Qiao
+   */
   public static class GetChatReply extends GetReply {
     private static final long serialVersionUID = 0L;
 

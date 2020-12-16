@@ -8,6 +8,11 @@ import reduber.ReDuber;
 import reduber.ReDuberId;
 import server.ConnectedUser;
 
+/**
+ * A message which creates a user account.
+ *
+ * @author Kevin Qiao
+ */
 public class CreateAccount extends CommandMessage {
   private static final long serialVersionUID = 0L;
 

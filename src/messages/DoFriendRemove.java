@@ -7,6 +7,11 @@ import logger.Log;
 import reduber.ReDuber;
 import server.ConnectedUser;
 
+/**
+ * A message which ends a friend relationship.
+ *
+ * @author Kevin Qiao
+ */
 public class DoFriendRemove extends CommandMessage {
   private static final long serialVersionUID = 0L;
 

@@ -6,6 +6,11 @@ import logger.Log;
 import reduber.ReDuber;
 import server.ConnectedUser;
 
+/**
+ * A message for the retrieval of data about a specific user.
+ *
+ * @author Kevin Qiao
+ */
 public class GetUser extends GetMessage {
   private static final long serialVersionUID = 0L;
 
@@ -53,6 +58,11 @@ public class GetUser extends GetMessage {
     return new GetUserReply(Reply.Status.E_SERVER_UNKNOWN);
   }
 
+  /**
+   * A message containing requested data about a specific user.
+   *
+   * @author Kevin Qiao
+   */
   public static class GetUserReply extends GetReply {
     private static final long serialVersionUID = 0L;
 

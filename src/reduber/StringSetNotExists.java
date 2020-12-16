@@ -2,6 +2,12 @@ package reduber;
 
 import java.util.Map;
 
+/**
+ * An operation which sets a string only if no value was set
+ * for it before.
+ *
+ * @author Kevin Qiao
+ */
 class StringSetNotExists extends StringOperation<String, ReDuber.Status> {
   StringSetNotExists(
     String key,

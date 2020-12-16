@@ -7,6 +7,11 @@ import logger.Log;
 import reduber.ReDuber;
 import server.ConnectedUser;
 
+/**
+ * A message for the retrieval of a user's friends.
+ *
+ * @author Kevin Qiao
+ */
 public class GetFriends extends GetMessage {
   private static final long serialVersionUID = 0L;
 
@@ -35,6 +40,12 @@ public class GetFriends extends GetMessage {
     return new GetFriendsReply(Reply.Status.E_SERVER_UNKNOWN);
   }
 
+  /**
+   * A message containing a requested array of a user's
+   * friends.
+   *
+   * @author Kevin Qiao
+   */
   public static class GetFriendsReply extends GetReply {
     private static final long serialVersionUID = 0L;
 

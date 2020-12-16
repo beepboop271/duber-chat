@@ -6,6 +6,11 @@ import logger.Log;
 import reduber.ReDuber;
 import server.ConnectedUser;
 
+/**
+ * A message which logs in a {@link server.ConnectedUser}.
+ *
+ * @author Kevin Qiao
+ */
 public class DoLogin extends CommandMessage {
   private static final long serialVersionUID = 0L;
 

@@ -5,6 +5,14 @@ import java.util.concurrent.ExecutionException;
 import logger.Log;
 import reduber.ReDuber;
 
+/**
+ * A server-published message which indicates that a friend
+ * request has been ended without a created friendship.
+ * Results from the recipient rejecting or the sender
+ * cancelling the request.
+ *
+ * @author Kevin Qiao
+ */
 public class PubSubFriendRequestFailed extends PubSubDirectMessage {
   private static final long serialVersionUID = 0L;
 

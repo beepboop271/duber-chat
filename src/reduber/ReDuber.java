@@ -13,7 +13,6 @@ import logger.Log;
  * spelling).
  *
  * @author Kevin Qiao
- * @version 0.0
  */
 public class ReDuber {
   private ReDuberStore store;

@@ -10,6 +10,13 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import logger.Log;
 
+/**
+ * Single-threaded core of the ReDuber database that
+ * executes all operations and stores all data. Runs
+ * operations received from a queue in an infinite loop.
+ *
+ * @author Kevin Qiao
+ */
 class ReDuberStore implements Runnable, Serializable {
   private static final long serialVersionUID = 0L;
 

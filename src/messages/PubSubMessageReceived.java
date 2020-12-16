@@ -5,6 +5,12 @@ import java.util.concurrent.ExecutionException;
 import logger.Log;
 import reduber.ReDuber;
 
+/**
+ * A server-published message which indicates a new message
+ * has been sent in a chat.
+ *
+ * @author Kevin Qiao
+ */
 public class PubSubMessageReceived extends PubSubMessage {
   private static final long serialVersionUID = 0L;
 

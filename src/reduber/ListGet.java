@@ -2,6 +2,11 @@ package reduber;
 
 import java.util.Map;
 
+/**
+ * An operation which gets a list.
+ *
+ * @author Kevin Qiao
+ */
 class ListGet extends ListOperation<Object, Long[]> {
   ListGet(String key) {
     super(key, null);

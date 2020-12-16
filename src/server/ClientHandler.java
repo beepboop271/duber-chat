@@ -17,6 +17,13 @@ import messages.Reply;
 import reduber.ReDuber;
 import reduber.ReDuberId;
 
+/**
+ * Handles a client connection in an infinite loop. Reads an
+ * object from the socket and attempts to execute it to send
+ * back a reply.
+ *
+ * @author Kevin Qiao
+ */
 class ClientHandler implements Runnable {
   private final Socket sock;
   private ObjectOutputStream out;

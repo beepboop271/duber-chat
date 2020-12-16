@@ -2,6 +2,11 @@ package reduber;
 
 import java.util.Map;
 
+/**
+ * An operation which sets a long.
+ *
+ * @author Kevin Qiao
+ */
 class LongSet extends LongOperation<Long, ReDuber.Status> {
   LongSet(String key, Long args) {
     super(key, args);

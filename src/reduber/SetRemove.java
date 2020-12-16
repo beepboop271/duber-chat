@@ -3,6 +3,11 @@ package reduber;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * An operation which removes a long from a set.
+ *
+ * @author Kevin Qiao
+ */
 class SetRemove extends SetOperation<Long, ReDuber.Status> {
   SetRemove(String key, Long args) {
     super(key, args);

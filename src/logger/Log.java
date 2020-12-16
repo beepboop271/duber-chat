@@ -3,6 +3,14 @@ package logger;
 import java.io.PrintStream;
 import java.time.Instant;
 
+/**
+ * Static class to log information. Provides colouring for
+ * various levels of severity, as well as the ability to
+ * generate colours from a string hash, for example to make
+ * it easier to follow a single user's requests.
+ *
+ * @author Kevin Qiao
+ */
 public class Log {
   private static final boolean USE_COLOURS = true;  // 24-bit colour terminals
   private static final String INFO_COLOUR = "\u001B[94m";
@@ -26,6 +34,10 @@ public class Log {
 
     return String.format("\u001B[38;2;%d;%d;%dm", r, g, b);
   }
+
+  // lots of overloads follows:
+
+  // log with no id:
 
   private static void log(String level, String message, String source) {
     Log.out.println(level+" "+Instant.now()+" "+source+" '"+message+"'");
@@ -61,6 +73,8 @@ public class Log {
     Log.out.println(level+" "+Instant.now()+" "+source+" '"+message+"' "+object);
     error.printStackTrace(out);
   }
+
+  // log with id:
 
   private static void log(
     String level,
@@ -107,6 +121,8 @@ public class Log {
     );
     error.printStackTrace(out);
   }
+
+  // info with no id:
 
   public static void info(String message, String source) {
     if (Log.USE_COLOURS) {
@@ -164,6 +180,8 @@ public class Log {
       log("INFO", message, source, object, error);
     }
   }
+
+  // info with id:
 
   public static void info(String message, String source, long id) {
     if (Log.USE_COLOURS) {
@@ -237,6 +255,8 @@ public class Log {
     }
   }
 
+  // warn with no id:
+
   public static void warn(String message, String source) {
     if (Log.USE_COLOURS) {
       log(
@@ -293,6 +313,8 @@ public class Log {
       log("WARN", message, source, object, error);
     }
   }
+
+  // warn with id:
 
   public static void warn(String message, String source, long id) {
     if (Log.USE_COLOURS) {
@@ -366,6 +388,8 @@ public class Log {
     }
   }
 
+  // error with no id:
+
   public static void error(String message, String source) {
     if (Log.USE_COLOURS) {
       log(
@@ -422,6 +446,8 @@ public class Log {
       log("ERROR", message, source, object, error);
     }
   }
+
+  // error with id:
 
   public static void error(String message, String source, long id) {
     if (Log.USE_COLOURS) {

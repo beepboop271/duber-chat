@@ -7,6 +7,11 @@ import logger.Log;
 import reduber.ReDuber;
 import server.ConnectedUser;
 
+/**
+ * A mesage which represents a change in user status.
+ *
+ * @author Kevin Qiao
+ */
 public class DoStatusChange extends CommandMessage {
   private static final long serialVersionUID = 0L;
 

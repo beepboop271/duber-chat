@@ -3,6 +3,18 @@ package reduber;
 import java.io.Serializable;
 import java.util.Arrays;
 
+/**
+ * A list that is always sorted from least to greatest, and
+ * assumes that elements being added belong very close to
+ * the top. A list of IDs fits appropriately in a
+ * SortedArray, since an ID created after a previous one
+ * must have a greater value. A long list with new IDs being
+ * appended by checking if they belong at the last few
+ * elements before binary searching will thus perform better
+ * in theory.
+ *
+ * @author Kevin Qiao
+ */
 public class SortedArray<E extends Comparable<E>> implements Serializable {
   private static final long serialVersionUID = 0L;
   private static final int MIN_CAPACITY = 32;

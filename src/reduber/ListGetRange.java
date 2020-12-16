@@ -4,6 +4,13 @@ import java.util.Map;
 
 import logger.Log;
 
+/**
+ * An operation which gets a range of elements from a list,
+ * starting at a certain value and retreiving
+ * forwards/backwards in the list.
+ *
+ * @author Kevin Qiao
+ */
 class ListGetRange extends ListOperation<Long[], Long[]> {
   ListGetRange(String key, Long[] args) {
     super(key, args);

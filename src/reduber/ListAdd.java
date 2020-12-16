@@ -4,6 +4,11 @@ import java.util.Map;
 
 import logger.Log;
 
+/**
+ * An operation which adds a long to a list.
+ *
+ * @author Kevin Qiao
+ */
 class ListAdd extends ListOperation<Long, ReDuber.Status> {
   ListAdd(String key, Long args) {
     super(key, args);

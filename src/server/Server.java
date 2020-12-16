@@ -7,6 +7,12 @@ import java.net.Socket;
 import logger.Log;
 import reduber.ReDuber;
 
+/**
+ * Listens to a given ServerSocket and spawns a new
+ * ClientHandler thread for each new connection.
+ *
+ * @author Kevin Qiao
+ */
 public class Server implements Runnable {
   private final ServerSocket sock;
   private final ReDuber db;
