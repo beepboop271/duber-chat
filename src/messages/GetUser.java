@@ -16,6 +16,11 @@ public class GetUser extends GetMessage {
   }
 
   @Override
+  public String toString() {
+    return "GetUser[userId="+this.userId+"]";
+  }
+
+  @Override
   public GetReply execute(ReDuber db, ConnectedUser user)
     throws InterruptedException {
     if (!user.isLoggedIn()) {
@@ -78,6 +83,17 @@ public class GetUser extends GetMessage {
       this.username = null;
       this.userStatus = null;
       this.userMessage = null;
+    }
+
+    @Override
+    public String toString() {
+      return "GetUserReply[username="
+        +this.username
+        +", userStatus="
+        +this.userStatus
+        +", userMessage="
+        +this.userMessage
+        +"]";
     }
 
     public String getUsername() {

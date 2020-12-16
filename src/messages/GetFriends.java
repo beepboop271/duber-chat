@@ -1,5 +1,6 @@
 package messages;
 
+import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
 import logger.Log;
@@ -10,6 +11,11 @@ public class GetFriends extends GetMessage {
   private static final long serialVersionUID = 0L;
 
   public GetFriends() {
+  }
+
+  @Override
+  public String toString() {
+    return "GetFriends[]";
   }
 
   @Override
@@ -48,7 +54,12 @@ public class GetFriends extends GetMessage {
       super(status, detailMessage);
       this.userIds = null;
     }
-    
+
+    @Override
+    public String toString() {
+      return "GetFriendsReply[userIds="+Arrays.toString(this.userIds)+"]";
+    }
+
     public Long[] getUserIds() {
       return this.userIds;
     }
