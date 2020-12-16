@@ -1,5 +1,11 @@
 package server;
 
+/**
+ * A user which is connected to the server but may or may
+ * not be logged in.
+ *
+ * @author Kevin Qiao
+ */
 public class ConnectedUser {
   private boolean isLoggedIn;  
   private String username;
