@@ -1,5 +1,6 @@
 package messages;
 
+import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
 import logger.Log;
@@ -17,6 +18,17 @@ public class GetMessages extends GetMessage {
     this.chatId = chatId;
     this.startMessageId = startMessageId;
     this.amount = amount;
+  }
+
+  @Override
+  public String toString() {
+    return "GetMessages[chatId="
+      +this.chatId
+      +", startMessageId="
+      +this.startMessageId
+      +", amount="
+      +this.amount
+      +"]";
   }
 
   @Override
@@ -110,6 +122,19 @@ public class GetMessages extends GetMessage {
 
     public String[] getMessages() {
       return this.messages;
+    }
+
+    @Override
+    public String toString() {
+      return "GetMessagesReply[messageIds="
+        +Arrays.toString(this.messageIds)
+        +", messages="
+        +Arrays.toString(this.messages)
+        +", userIds="
+        +Arrays.toString(this.userIds)
+        +", times="
+        +Arrays.toString(this.times)
+        +"]";
     }
   }
 }

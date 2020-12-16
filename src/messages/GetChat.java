@@ -1,5 +1,6 @@
 package messages;
 
+import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
 import logger.Log;
@@ -13,6 +14,11 @@ public class GetChat extends GetMessage {
 
   public GetChat(long chatId) {
     this.chatId = chatId;
+  }
+
+  @Override
+  public String toString() {
+    return "GetChat[chatId="+this.chatId+"]";
   }
 
   @Override
@@ -85,6 +91,19 @@ public class GetChat extends GetMessage {
       this.userIds = null;
       this.name = null;
       this.lastMessageId = null;
+    }
+
+    @Override
+    public String toString() {
+      return "GetChatReply[name="
+        +this.name
+        +", type="
+        +this.type
+        +", userIds="
+        +Arrays.toString(this.userIds)
+        +", lastMessageId="
+        +this.lastMessageId
+        +"]";
     }
 
     public String getType() {
