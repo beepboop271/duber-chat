@@ -35,6 +35,12 @@ public class ChatPanel extends JPanel implements ActionListener {
     send = false;
     //coment things that use chat list to reference
     mainPanel = new JPanel();
+    
+    updatePanel();
+  }
+  public void updatePanel(){
+    mainPanel.removeAll();
+
     friendListPanel = new JPanel();
     chatListPane = new JScrollPane(friendListPanel);
     chatListPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -45,8 +51,6 @@ public class ChatPanel extends JPanel implements ActionListener {
     chatLabel.setHorizontalAlignment(10);
     chatLabel.setVerticalAlignment(1);
 
-
-
     requestButton = new JButton("Manage chats and friends");
     requestButton.setActionCommand("request");
     requestButton.setPreferredSize(new Dimension(240, 50));
@@ -55,7 +59,20 @@ public class ChatPanel extends JPanel implements ActionListener {
     friendListPanel.setPreferredSize(new Dimension(270,330));
     friendListPanel.add(new JPanel());
 
-    updatePanel();
+    friendListPanel.removeAll();
+    map = new HashMap<>();//
+    chatListButton = new JButton[chatList.getChatNames().length];//
+    //entire loop
+    for (int i = 0; i < chatList.getChatNames().length; i++) {
+      System.out.println("chatname" + chatList.getChatNames()[i]);
+      map.put(chatList.getChatNames()[i], createChat(chatList, i));//adds chat name and chat messages into the map
+      chatListButton[i] = new JButton(chatList.getChatNames()[i]);//create a new button with chat name
+      chatListButton[i].addActionListener(this);//adds the button listener
+      chatListButton[i].setActionCommand("chatbutton");//action command of the button
+      chatListButton[i].setPreferredSize(new Dimension(240, 25));//prefered size of the button
+      chatListButton[i].setHorizontalAlignment(2);//alligns the text left
+      friendListPanel.add(chatListButton[i]);//adds the button to the chat list panel
+    }
 
     typeField = new JTextField();
     typeField.setPreferredSize(new Dimension(400, 25));
@@ -76,28 +93,13 @@ public class ChatPanel extends JPanel implements ActionListener {
     leftPanel = new JPanel();
     leftPanel.setLayout(new BorderLayout());
     leftPanel.add(requestButton, BorderLayout.NORTH);
-    leftPanel.add(chatListPane, BorderLayout.CENTER);
+    leftPanel.add(friendListPanel, BorderLayout.CENTER);
     leftPanel.add(quitButton, BorderLayout.SOUTH);
 
     mainPanel.setLayout(new BorderLayout());
     mainPanel.add(leftPanel, BorderLayout.WEST);
     mainPanel.add(chatPanel, BorderLayout.CENTER);
-    
-  }
-  public void updatePanel(){
-    friendListPanel.removeAll();
-    map = new HashMap<>();//
-    chatListButton = new JButton[chatList.getChatNames().length];//
-    //entire loop
-    for (int i = 0; i < chatList.getChatNames().length; i++) {
-      map.put(chatList.getChatNames()[i], createChat(chatList, i));//adds chat name and chat messages into the map
-      chatListButton[i] = new JButton(chatList.getChatNames()[i]);//create a new button with chat name
-      chatListButton[i].addActionListener(this);//adds the button listener
-      chatListButton[i].setActionCommand("chatbutton");//action command of the button
-      chatListButton[i].setPreferredSize(new Dimension(240, 25));//prefered size of the button
-      chatListButton[i].setHorizontalAlignment(2);//alligns the text left
-      friendListPanel.add(chatListButton[i]);//adds the button to the chat list panel
-    }
+
   }
   public void chatUpdate(ChatList chatList){
     this.chatList = chatList;

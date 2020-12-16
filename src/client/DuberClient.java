@@ -137,12 +137,13 @@ class ChatClient {
     long[] authorIDs = {};
     long[] times = {};
     String[] messages = {};
+    long[] lastMessageId = {};
     chatInfo = new ChatInformation(messageIDs, authorIDs, times, messages);
 
     ChatInformation[] chatInfoArray = {};
     String[] chatNames = {};
     long[] chatIDs = {};
-    chatList = new ChatList(chatNames, chatIDs, chatInfoArray);
+    chatList = new ChatList(chatNames, chatIDs, chatInfoArray, lastMessageId);
     ChatPanel chatPanel = new ChatPanel(chatList);
 
 
@@ -159,7 +160,7 @@ class ChatClient {
     FriendInformation[] friendInfo = new  FriendInformation[0];
 
     ListOfFriendID friendIDs = new ListOfFriendID(userIDs, friendInfo);
-    CreateGroupChat createGroupChat = new CreateGroupChat(friendIDs);
+    CreateGroupChatPanel createGroupChat = new CreateGroupChatPanel(friendIDs);
 
     JPanel createGroupPanel = createGroupChat.getPanel();
 
@@ -185,9 +186,11 @@ class ChatClient {
     boolean updateFriendRequestList = false;
     boolean updateFriendList = false;
     
-    Runnable pubSub = new PubSubInput(pubsubInput, input, output, chatPanel, chatList, createGroupChat, friendIDs, friendPanel, friendRequestPanel, friendRequestInfo, running);
+    Runnable pubSub = new PubSubInput(pubsubInput, input, output, chatPanel, chatList, createGroupChat, friendIDs, friendPanel, friendRequestPanel, friendRequestInfo, running, username);
     Thread t = new Thread(pubSub);
     t.start();
+
+    String friendName;
 
     do{
 
@@ -230,19 +233,20 @@ class ChatClient {
               System.out.println("could not accept friend request");
             }
           }
-          try {//catches errors reading the object
-            commandReply = (Reply)input.readObject();
-            if (commandReply.getStatus() == Status.OK){
-              System.out.println("friend request accepted");
-              updateFriendRequestList = true;
-            } else {
-              System.out.println("could not accept friend request");
+          synchronized (input) {
+            try {//catches errors reading the object
+              commandReply = (Reply)input.readObject();
+              if (commandReply.getStatus() == Status.OK){
+                System.out.println("friend request accepted");
+                updateFriendRequestList = true;
+              } else {
+                System.out.println("could not accept friend request");
+              }
+            } catch (IOException | ClassNotFoundException error) {
+              System.out.print("Error reading server response");
+              error.printStackTrace();
             }
-          } catch (IOException | ClassNotFoundException error) {
-            System.out.print("Error reading server response");
-            error.printStackTrace();
           }
-
         } catch(NullPointerException error) {
           System.out.println("error connecting");
         }
@@ -258,17 +262,19 @@ class ChatClient {
               System.out.println("could not reject friend request");
             }
           }
-          try {//catches errors reading the object
-            commandReply = (Reply)input.readObject();
-            if (commandReply.getStatus() == Status.OK){
-              System.out.println("friend request rejected");
-              updateFriendRequestList = true;
-            } else {
-              System.out.println("could not reject friend request");
+          synchronized (input) {
+            try {//catches errors reading the object
+              commandReply = (Reply)input.readObject();
+              if (commandReply.getStatus() == Status.OK){
+                System.out.println("friend request rejected");
+                updateFriendRequestList = true;
+              } else {
+                System.out.println("could not reject friend request");
+              }
+            } catch (IOException | ClassNotFoundException error) {
+              System.out.print("Error reading server response");
+              error.printStackTrace();
             }
-          } catch (IOException | ClassNotFoundException error) {
-            System.out.print("Error reading server response");
-            error.printStackTrace();
           }
         } catch(NullPointerException error) {
           System.out.println("error connecting");
@@ -285,17 +291,19 @@ class ChatClient {
               System.out.println("could not cancel friend request");
             }
           }
-          try {//catches errors reading the object
-            commandReply = (Reply)input.readObject();
-            if (commandReply.getStatus() == Status.OK){
-              System.out.println("friend request cancelled");
-              updateFriendRequestList = true;
-            } else {
-              System.out.println("could not cancel friend request");
+          synchronized (input) {
+            try {//catches errors reading the object
+              commandReply = (Reply)input.readObject();
+              if (commandReply.getStatus() == Status.OK){
+                System.out.println("friend request cancelled");
+                updateFriendRequestList = true;
+              } else {
+                System.out.println("could not cancel friend request");
+              }
+            } catch (IOException | ClassNotFoundException error) {
+              System.out.print("Error reading server response");
+              error.printStackTrace();
             }
-          } catch (IOException | ClassNotFoundException error) {
-            System.out.print("Error reading server response");
-            error.printStackTrace();
           }
         } catch(NullPointerException error) {
           System.out.println("error connecting");
@@ -304,7 +312,7 @@ class ChatClient {
       }
 
       if (friendPanel.getSend()){
-        String friendName = friendPanel.getMessage();
+        friendName = friendPanel.getMessage();
         System.out.println(friendName);
         try{//catchs connection errors
           synchronized (output) {
@@ -315,25 +323,53 @@ class ChatClient {
               System.out.println("could not create friend request");
             }
           }
-          
-          try {//catches errors reading the object
-            commandReply = (Reply)input.readObject();
-            if (commandReply.getStatus() == Status.OK){
-              System.out.println("friend request created");
-            } else {
-              System.out.println("could not create friend request");
+          synchronized (input) {
+            try {//catches errors reading the object
+              commandReply = (Reply)input.readObject();
+              if (commandReply.getStatus() == Status.OK){
+                System.out.println("friend request created");
+              } else {
+                System.out.println("could not create friend request");
+              }
+            } catch (IOException | ClassNotFoundException error) {
+              System.out.print("Error reading server response");
+              error.printStackTrace();
             }
-          } catch (IOException | ClassNotFoundException error) {
-            System.out.print("Error reading server response");
-            error.printStackTrace();
           }
-          
         } catch(NullPointerException error) {
           System.out.println("error connecting");
         }
       }
 
-
+      if (createGroupChat.getCreate()){
+        String name = createGroupChat.getMessage();
+        System.out.println(name);
+        try{//catchs connection errors
+          synchronized (output) {
+            try {//sends a get command to cancel group chat
+              output.writeObject(new CreateGroupChat(createGroupChat.getMembers(), name));
+              output.flush();
+            } catch (IOException e) {
+              System.out.println("could not create group chat");
+            }
+          }
+          synchronized (input) {
+            try {//catches errors reading the object
+              commandReply = (Reply)input.readObject();
+              if (commandReply.getStatus() == Status.OK){
+                System.out.println("group chat created");
+              } else {
+                System.out.println("could not create group chat");
+              }
+            } catch (IOException | ClassNotFoundException error) {
+              System.out.print("Error reading server response");
+              error.printStackTrace();
+            }
+          }
+        } catch(NullPointerException error) {
+          System.out.println("error connecting");
+        }
+      }
 
       if (updateFriendRequestList) {
 

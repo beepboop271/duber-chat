@@ -36,7 +36,6 @@ public class FriendRequestPanel extends JPanel implements ActionListener {
     mainPanel.setPreferredSize(new Dimension(300, 370));
     updatePanel();
     
-    mainPanel.add(requestListPane);
   }
 
   public JPanel getPanel(){

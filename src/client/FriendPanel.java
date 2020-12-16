@@ -8,6 +8,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 
+import java.awt.GridLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,24 +30,10 @@ public class FriendPanel extends JPanel implements ActionListener {
   FriendPanel(ListOfFriendID listOfFriendID){
     this.listOfFriendID = listOfFriendID;
     send = false;
-    mainPanel = new JPanel();
+    mainPanel = new JPanel(); 
     mainPanel.setPreferredSize(new Dimension(300,390));
-    friendListPanel = new JPanel();
-    friendListPanel.setPreferredSize(new Dimension(300,340));
-    JPanel temp = new JPanel();
-    friendListPanel.add(temp);
-    friendListPane = new JScrollPane(friendPanel);
-    typeField = new JTextField();
-    typeField.setPreferredSize(new Dimension(280,25));
-    sendFriendRequest = new JButton("Add Friend");
-    sendFriendRequest.setPreferredSize(new Dimension(280,25));
-    sendFriendRequest.addActionListener(this);
-    sendFriendRequest.setActionCommand("send");
-    mainPanel.add(new JPanel());
+
     updatePanel();
-    mainPanel.add(typeField);
-    mainPanel.add(sendFriendRequest);
-    mainPanel.add(friendListPane);
   }
   public JPanel getPanel(){
     return mainPanel;
@@ -57,23 +44,48 @@ public class FriendPanel extends JPanel implements ActionListener {
   public void updatePanel(){
     //update friend panel
     mainPanel.removeAll();
+    friendListPanel = new JPanel();
+    friendListPanel.setPreferredSize(new Dimension(300,340));
+    friendListPane = new JScrollPane(friendPanel);
+    typeField = new JTextField();
+    typeField.setPreferredSize(new Dimension(280,25));
+    sendFriendRequest = new JButton("Add Friend");
+    sendFriendRequest.setPreferredSize(new Dimension(280,25));
+    sendFriendRequest.addActionListener(this);
+    sendFriendRequest.setActionCommand("send");
     friendLabel = new JLabel[listOfFriendID.getUserIDs().length];
     removeFriend = new JButton[listOfFriendID.getUserIDs().length];
+    JPanel tempPanel = new JPanel();
     map = new HashMap<>();
-    friendListPanel.removeAll();
+    friendListPanel = new JPanel();
+    friendListPane = new JScrollPane(friendPanel);
+    friendListPanel.setPreferredSize(new Dimension(280,340));
+    friendListPane.setPreferredSize(new Dimension(280,350));
+    friendListPanel.setLayout(new GridLayout(0, 1));
     for (int i = 0; i < friendLabel.length; i++) {
+      
       friendLabel[i] = new JLabel(listOfFriendID.getFriendInfo()[i].getUsername());
-      friendLabel[i].setPreferredSize(new Dimension(245, 25));
+      friendLabel[i].setPreferredSize(new Dimension(200, 25));
       removeFriend[i] = new JButton("X");
+      removeFriend[i].setPreferredSize(new Dimension(50,25));
       removeFriend[i].setActionCommand("remove");
       removeFriend[i].addActionListener(this);
-      friendListPanel.add(friendLabel[i]);
-      friendListPanel.add(removeFriend[i]);
+
+      //friendListPanel.add(friendLabel[i]);
+      //friendListPanel.add(removeFriend[i]);
+
+      tempPanel.add(friendLabel[i]);
+      tempPanel.add(removeFriend[i]);
+      friendListPanel.add(tempPanel);
       map.put(removeFriend[i], listOfFriendID.getUserIDs()[i]);
+      System.out.println("creating new friend");
     }
     mainPanel.add(typeField);
     mainPanel.add(sendFriendRequest);
     mainPanel.add(friendListPane);
+    friendListPanel.repaint();
+    friendListPane.repaint();
+    mainPanel.repaint();
   }
   public void updateListOfFriendID(ListOfFriendID listOfFriendID){
     this.listOfFriendID = listOfFriendID;

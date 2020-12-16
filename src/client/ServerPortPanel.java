@@ -31,7 +31,7 @@ public class ServerPortPanel extends JPanel implements ActionListener {
     westPanel =  new JPanel();
     connectButton = new JButton("Connect");
     connectButton.addActionListener(this);
-    IPField = new JTextField("174.119.134.120",10);
+    IPField = new JTextField("127.0.0.1",10);
     portField = new JTextField("41047", 10);
     IPLabel = new JLabel("IP Address:");
     portLabel = new JLabel("Port:");

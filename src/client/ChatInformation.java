@@ -11,6 +11,12 @@ public class ChatInformation {
     this.times = times;
     this.messages = messages;
   }
+  ChatInformation() {
+    this.messageIDs = new long[0];
+    this.userIDs = new long[0];
+    this.times = new long[0];
+    this.messages = new String[0];
+  }
   public long[] getMessageIDs(){
     return messageIDs;
   }

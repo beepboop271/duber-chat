@@ -14,7 +14,7 @@ public class PubSubInput implements Runnable {
   private ObjectOutputStream output;
   private ChatPanel chatPanel;
   private ChatList chatList;
-  private CreateGroupChat createGroupChat;
+  private CreateGroupChatPanel createGroupChat;
   private ListOfFriendID listOfFriendID;
   private FriendPanel friendPanel;
   private FriendRequestPanel friendRequestPanel;
@@ -30,11 +30,12 @@ public class PubSubInput implements Runnable {
   private PubSubStatusChange statusChange;
   private GetUserReply getUser;
   private Reply reply;
+  private String username;
 
 
   PubSubInput(ObjectInputStream pubsubInput, ObjectInputStream input, ObjectOutputStream output,
-            ChatPanel chatPanel, ChatList chatList, CreateGroupChat createGroupChat, ListOfFriendID listOfFriendID, 
-            FriendPanel friendPanel, FriendRequestPanel friendRequestPanel, FriendRequestInformation friendRequestInformation, boolean running){
+            ChatPanel chatPanel, ChatList chatList, CreateGroupChatPanel createGroupChat, ListOfFriendID listOfFriendID, 
+            FriendPanel friendPanel, FriendRequestPanel friendRequestPanel, FriendRequestInformation friendRequestInformation, boolean running, String username){
     this.input = input;
     this.output = output;
     this.pubsubInput = pubsubInput;
@@ -45,6 +46,7 @@ public class PubSubInput implements Runnable {
     this.friendPanel = friendPanel;
     this.friendRequestPanel = friendRequestPanel;
     this.friendRequestInformation = friendRequestInformation;
+    this.username = username;
     this.running = true;
   }
 
@@ -75,7 +77,7 @@ public class PubSubInput implements Runnable {
             if (getUser.getStatus() == Status.OK){
               
               //updates the chat list
-              chatList.addChat(getUser.getUsername(), dmJoined.getChatId(), new ChatInformation(new long[0], new long[0], new long[0], new String[0]));//created a new chat with empty list
+              chatList.addChat(getUser.getUsername(), dmJoined.getChatId(), new ChatInformation(), dmJoined.getChatId());//created a new chat with empty list
             }
 
           } catch (IOException | ClassNotFoundException error) {
@@ -105,73 +107,53 @@ public class PubSubInput implements Runnable {
           System.out.println("friend has been obtained");
           try{//catchs connection errors
             synchronized (output) {
-              try {
-                output.writeObject(new GetUser(friendUpdate.getUserId()));
-                output.flush();
-              } catch (IOException e) {
-                System.out.println("could not get friend name");
+              synchronized (input) {
+                try {
+                  output.writeObject(new GetUser(friendUpdate.getUserId()));
+                  System.out.println("getting friend name");
+                  output.flush();
+                } catch (IOException e) {
+                  System.out.println("could not get friend name");
+                }
               }
-            }
-            try {//catches errors reading the object
-              getUser = (GetUserReply)input.readObject();
-              if (getUser.getStatus() == Status.OK){
-                //updates the friends list
-                listOfFriendID.addFriend(friendUpdate.getUserId(), new FriendInformation(getUser.getUsername(), getUser.getUserStatus(), getUser.getUserMessage()));//AAAAAAAAAAAAAAAAAAAAApain
-                friendPanel.updateListOfFriendID(listOfFriendID);
+              try {//catches errors reading the object
+                getUser = (GetUserReply)input.readObject();
+                if (getUser.getStatus() == Status.OK){
+                  //updates the friends list
+                  friendRequestInformation.removeRequest(getUser.getUsername(), username);
+                  friendRequestPanel.updateFriendRequestInformation(friendRequestInformation);
+                  System.out.println("new friend: " + getUser.getUsername());
+                  listOfFriendID.addFriend(friendUpdate.getUserId(), new FriendInformation(getUser.getUsername(), getUser.getUserStatus(), getUser.getUserMessage()));//AAAAAAAAAAAAAAAAAAAAApain
+                  createGroupChat.updateListOfFriendID(listOfFriendID);
+                  friendPanel.updateListOfFriendID(listOfFriendID);
+                }
+              } catch (IOException | ClassNotFoundException error) {
+                System.out.print("Error reading server response");
+                error.printStackTrace();
               }
-            } catch (IOException | ClassNotFoundException error) {
-              System.out.print("Error reading server response");
-              error.printStackTrace();
             }
           } catch(NullPointerException error) {
             System.out.println("error connecting");
-        }
-
-        try{//catchs connection errors
-          synchronized (output) {
-            //creates a dm
-            try {//sends a get command to accept friend request
-              output.writeObject(new CreateDm(friendUpdate.getUserId()));
-              output.flush();
-            } catch (IOException e) {
-              System.out.println("could not reject friend request");
-            }
-
-            try {//catches errors reading the object
-              reply = (Reply)input.readObject();
-              if (reply.getStatus() == Status.OK){
-                System.out.println("dm created");
-              } else {
-                System.out.println("could not create dm");
-              }
-            } catch (IOException | ClassNotFoundException error) {
-              System.out.print("Error reading server response");
-              error.printStackTrace();
-            }
           }
-        } catch(NullPointerException error) {
-            System.out.println("error connecting");
-        }
           
         } else {
-
-          listOfFriendID.removeFriend(friendUpdate.getUserId());
+          listOfFriendID.removeFriend(friendUpdate.getUserId());//removes friend
+          friendPanel.updateListOfFriendID(listOfFriendID);
         }
       } else if (pubSubMessage instanceof PubSubGroupChatJoined){
         groupChatJoined = ((PubSubGroupChatJoined)pubSubMessage);
+        chatList.addChat(groupChatJoined.getName(), groupChatJoined.getChatId(), new ChatInformation(), groupChatJoined.getLastMessageId());
+        chatPanel.chatUpdate(chatList);
 
       } else if (pubSubMessage instanceof PubSubMessageReceived){
         messageReceived = ((PubSubMessageReceived)pubSubMessage);
-        int index = -1;
         for (int i = 0; i < chatList.getChatIDs().length; i++){
-          if (messageReceived.getChatId() == chatList.getChatIDs()[i]){
-            index = i;
+          if (chatList.getChatIDs()[i] == messageReceived.getChatId()){
+            chatList.getChatInfo()[i].addMessage(messageReceived.getMessageId(), messageReceived.getUserId(), messageReceived.getTime(), messageReceived.getMessage());
           }
         }
-        if (index != -1){
-          chatList.getChatInfo()[index].addMessage(messageReceived.getMessageId(), messageReceived.getUserId(), messageReceived.getTime(), messageReceived.getMessage());
-          chatPanel.chatUpdate(chatList);
-        }
+        
+        
       } else if (pubSubMessage instanceof PubSubStatusChange){
         statusChange = ((PubSubStatusChange)pubSubMessage);
         

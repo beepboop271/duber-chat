@@ -18,6 +18,8 @@ public class ListOfFriendID {
     int index = -1;
     for (int i = 0; i < userIDs.length; i++){
       if (ID == userIDs[i]){
+        System.out.println(ID);
+        System.out.println(userIDs[i]);
         index = i;
       }
     }
@@ -37,24 +39,30 @@ public class ListOfFriendID {
 
       }
       //reassigns the new IDs into the object
+      System.out.println("removed from friend req: " + ID);
       this.userIDs = newUserIDs;
       this.friendInfo = newFriendInfo;
     }
-
   }
   public void addFriend(long newID, FriendInformation newFriend){
     long[] newUserIDs = new long[userIDs.length + 1];//new array one larger
     FriendInformation[] newFriendInfo = new FriendInformation[newUserIDs.length];
     for (int i = 0; i < userIDs.length; i++){
+      System.out.println(userIDs[i]);
       newUserIDs[i] = userIDs[i];
       newFriendInfo[i] = friendInfo[i];
     }
     //adds the new friend at the end of the array
     newUserIDs[newUserIDs.length - 1] = newID;
     newFriendInfo[newUserIDs.length - 1] = newFriend;
+
+    System.out.println(newUserIDs[newUserIDs.length - 1]);
+    System.out.println(newFriendInfo[newUserIDs.length - 1].getUsername());
+
     //reassigns the new IDs into the object
     this.userIDs = newUserIDs;
     this.friendInfo = newFriendInfo;
+    System.out.println("updated friends panel");
   }
   
 }

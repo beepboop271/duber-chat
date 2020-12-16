@@ -4,6 +4,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 
 import java.awt.Dimension;
@@ -11,16 +12,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 
-public class CreateGroupChat extends JPanel implements ActionListener {
+public class CreateGroupChatPanel extends JPanel implements ActionListener {
   private JCheckBox[] friendIDsBox;
   private JButton createButton;
   private JPanel mainPanel, friendListPanel;
   private JScrollPane friendListPane;
   private HashMap<String, JCheckBox> map;
   private ListOfFriendID friendIDs;
+  private JTextField typeField;
+  private boolean create;
+  private Long[] members;
 
-  CreateGroupChat(ListOfFriendID friendIDs){
+  CreateGroupChatPanel(ListOfFriendID friendIDs){
     this.friendIDs = friendIDs;
+    create = false;
     friendListPanel = new JPanel();
     friendListPane = new JScrollPane(friendListPanel);
     friendListPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -30,12 +35,16 @@ public class CreateGroupChat extends JPanel implements ActionListener {
 
     updatePanel();
 
+    typeField = new JTextField();
+    typeField.setPreferredSize(new Dimension(280,25));
+
     createButton = new JButton("Create group chat");
     createButton.setActionCommand("create");
     createButton.addActionListener(this);
     createButton.setPreferredSize(new Dimension(280, 25));
     
     mainPanel = new JPanel();
+    mainPanel.add(typeField);
     mainPanel.add(createButton);
     mainPanel.add(friendListPane);
     
@@ -64,13 +73,29 @@ public class CreateGroupChat extends JPanel implements ActionListener {
   public JPanel getPanel(){
     return mainPanel;
   }
-
+  public boolean getCreate(){
+    return create;
+  }
+  public Long[] getMembers(){
+    return members;
+  }
   public void actionPerformed(ActionEvent e) {
     if ("create".equals(e.getActionCommand())) {
+      create = true;
       System.out.println("Creating group with following members:");
-      for (int i = 0; i < friendIDsBox.length; i++){
+      int count = 0;
+      for (int i = 0; i < friendIDsBox.length; i++){//count how many members
         if (friendIDsBox[i].isSelected()){
           System.out.println(friendIDsBox[i].getText());
+          count += 1;
+        }
+      }
+      if (count > 0) {//cecks that there is at least one member
+        members = new Long[count];
+        for (int i = 0; i < friendIDsBox.length; i++){
+          if (friendIDsBox[i].isSelected()){
+            members[i] = friendIDs.getUserIDs()[i];
+          }
         }
       }
     } else {
@@ -83,6 +108,11 @@ public class CreateGroupChat extends JPanel implements ActionListener {
       }
 
     }
-    
+  }
+  public String getMessage(){
+    String message = typeField.getText();
+    typeField.setText("");
+    create = false;
+    return message;
   }
 }
