@@ -32,7 +32,7 @@ public class ServerPortPanel extends JPanel implements ActionListener {
     connectButton = new JButton("Connect");
     connectButton.addActionListener(this);
     IPField = new JTextField("127.0.0.1",10);
-    portField = new JTextField("41047", 10);
+    portField = new JTextField("5000", 10);
     IPLabel = new JLabel("IP Address:");
     portLabel = new JLabel("Port:");
     errorLabel = new JLabel("");
