@@ -3,6 +3,11 @@ package reduber;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * An operation which checks if a long is present in a set.
+ *
+ * @author Kevin Qiao
+ */
 class SetContains extends SetOperation<Long, ReDuber.Status> {
   SetContains(String key, Long args) {
     super(key, args);

@@ -4,6 +4,12 @@ import java.util.Map;
 
 import logger.Log;
 
+/**
+ * An operation which gets a certain number of elements from
+ * the end of a list.
+ *
+ * @author Kevin Qiao
+ */
 class ListGetLast extends ListOperation<Long, Long[]> {
   ListGetLast(String key, Long args) {
     super(key, args);

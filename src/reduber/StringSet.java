@@ -2,6 +2,11 @@ package reduber;
 
 import java.util.Map;
 
+/**
+ * An operation which sets a string.
+ *
+ * @author Kevin Qiao
+ */
 class StringSet extends StringOperation<String, ReDuber.Status> {
   StringSet(String key, String args) {
     super(key, args);

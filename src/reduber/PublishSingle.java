@@ -5,6 +5,13 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * An operation which attempts to send a single message to a
+ * user specified by a single key to the String, Long map of
+ * the database.
+ *
+ * @author Kevin Qiao
+ */
 class PublishSingle extends OperationData<Serializable, ReDuber.Status> {
   PublishSingle(String key, Serializable args) {
     super(key, args);

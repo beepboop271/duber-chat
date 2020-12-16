@@ -6,6 +6,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
 
+/**
+ * An operation which registers the given ObjectOutputStream
+ * as a logged in user. All streams are stored with a weak
+ * set, so they can be garbage collected if no longer
+ * referenced outside of the database.
+ *
+ * @author Kevin Qiao
+ */
 class PubSubLogin extends OperationData<Long, ReDuber.Status> {
   private final ObjectOutputStream out;
 

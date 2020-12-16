@@ -5,6 +5,12 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * An operation which attempts to send a single message to a
+ * specific user.
+ *
+ * @author Kevin Qiao
+ */
 class PublishDirect extends OperationData<Long, ReDuber.Status> {
   private final Serializable message;
 

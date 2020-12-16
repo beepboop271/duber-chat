@@ -4,6 +4,11 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * An operation which adds a long to a set.
+ *
+ * @author Kevin Qiao
+ */
 class SetAdd extends SetOperation<Long, ReDuber.Status> {
   SetAdd(String key, Long args) {
     super(key, args);

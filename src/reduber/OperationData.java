@@ -2,6 +2,14 @@ package reduber;
 
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * Data which could be used to perform some asynchronous
+ * action.
+ *
+ * @param <I> The type of the operation's argument.
+ * @param <O> The type of the operation's result.
+ * @author Kevin Qiao
+ */
 abstract class OperationData<I, O> {
   private final CompletableFuture<O> result;
   private final String key;

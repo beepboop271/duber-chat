@@ -3,6 +3,11 @@ package reduber;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * An operation which gets a set.
+ *
+ * @author Kevin Qiao
+ */
 class SetGet extends SetOperation<Object, Long[]> {
   SetGet(String key) {
     super(key, null);

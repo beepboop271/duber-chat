@@ -2,6 +2,11 @@ package reduber;
 
 import java.util.Map;
 
+/**
+ * An operation which removes a string from the database.
+ *
+ * @author Kevin Qiao
+ */
 class StringRemove extends StringOperation<Object, ReDuber.Status> {
   StringRemove(String key) {
     super(key, null);

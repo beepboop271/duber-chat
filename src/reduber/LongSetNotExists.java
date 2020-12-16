@@ -2,6 +2,12 @@ package reduber;
 
 import java.util.Map;
 
+/**
+ * An operation which sets a long only if no value was set
+ * for it before.
+ *
+ * @author Kevin Qiao
+ */
 class LongSetNotExists extends LongOperation<Long, ReDuber.Status> {
   LongSetNotExists(String key, Long args) {
     super(key, args);

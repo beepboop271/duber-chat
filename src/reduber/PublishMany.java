@@ -5,6 +5,13 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * An operation which attempts to send a single message to
+ * an arbitrary number of users specified by a single key to
+ * the String, Set map of the database.
+ *
+ * @author Kevin Qiao
+ */
 class PublishMany extends OperationData<Serializable, ReDuber.Status> {
   PublishMany(String key, Serializable args) {
     super(key, args);
