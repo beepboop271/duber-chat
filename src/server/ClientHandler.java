@@ -89,6 +89,7 @@ class ClientHandler implements Runnable {
             }
           } else if (o instanceof DoPubSubLogin) {
             if (this.user.isLoggedIn()) {
+              this.out.writeObject(reply);
               this.runPubSub((DoPubSubLogin)o);
               this.destroy();
               return;
